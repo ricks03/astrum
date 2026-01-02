@@ -252,13 +252,13 @@ func (a *App) GenerateAnimatedMap(request AnimatedMapRequest) (string, error) {
 	// Use default GIF palette
 	animator.SetPalette(maprenderer.DefaultGIFPalette())
 
-	// Render GIF (delay is in centiseconds for GIF format, input is milliseconds)
-	delayCs := request.Delay / 10
-	if delayCs < 1 {
-		delayCs = 50 // Default to 500ms if invalid
+	// Render GIF (houston expects milliseconds)
+	delayMs := request.Delay
+	if delayMs < 100 {
+		delayMs = 500 // Default to 500ms if invalid
 	}
 
-	gifBytes, err := animator.RenderGIFBytes(delayCs)
+	gifBytes, err := animator.RenderGIFBytes(delayMs)
 	if err != nil {
 		return "", fmt.Errorf("failed to render GIF: %w", err)
 	}
@@ -269,6 +269,7 @@ func (a *App) GenerateAnimatedMap(request AnimatedMapRequest) (string, error) {
 	logger.App.Info().
 		Int("gifSize", len(gifBytes)).
 		Int("frameCount", animator.FrameCount()).
+		Int("delayMs", delayMs).
 		Msg("Animated map generated successfully")
 
 	return gifB64, nil
