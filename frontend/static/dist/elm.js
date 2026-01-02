@@ -17080,11 +17080,11 @@ var $elm$core$Set$member = F2(
 		return A2($elm$core$Dict$member, key, dict);
 	});
 var $elm$json$Json$Decode$fail = _Json_fail;
-var $author$project$View$Helpers$onClickTarget = F2(
+var $author$project$View$Helpers$onMouseDownTarget = F2(
 	function (targetClass, msg) {
 		return A2(
 			$elm$html$Html$Events$on,
-			'click',
+			'mousedown',
 			A2(
 				$elm$json$Json$Decode$andThen,
 				function (className) {
@@ -25309,7 +25309,7 @@ var $author$project$View$Dialog$viewDialog = function (model) {
 			_List_fromArray(
 				[
 					$elm$html$Html$Attributes$class('dialog-overlay'),
-					A2($author$project$View$Helpers$onClickTarget, 'dialog-overlay', $author$project$Msg$CloseDialog)
+					A2($author$project$View$Helpers$onMouseDownTarget, 'dialog-overlay', $author$project$Msg$CloseDialog)
 				]),
 			_List_fromArray(
 				[

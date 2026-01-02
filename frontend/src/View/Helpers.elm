@@ -1,6 +1,7 @@
 module View.Helpers exposing
     ( viewFormError
     , onClickTarget
+    , onMouseDownTarget
     , getCurrentUserId
     , getNickname
     )
@@ -36,6 +37,25 @@ This allows clicking on child elements without triggering the parent handler.
 onClickTarget : String -> Msg -> Attribute Msg
 onClickTarget targetClass msg =
     on "click"
+        (Decode.field "target" (Decode.field "className" Decode.string)
+            |> Decode.andThen
+                (\className ->
+                    if String.contains targetClass className then
+                        Decode.succeed msg
+
+                    else
+                        Decode.fail "not target"
+                )
+        )
+
+
+{-| Handle mousedown only if the target element has the specified class.
+Similar to onClickTarget but uses mousedown event. This prevents accidental
+dialog closing when user selects text in an input and releases mouse outside.
+-}
+onMouseDownTarget : String -> Msg -> Attribute Msg
+onMouseDownTarget targetClass msg =
+    on "mousedown"
         (Decode.field "target" (Decode.field "className" Decode.string)
             |> Decode.andThen
                 (\className ->

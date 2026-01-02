@@ -20,7 +20,7 @@ import View.Dialog.Settings exposing (viewSettingsDialog)
 import View.Dialog.TurnFiles exposing (viewTurnFilesDialog)
 import View.Dialog.Users exposing (viewCreateUserDialog, viewInvitationsDialog, viewInviteUserDialog, viewUsersListDialog)
 import View.Dialog.MapViewer exposing (viewMapViewerDialog)
-import View.Helpers exposing (onClickTarget)
+import View.Helpers exposing (onMouseDownTarget)
 
 
 {-| Render the active dialog if any.
@@ -38,7 +38,7 @@ viewDialog model =
         Just dialog ->
             div
                 [ class "dialog-overlay"
-                , onClickTarget "dialog-overlay" CloseDialog
+                , onMouseDownTarget "dialog-overlay" CloseDialog
                 ]
                 [ div
                     [ class "dialog"
