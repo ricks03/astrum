@@ -17,6 +17,7 @@ import Model exposing (..)
 import Msg exposing (Msg(..))
 import Api.UserProfile exposing (UserProfile)
 import View.Helpers exposing (getCurrentUserId, getNickname)
+import View.Icons as Icons
 import View.SessionList exposing (viewOrdersSummary)
 
 
@@ -209,7 +210,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                         , onClick (DownloadSessionBackup session.id)
                         , attribute "title" "Download session backup"
                         ]
-                        [ text "\u{2E13} Backup" ]
+                        [ text (Icons.download ++ " Backup") ]
 
                   else
                     text ""
@@ -220,7 +221,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                         , onClick (DownloadHistoricBackup session.id)
                         , attribute "title" "Download all historic game files"
                         ]
-                        [ text "\u{2E13} Historic" ]
+                        [ text (Icons.download ++ " Historic") ]
 
                   else
                     text ""
@@ -365,10 +366,10 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                         [ span [ class "session-detail__expand-icon" ]
                             [ text
                                 (if detail.playersExpanded then
-                                    "▼"
+                                    Icons.expand
 
                                  else
-                                    "▶"
+                                    Icons.collapse
                                 )
                             ]
                         , text ("Players (" ++ String.fromInt (List.length session.players) ++ ")")

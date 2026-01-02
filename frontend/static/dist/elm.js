@@ -24948,6 +24948,9 @@ var $elm$core$List$all = F2(
 			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
 			list);
 	});
+var $author$project$View$Icons$collapse = '▶';
+var $author$project$View$Icons$download = '\u2B07';
+var $author$project$View$Icons$expand = '▼';
 var $author$project$View$Helpers$getCurrentUserId = function (model) {
 	var _v0 = $author$project$Model$getCurrentServerData(model).aH;
 	if (_v0.$ === 2) {
@@ -25608,7 +25611,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('\u2E13 Backup')
+											$elm$html$Html$text($author$project$View$Icons$download + ' Backup')
 										])) : $elm$html$Html$text(''),
 									(isPlayer && session.e6) ? A2(
 									$elm$html$Html$button,
@@ -25621,7 +25624,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('\u2E13 Historic')
+											$elm$html$Html$text($author$project$View$Icons$download + ' Historic')
 										])) : $elm$html$Html$text(''),
 									isManager ? A2(
 									$elm$html$Html$button,
@@ -26017,7 +26020,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 														_List_fromArray(
 															[
 																$elm$html$Html$text(
-																detail.ew ? '▼' : '▶')
+																detail.ew ? $author$project$View$Icons$expand : $author$project$View$Icons$collapse)
 															])),
 														$elm$html$Html$text(
 														'Players (' + ($elm$core$String$fromInt(
