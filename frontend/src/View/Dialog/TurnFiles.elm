@@ -59,7 +59,15 @@ viewTurnFilesDialog form hasConflict =
 
             -- Turn Files section
             , div [ class "turn-files-dialog__section" ]
-                [ h3 [ class "turn-files-dialog__section-title" ] [ text "Turn Files" ]
+                [ div [ class "turn-files-dialog__section-header" ]
+                    [ h3 [ class "turn-files-dialog__section-title" ] [ text "Turn Files" ]
+                    , button
+                        [ class "btn btn--small btn--secondary"
+                        , onClick (OpenGameDir form.sessionId)
+                        , title "Open game directory"
+                        ]
+                        [ text "Open Directory" ]
+                    ]
                 , if form.loading then
                     div [ class "turn-files-dialog__loading" ]
                         [ text "Loading turn files..." ]
@@ -73,7 +81,7 @@ viewTurnFilesDialog form hasConflict =
                                         [ text "Universe File (.xy)" ]
                                     , div [ class "turn-files-dialog__file-info" ]
                                         [ span [ class "turn-files-dialog__file-size" ]
-                                            [ text (String.fromInt (String.length turnFiles.universe) ++ " bytes (base64)") ]
+                                            [ text (formatFileSize (base64ToRealSize (String.length turnFiles.universe))) ]
                                         ]
                                     ]
                                 , div [ class "turn-files-dialog__file" ]
@@ -81,7 +89,7 @@ viewTurnFilesDialog form hasConflict =
                                         [ text "Turn File (.m)" ]
                                     , div [ class "turn-files-dialog__file-info" ]
                                         [ span [ class "turn-files-dialog__file-size" ]
-                                            [ text (String.fromInt (String.length turnFiles.turn) ++ " bytes (base64)") ]
+                                            [ text (formatFileSize (base64ToRealSize (String.length turnFiles.turn))) ]
                                         ]
                                     ]
                                 ]
@@ -143,3 +151,36 @@ viewPlayerOrderStatus player =
                 )
             ]
         ]
+
+
+{-| Convert base64 string length to approximate real file size.
+Base64 encodes 3 bytes as 4 characters, so real size = base64 length * 3 / 4.
+-}
+base64ToRealSize : Int -> Int
+base64ToRealSize base64Length =
+    base64Length * 3 // 4
+
+
+{-| Format file size in human-readable form.
+-}
+formatFileSize : Int -> String
+formatFileSize bytes =
+    if bytes < 1024 then
+        String.fromInt bytes ++ " B"
+
+    else if bytes < 1024 * 1024 then
+        String.fromFloat (toFloat bytes / 1024 |> roundTo 1) ++ " KB"
+
+    else
+        String.fromFloat (toFloat bytes / (1024 * 1024) |> roundTo 1) ++ " MB"
+
+
+{-| Round a float to n decimal places.
+-}
+roundTo : Int -> Float -> Float
+roundTo decimals value =
+    let
+        factor =
+            toFloat (10 ^ decimals)
+    in
+    toFloat (round (value * factor)) / factor

@@ -1,13 +1,13 @@
 module View.Dialog.MapViewer exposing (viewMapViewerDialog)
 
-{-| Map viewer dialog for displaying SVG maps of Stars! games.
+{-| Map viewer dialog for displaying SVG and animated GIF maps of Stars! games.
 -}
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onClick, onInput)
 import Json.Encode as E
-import Model exposing (MapOptions, MapViewerForm)
+import Model exposing (MapOptions, MapOutputFormat(..), MapViewerForm)
 import Msg exposing (Msg(..))
 
 
@@ -52,10 +52,64 @@ viewBody form =
 viewOptionsPanel : MapOptions -> Html Msg
 viewOptionsPanel options =
     div [ class "map-viewer-dialog__options" ]
-        [ h3 [ class "map-viewer-dialog__section-title" ] [ text "Resolution" ]
+        [ h3 [ class "map-viewer-dialog__section-title" ] [ text "Output Format" ]
+        , viewFormatOptions options
+        , h3 [ class "map-viewer-dialog__section-title" ] [ text "Resolution" ]
         , viewResolutionOptions options
         , h3 [ class "map-viewer-dialog__section-title" ] [ text "Display Options" ]
         , viewDisplayOptions options
+        ]
+
+
+{-| Output format selection (SVG or GIF).
+-}
+viewFormatOptions : MapOptions -> Html Msg
+viewFormatOptions options =
+    div [ class "map-viewer-dialog__format-options" ]
+        [ label [ class "map-viewer-dialog__radio" ]
+            [ input
+                [ type_ "radio"
+                , name "mapFormat"
+                , checked (options.outputFormat == SVGFormat)
+                , onClick (SelectMapFormat "svg")
+                ]
+                []
+            , text "Static Map (SVG) - current year"
+            ]
+        , label [ class "map-viewer-dialog__radio" ]
+            [ input
+                [ type_ "radio"
+                , name "mapFormat"
+                , checked (options.outputFormat == GIFFormat)
+                , onClick (SelectMapFormat "gif")
+                ]
+                []
+            , text "Animated Map (GIF) - full history"
+            ]
+        , case options.outputFormat of
+            GIFFormat ->
+                viewGifDelayInput options.gifDelay
+
+            SVGFormat ->
+                text ""
+        ]
+
+
+{-| GIF delay input (milliseconds between frames).
+-}
+viewGifDelayInput : Int -> Html Msg
+viewGifDelayInput delay =
+    div [ class "map-viewer-dialog__gif-delay" ]
+        [ label [] [ text "Frame delay (ms):" ]
+        , input
+            [ type_ "number"
+            , value (String.fromInt delay)
+            , onInput UpdateGifDelay
+            , Html.Attributes.min "100"
+            , Html.Attributes.max "2000"
+            , Html.Attributes.step "100"
+            ]
+            []
         ]
 
 
@@ -156,26 +210,63 @@ viewMapDisplay form =
 
             Nothing ->
                 text ""
-        , case form.generatedSvg of
-            Just svg ->
-                div [ class "map-viewer-dialog__svg-container" ]
-                    [ Html.node "iframe"
-                        [ id "map-viewer-frame"
-                        , attribute "srcdoc" (wrapSvgInHtml svg)
-                        , class "map-viewer-dialog__svg-frame"
-                        ]
-                        []
-                    , button
-                        [ class "map-viewer-dialog__fullscreen-btn"
-                        , onClick ToggleMapFullscreen
-                        , title "View fullscreen"
-                        ]
-                        [ text "⛶" ]
-                    ]
+        , viewMapContent form
+        ]
 
-            Nothing ->
-                div [ class "map-viewer-dialog__placeholder" ]
-                    [ text "Click \"Generate Map\" to create the map" ]
+
+{-| Display the generated map content (SVG or GIF).
+-}
+viewMapContent : MapViewerForm -> Html Msg
+viewMapContent form =
+    case ( form.generatedSvg, form.generatedGif ) of
+        ( Just svg, _ ) ->
+            div [ class "map-viewer-dialog__svg-container" ]
+                [ Html.node "iframe"
+                    [ id "map-viewer-frame"
+                    , attribute "srcdoc" (wrapSvgInHtml svg)
+                    , class "map-viewer-dialog__svg-frame"
+                    ]
+                    []
+                , button
+                    [ class "map-viewer-dialog__fullscreen-btn"
+                    , onClick ToggleMapFullscreen
+                    , title "View fullscreen"
+                    ]
+                    [ text "⛶" ]
+                ]
+
+        ( Nothing, Just gifB64 ) ->
+            div [ class "map-viewer-dialog__gif-container" ]
+                [ img
+                    [ src ("data:image/gif;base64," ++ gifB64)
+                    , class "map-viewer-dialog__gif-image"
+                    , alt "Animated game map"
+                    ]
+                    []
+                ]
+
+        ( Nothing, Nothing ) ->
+            viewPlaceholder form
+
+
+{-| Placeholder when no map is generated yet.
+-}
+viewPlaceholder : MapViewerForm -> Html Msg
+viewPlaceholder form =
+    div [ class "map-viewer-dialog__placeholder" ]
+        [ if form.generating then
+            text "Generating SVG map..."
+
+          else if form.generatingGif then
+            text "Generating animated GIF (this may take a moment)..."
+
+          else
+            case form.options.outputFormat of
+                SVGFormat ->
+                    text "Click \"Generate Map\" to create the map"
+
+                GIFFormat ->
+                    text "Click \"Generate Animated Map\" to create the animation"
         ]
 
 
@@ -218,10 +309,28 @@ viewFooter : MapViewerForm -> Html Msg
 viewFooter form =
     div [ class "dialog__footer" ]
         [ div [ class "dialog__actions" ]
+            (viewGenerateButton form
+                ++ viewSaveButton form
+                ++ [ button
+                        [ class "btn"
+                        , onClick CloseDialog
+                        ]
+                        [ text "Close" ]
+                   ]
+            )
+        ]
+
+
+{-| Generate button based on output format.
+-}
+viewGenerateButton : MapViewerForm -> List (Html Msg)
+viewGenerateButton form =
+    case form.options.outputFormat of
+        SVGFormat ->
             [ button
                 [ class "btn btn--primary"
                 , onClick GenerateMap
-                , disabled form.generating
+                , disabled (form.generating || form.generatingGif)
                 ]
                 [ text
                     (if form.generating then
@@ -231,28 +340,61 @@ viewFooter form =
                         "Generate Map"
                     )
                 ]
-            , case form.generatedSvg of
-                Just _ ->
-                    button
-                        [ class "btn btn--secondary"
-                        , onClick SaveMap
-                        , disabled form.saving
-                        ]
-                        [ text
-                            (if form.saving then
-                                "Saving..."
-
-                             else
-                                "Save SVG"
-                            )
-                        ]
-
-                Nothing ->
-                    text ""
-            , button
-                [ class "btn"
-                , onClick CloseDialog
-                ]
-                [ text "Close" ]
             ]
-        ]
+
+        GIFFormat ->
+            [ button
+                [ class "btn btn--primary"
+                , onClick GenerateAnimatedMap
+                , disabled (form.generating || form.generatingGif)
+                ]
+                [ text
+                    (if form.generatingGif then
+                        "Generating..."
+
+                     else
+                        "Generate Animated Map"
+                    )
+                ]
+            ]
+
+
+{-| Save button based on generated content.
+-}
+viewSaveButton : MapViewerForm -> List (Html Msg)
+viewSaveButton form =
+    case ( form.generatedSvg, form.generatedGif ) of
+        ( Just _, _ ) ->
+            [ button
+                [ class "btn btn--secondary"
+                , onClick SaveMap
+                , disabled form.saving
+                ]
+                [ text
+                    (if form.saving then
+                        "Saving..."
+
+                     else
+                        "Save SVG"
+                    )
+                ]
+            ]
+
+        ( Nothing, Just _ ) ->
+            [ button
+                [ class "btn btn--secondary"
+                , onClick SaveGif
+                , disabled form.saving
+                ]
+                [ text
+                    (if form.saving then
+                        "Saving..."
+
+                     else
+                        "Save GIF"
+                    )
+                ]
+            ]
+
+        ( Nothing, Nothing ) ->
+            []

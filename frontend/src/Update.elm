@@ -3679,6 +3679,94 @@ update msg model =
         ToggleMapFullscreen ->
             ( model, Ports.requestFullscreen "map-viewer-frame" )
 
+        SelectMapFormat formatStr ->
+            let
+                format =
+                    if formatStr == "gif" then
+                        GIFFormat
+
+                    else
+                        SVGFormat
+            in
+            ( updateMapOptions model (\opts -> { opts | outputFormat = format })
+                |> clearMapContent
+            , Cmd.none
+            )
+
+        UpdateGifDelay delayStr ->
+            case String.toInt delayStr of
+                Just delay ->
+                    ( updateMapOptions model (\opts -> { opts | gifDelay = clamp 100 2000 delay })
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        GenerateAnimatedMap ->
+            case model.dialog of
+                Just (MapViewerDialog form) ->
+                    case model.selectedServerUrl of
+                        Just serverUrl ->
+                            ( { model | dialog = Just (MapViewerDialog { form | generatingGif = True, error = Nothing, generatedGif = Nothing }) }
+                            , Ports.generateAnimatedMap (Encode.generateAnimatedMap serverUrl form.sessionId form.options)
+                            )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        AnimatedMapGenerated result ->
+            case model.dialog of
+                Just (MapViewerDialog form) ->
+                    case result of
+                        Ok gifB64 ->
+                            ( { model | dialog = Just (MapViewerDialog { form | generatedGif = Just gifB64, generatingGif = False, generatedSvg = Nothing }) }
+                            , Cmd.none
+                            )
+
+                        Err err ->
+                            ( { model | dialog = Just (MapViewerDialog { form | error = Just err, generatingGif = False }) }
+                            , Cmd.none
+                            )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        SaveGif ->
+            case model.dialog of
+                Just (MapViewerDialog form) ->
+                    case ( model.selectedServerUrl, form.generatedGif ) of
+                        ( Just serverUrl, Just gifB64 ) ->
+                            ( { model | dialog = Just (MapViewerDialog { form | saving = True }) }
+                            , Ports.saveGif (Encode.saveGif serverUrl form.sessionId form.raceName form.playerNumber gifB64)
+                            )
+
+                        _ ->
+                            ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        GifSaved result ->
+            case model.dialog of
+                Just (MapViewerDialog form) ->
+                    case result of
+                        Ok () ->
+                            ( { model | dialog = Just (MapViewerDialog { form | saving = False }) }
+                            , Cmd.none
+                            )
+
+                        Err err ->
+                            ( { model | dialog = Just (MapViewerDialog { form | error = Just err, saving = False }) }
+                            , Cmd.none
+                            )
+
+                _ ->
+                    ( model, Cmd.none )
+
         -- =====================================================================
         -- Admin/Manager Messages
         -- =====================================================================
@@ -4521,6 +4609,14 @@ updateMapOptions : Model -> (MapOptions -> MapOptions) -> Model
 updateMapOptions model optionsUpdater =
     updateMapViewerForm model
         (\form -> { form | options = optionsUpdater form.options })
+
+
+{-| Clear generated map content when format changes.
+-}
+clearMapContent : Model -> Model
+clearMapContent model =
+    updateMapViewerForm model
+        (\form -> { form | generatedSvg = Nothing, generatedGif = Nothing, error = Nothing })
 
 
 {-| Move an item in a list from one index to another.

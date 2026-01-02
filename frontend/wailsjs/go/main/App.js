@@ -78,6 +78,10 @@ export function DownloadSessionBackup(arg1, arg2) {
   return window['go']['main']['App']['DownloadSessionBackup'](arg1, arg2);
 }
 
+export function GenerateAnimatedMap(arg1) {
+  return window['go']['main']['App']['GenerateAnimatedMap'](arg1);
+}
+
 export function GenerateMap(arg1) {
   return window['go']['main']['App']['GenerateMap'](arg1);
 }
@@ -208,6 +212,10 @@ export function ReorderServers(arg1) {
 
 export function ResetUserApikey(arg1, arg2) {
   return window['go']['main']['App']['ResetUserApikey'](arg1, arg2);
+}
+
+export function SaveGif(arg1) {
+  return window['go']['main']['App']['SaveGif'](arg1);
 }
 
 export function SaveMap(arg1) {

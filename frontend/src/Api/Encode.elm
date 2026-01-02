@@ -29,6 +29,8 @@ module Api.Encode exposing
     , validateRaceConfig
     , generateMap
     , saveMap
+    , generateAnimatedMap
+    , saveGif
     )
 
 {-| JSON encoders for API requests.
@@ -511,5 +513,30 @@ saveMap serverUrl sessionId year raceName playerNumber svgContent =
         , ( "raceName", E.string raceName )
         , ( "playerNumber", E.int playerNumber )
         , ( "svgContent", E.string svgContent )
+        ]
+
+
+{-| Encode generate animated map request.
+-}
+generateAnimatedMap : String -> String -> MapOptions -> E.Value
+generateAnimatedMap serverUrl sessionId options =
+    E.object
+        [ ( "serverUrl", E.string serverUrl )
+        , ( "sessionId", E.string sessionId )
+        , ( "options", encodeMapOptions options )
+        , ( "delay", E.int options.gifDelay )
+        ]
+
+
+{-| Encode save GIF request.
+-}
+saveGif : String -> String -> String -> Int -> String -> E.Value
+saveGif serverUrl sessionId raceName playerNumber gifContent =
+    E.object
+        [ ( "serverUrl", E.string serverUrl )
+        , ( "sessionId", E.string sessionId )
+        , ( "raceName", E.string raceName )
+        , ( "playerNumber", E.int playerNumber )
+        , ( "gifContent", E.string gifContent )
         ]
 

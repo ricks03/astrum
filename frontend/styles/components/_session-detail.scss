@@ -721,6 +721,19 @@
     border-bottom: 1px solid $bg-tertiary;
   }
 
+  &__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+
+    .turn-files-dialog__section-title {
+      margin: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
   &__loading {
     color: $text-secondary;
     font-size: $font-size-sm;

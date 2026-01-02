@@ -243,3 +243,20 @@ type MapSaveRequest struct {
 	PlayerNumber int    `json:"playerNumber"`
 	SVGContent   string `json:"svgContent"`
 }
+
+// AnimatedMapRequest contains the data needed to generate an animated GIF map
+type AnimatedMapRequest struct {
+	ServerURL string     `json:"serverUrl"`
+	SessionID string     `json:"sessionId"`
+	Options   MapOptions `json:"options"`
+	Delay     int        `json:"delay"` // Frame delay in milliseconds
+}
+
+// GifSaveRequest contains the data needed to save a GIF
+type GifSaveRequest struct {
+	ServerURL    string `json:"serverUrl"`
+	SessionID    string `json:"sessionId"`
+	RaceName     string `json:"raceName"`
+	PlayerNumber int    `json:"playerNumber"`
+	GifContent   string `json:"gifContent"` // Base64 encoded GIF
+}

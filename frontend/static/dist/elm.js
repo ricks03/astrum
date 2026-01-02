@@ -1861,9 +1861,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.dO,
-		impl.fl,
-		impl.e9,
+		impl.dS,
+		impl.fp,
+		impl.fd,
 		function() { return function() {} }
 	);
 });
@@ -2727,7 +2727,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		bM: func(record.bM),
+		bO: func(record.bO),
 		aW: record.aW,
 		aQ: record.aQ
 	}
@@ -2997,7 +2997,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.bM;
+		var message = !tag ? value : tag < 3 ? value.a : value.bO;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aW;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -3951,11 +3951,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.dO,
-		impl.fl,
-		impl.e9,
+		impl.dS,
+		impl.fp,
+		impl.fd,
 		function(sendToApp, initialModel) {
-			var view = impl.fJ;
+			var view = impl.fN;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3987,12 +3987,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.dO,
-		impl.fl,
-		impl.e9,
+		impl.dS,
+		impl.fp,
+		impl.fd,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.aU && impl.aU(sendToApp)
-			var view = impl.fJ;
+			var view = impl.fN;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -4000,12 +4000,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.c5);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.c8);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.fg) && (_VirtualDom_doc.title = title = doc.fg);
+				(title !== doc.fk) && (_VirtualDom_doc.title = title = doc.fk);
 			});
 		}
 	);
@@ -4061,8 +4061,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.en;
-	var onUrlRequest = impl.eo;
+	var onUrlChange = impl.er;
+	var onUrlRequest = impl.es;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4082,9 +4082,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.cb === next.cb
-							&& curr.bA === next.bA
-							&& curr.b8.a === next.b8.a
+							&& curr.ce === next.ce
+							&& curr.bC === next.bC
+							&& curr.cb.a === next.cb.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4092,13 +4092,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		dO: function(flags)
+		dS: function(flags)
 		{
-			return A3(impl.dO, flags, _Browser_getUrl(), key);
+			return A3(impl.dS, flags, _Browser_getUrl(), key);
 		},
-		fJ: impl.fJ,
-		fl: impl.fl,
-		e9: impl.e9
+		fN: impl.fN,
+		fp: impl.fp,
+		fd: impl.fd
 	});
 }
 
@@ -4164,17 +4164,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { dJ: 'hidden', c8: 'visibilitychange' }
+		? { dN: 'hidden', db: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { dJ: 'mozHidden', c8: 'mozvisibilitychange' }
+		? { dN: 'mozHidden', db: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { dJ: 'msHidden', c8: 'msvisibilitychange' }
+		? { dN: 'msHidden', db: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { dJ: 'webkitHidden', c8: 'webkitvisibilitychange' }
-		: { dJ: 'hidden', c8: 'visibilitychange' };
+		? { dN: 'webkitHidden', db: 'webkitvisibilitychange' }
+		: { dN: 'hidden', db: 'visibilitychange' };
 }
 
 
@@ -4255,12 +4255,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		co: _Browser_getScene(),
-		cV: {
-			fN: _Browser_window.pageXOffset,
-			fO: _Browser_window.pageYOffset,
-			fK: _Browser_doc.documentElement.clientWidth,
-			dH: _Browser_doc.documentElement.clientHeight
+		cr: _Browser_getScene(),
+		cY: {
+			fR: _Browser_window.pageXOffset,
+			fS: _Browser_window.pageYOffset,
+			fO: _Browser_doc.documentElement.clientWidth,
+			dL: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4270,8 +4270,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		fK: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		dH: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		fO: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		dL: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4294,15 +4294,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			co: {
-				fK: node.scrollWidth,
-				dH: node.scrollHeight
+			cr: {
+				fO: node.scrollWidth,
+				dL: node.scrollHeight
 			},
-			cV: {
-				fN: node.scrollLeft,
-				fO: node.scrollTop,
-				fK: node.clientWidth,
-				dH: node.clientHeight
+			cY: {
+				fR: node.scrollLeft,
+				fS: node.scrollTop,
+				fO: node.clientWidth,
+				dL: node.clientHeight
 			}
 		};
 	});
@@ -4332,18 +4332,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			co: _Browser_getScene(),
-			cV: {
-				fN: x,
-				fO: y,
-				fK: _Browser_doc.documentElement.clientWidth,
-				dH: _Browser_doc.documentElement.clientHeight
+			cr: _Browser_getScene(),
+			cY: {
+				fR: x,
+				fS: y,
+				fO: _Browser_doc.documentElement.clientWidth,
+				dL: _Browser_doc.documentElement.clientHeight
 			},
-			$7: {
-				fN: x + rect.left,
-				fO: y + rect.top,
-				fK: rect.width,
-				dH: rect.height
+			dr: {
+				fR: x + rect.left,
+				fS: y + rect.top,
+				fO: rect.width,
+				dL: rect.height
 			}
 		};
 	});
@@ -4965,7 +4965,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {bp: fragment, bA: host, b0: path, b8: port_, cb: protocol, cd: query};
+		return {bp: fragment, bC: host, b3: path, cb: port_, ce: protocol, cg: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5257,7 +5257,7 @@ var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Model$init = function (_v0) {
 	return _Utils_Tuple2(
-		{a2: $elm$core$Maybe$Nothing, a8: $elm$core$Maybe$Nothing, bg: $elm$core$Maybe$Nothing, bh: $elm$core$Maybe$Nothing, c: $elm$core$Maybe$Nothing, I: true, bU: false, bV: $elm$core$Maybe$Nothing, b4: $elm$core$Maybe$Nothing, aS: $elm$core$Maybe$Nothing, cr: $elm$core$Maybe$Nothing, aT: $elm$core$Dict$empty, cv: $elm$core$Maybe$Nothing, cw: _List_Nil, cx: $elm$core$Maybe$Nothing, cy: 0, cF: false, cH: $elm$core$Maybe$Nothing, cY: false, cZ: $elm$core$Maybe$Nothing},
+		{a2: $elm$core$Maybe$Nothing, a8: $elm$core$Maybe$Nothing, bg: $elm$core$Maybe$Nothing, bh: $elm$core$Maybe$Nothing, c: $elm$core$Maybe$Nothing, I: true, bW: false, bX: $elm$core$Maybe$Nothing, b7: $elm$core$Maybe$Nothing, aS: $elm$core$Maybe$Nothing, cu: $elm$core$Maybe$Nothing, aT: $elm$core$Dict$empty, cy: $elm$core$Maybe$Nothing, cz: _List_Nil, cA: $elm$core$Maybe$Nothing, cB: 0, cI: false, cK: $elm$core$Maybe$Nothing, c$: false, c0: $elm$core$Maybe$Nothing},
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Main$init = function (flags) {
@@ -5273,17 +5273,23 @@ var $author$project$Main$init = function (flags) {
 					$author$project$Ports$getServers(0)
 				])));
 };
+var $author$project$Msg$AnimatedMapGenerated = function (a) {
+	return {$: 283, a: a};
+};
 var $author$project$Msg$AutoDownloadStarsSet = function (a) {
 	return {$: 207, a: a};
 };
 var $author$project$Msg$ChangeApikeyResult = function (a) {
 	return {$: 246, a: a};
 };
-var $author$project$Msg$EscapePressed = {$: 281};
+var $author$project$Msg$EscapePressed = {$: 287};
 var $author$project$Msg$GameStarted = F2(
 	function (a, b) {
 		return {$: 138, a: a, b: b};
 	});
+var $author$project$Msg$GifSaved = function (a) {
+	return {$: 285, a: a};
+};
 var $author$project$Msg$GotApiKey = F2(
 	function (a, b) {
 		return {$: 257, a: a, b: b};
@@ -5472,6 +5478,7 @@ var $author$project$Msg$ZoomLevelSet = function (a) {
 	return {$: 263, a: a};
 };
 var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $author$project$Ports$animatedMapGenerated = _Platform_incomingPort('animatedMapGenerated', $elm$json$Json$Decode$value);
 var $author$project$Ports$apiKeyReceived = _Platform_incomingPort('apiKeyReceived', $elm$json$Json$Decode$value);
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $elm$json$Json$Decode$field = _Json_decodeField;
@@ -5483,7 +5490,7 @@ var $author$project$Api$Decode$appSettings = A7(
 	$elm$json$Json$Decode$map6,
 	F6(
 		function (sd, ads, zl, uw, wpd, vwi) {
-			return {c1: ads, eU: sd, fn: uw, fr: vwi, fL: wpd, fQ: zl};
+			return {c4: ads, eY: sd, fr: uw, fv: vwi, fP: wpd, fU: zl};
 		}),
 	A2($elm$json$Json$Decode$field, 'serversDir', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'autoDownloadStars', $elm$json$Json$Decode$bool),
@@ -5570,7 +5577,7 @@ var $author$project$Subscriptions$decodeConnectResult = function (value) {
 		$elm$json$Json$Decode$map4,
 		F4(
 			function (u, i, m, s) {
-				return {dW: m, eS: s, fo: i, aZ: u};
+				return {d_: m, eW: s, fs: i, aZ: u};
 			}),
 		A2($elm$json$Json$Decode$field, 'username', $elm$json$Json$Decode$string),
 		A2($elm$json$Json$Decode$field, 'userId', $elm$json$Json$Decode$string),
@@ -5658,7 +5665,7 @@ var $author$project$Subscriptions$decodeCreateUserResult = function (value) {
 		$elm$json$Json$Decode$map3,
 		F3(
 			function (id, nickname, email) {
-				return {dp: email, dM: id, ee: nickname};
+				return {ds: email, dQ: id, ei: nickname};
 			}),
 		A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
 		A2($elm$json$Json$Decode$field, 'nickname', $elm$json$Json$Decode$string),
@@ -5778,7 +5785,7 @@ var $author$project$Msg$GotInvitations = F2(
 	});
 var $author$project$Api$Invitation$Invitation = F7(
 	function (id, sessionId, sessionName, userProfileId, inviterId, inviterNickname, inviteeNickname) {
-		return {dM: id, dP: inviteeNickname, dQ: inviterId, dR: inviterNickname, eW: sessionId, eX: sessionName, fp: userProfileId};
+		return {dQ: id, dT: inviteeNickname, dU: inviterId, dV: inviterNickname, e_: sessionId, e$: sessionName, ft: userProfileId};
 	});
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
@@ -5863,7 +5870,7 @@ var $author$project$Msg$GotLatestTurn = F2(
 	});
 var $author$project$Api$TurnFiles$TurnFiles = F4(
 	function (sessionId, year, universe, turn) {
-		return {eW: sessionId, fh: turn, fj: universe, fP: year};
+		return {e_: sessionId, fl: turn, fn: universe, fT: year};
 	});
 var $author$project$Api$Decode$turnFiles = A5(
 	$elm$json$Json$Decode$map4,
@@ -5945,11 +5952,11 @@ var $author$project$Msg$GotOrdersStatus = F2(
 	});
 var $author$project$Api$OrdersStatus$OrdersStatus = F3(
 	function (sessionId, pendingYear, players) {
-		return {et: pendingYear, ev: players, eW: sessionId};
+		return {ex: pendingYear, ez: players, e_: sessionId};
 	});
 var $author$project$Api$OrdersStatus$PlayerOrderStatus = F4(
 	function (playerOrder, nickname, isBot, submitted) {
-		return {dU: isBot, ee: nickname, eu: playerOrder, e8: submitted};
+		return {dY: isBot, ei: nickname, ey: playerOrder, fc: submitted};
 	});
 var $author$project$Api$Decode$playerOrderStatus = A5(
 	$elm$json$Json$Decode$map4,
@@ -6016,7 +6023,7 @@ var $author$project$Subscriptions$decodePendingRegistrationsReceived = function 
 		$elm$json$Json$Decode$map4,
 		F4(
 			function (id, nickname, email, message) {
-				return {dp: email, dM: id, bM: message, ee: nickname};
+				return {ds: email, dQ: id, bO: message, ei: nickname};
 			}),
 		A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
 		A2($elm$json$Json$Decode$field, 'nickname', $elm$json$Json$Decode$string),
@@ -6225,7 +6232,7 @@ var $author$project$Api$Rules$Rules = function (universeSize) {
 																									return function (vcHaveHighestScoreAfterYearsValue) {
 																										return function (vcWinnerMustMeet) {
 																											return function (vcMinYearsBeforeWinner) {
-																												return {c_: acceleratedBbsPlay, db: computerPlayersFormAlliances, de: density, dA: galaxyClumping, d2: maximumMinerals, ef: noRandomEvents, ez: publicPlayerScores, eE: randomSeed, e5: slowerTechAdvances, e7: startingDistance, fk: universeSize, fs: vcAttainTechInFields, ft: vcAttainTechInFieldsFieldsValue, fu: vcAttainTechInFieldsTechValue, fv: vcExceedNextPlayerScoreBy, fw: vcExceedNextPlayerScoreByValue, fx: vcExceedScoreOf, fy: vcExceedScoreOfValue, fz: vcHasProductionCapacityOf, fA: vcHasProductionCapacityOfValue, fB: vcHaveHighestScoreAfterYears, fC: vcHaveHighestScoreAfterYearsValue, fD: vcMinYearsBeforeWinner, fE: vcOwnsCapitalShips, fF: vcOwnsCapitalShipsValue, fG: vcOwnsPercentOfPlanets, fH: vcOwnsPercentOfPlanetsValue, fI: vcWinnerMustMeet};
+																												return {c1: acceleratedBbsPlay, de: computerPlayersFormAlliances, dh: density, dD: galaxyClumping, d6: maximumMinerals, ej: noRandomEvents, eD: publicPlayerScores, eI: randomSeed, e9: slowerTechAdvances, fb: startingDistance, fo: universeSize, fw: vcAttainTechInFields, fx: vcAttainTechInFieldsFieldsValue, fy: vcAttainTechInFieldsTechValue, fz: vcExceedNextPlayerScoreBy, fA: vcExceedNextPlayerScoreByValue, fB: vcExceedScoreOf, fC: vcExceedScoreOfValue, fD: vcHasProductionCapacityOf, fE: vcHasProductionCapacityOfValue, fF: vcHaveHighestScoreAfterYears, fG: vcHaveHighestScoreAfterYearsValue, fH: vcMinYearsBeforeWinner, fI: vcOwnsCapitalShips, fJ: vcOwnsCapitalShipsValue, fK: vcOwnsPercentOfPlanets, fL: vcOwnsPercentOfPlanetsValue, fM: vcWinnerMustMeet};
 																											};
 																										};
 																									};
@@ -6528,7 +6535,7 @@ var $author$project$Msg$GotSessionPlayerRace = F3(
 	});
 var $author$project$Api$Race$Race = F4(
 	function (id, userId, nameSingular, namePlural) {
-		return {dM: id, eb: namePlural, ec: nameSingular, fo: userId};
+		return {dQ: id, ef: namePlural, eg: nameSingular, fs: userId};
 	});
 var $author$project$Api$Decode$race = A5(
 	$elm$json$Json$Decode$map4,
@@ -6581,11 +6588,11 @@ var $author$project$Msg$GotSession = F2(
 	});
 var $author$project$Api$Session$Session = F9(
 	function (id, name, isPublic, members, managers, started, rulesIsSet, players, pendingInvitation) {
-		return {dM: id, dX: isPublic, d1: managers, d3: members, ea: name, es: pendingInvitation, ev: players, eR: rulesIsSet, e6: started};
+		return {dQ: id, d$: isPublic, d5: managers, d7: members, ee: name, ew: pendingInvitation, ez: players, eV: rulesIsSet, fa: started};
 	});
 var $author$project$Api$Session$SessionPlayer = F3(
 	function (userProfileId, ready, playerOrder) {
-		return {eu: playerOrder, eF: ready, fp: userProfileId};
+		return {ey: playerOrder, eJ: ready, ft: userProfileId};
 	});
 var $author$project$Api$Decode$sessionPlayer = A4(
 	$elm$json$Json$Decode$map3,
@@ -6813,7 +6820,7 @@ var $elm$time$Time$Every = F2(
 	});
 var $elm$time$Time$State = F2(
 	function (taggers, processes) {
-		return {ca: processes, cM: taggers};
+		return {cd: processes, cP: taggers};
 	});
 var $elm$time$Time$init = $elm$core$Task$succeed(
 	A2($elm$time$Time$State, $elm$core$Dict$empty, $elm$core$Dict$empty));
@@ -7103,7 +7110,7 @@ var $elm$time$Time$spawnHelp = F3(
 	});
 var $elm$time$Time$onEffects = F3(
 	function (router, subs, _v0) {
-		var processes = _v0.ca;
+		var processes = _v0.cd;
 		var rightStep = F3(
 			function (_v6, id, _v7) {
 				var spawns = _v7.a;
@@ -7172,7 +7179,7 @@ var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
 var $elm$time$Time$onSelfMsg = F3(
 	function (router, interval, state) {
-		var _v0 = A2($elm$core$Dict$get, interval, state.cM);
+		var _v0 = A2($elm$core$Dict$get, interval, state.cP);
 		if (_v0.$ === 1) {
 			return $elm$core$Task$succeed(state);
 		} else {
@@ -7220,6 +7227,7 @@ var $elm$time$Time$every = F2(
 	});
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $author$project$Ports$gameStarted = _Platform_incomingPort('gameStarted', $elm$json$Json$Decode$value);
+var $author$project$Ports$gifSaved = _Platform_incomingPort('gifSaved', $elm$json$Json$Decode$value);
 var $author$project$Ports$hasStarsExeResult = _Platform_incomingPort('hasStarsExeResult', $elm$json$Json$Decode$value);
 var $author$project$Ports$historicBackupDownloaded = _Platform_incomingPort('historicBackupDownloaded', $elm$json$Json$Decode$value);
 var $author$project$Ports$invitationAccepted = _Platform_incomingPort('invitationAccepted', $elm$json$Json$Decode$value);
@@ -7243,7 +7251,7 @@ var $author$project$Api$Decode$ntvdmCheckResult = A5(
 	$elm$json$Json$Decode$map4,
 	F4(
 		function (a, i, m, h) {
-			return {c2: a, dI: h, dS: i, bM: m};
+			return {c5: a, dM: h, dW: i, bO: m};
 		}),
 	A2($elm$json$Json$Decode$field, 'available', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'is64Bit', $elm$json$Json$Decode$bool),
@@ -7258,7 +7266,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {b5: pids, cK: subs};
+		return {b8: pids, cN: subs};
 	});
 var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
 	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
@@ -7292,7 +7300,7 @@ var $elm$core$Dict$fromList = function (assocs) {
 };
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {bl: event, bG: key};
+		return {bl: event, bI: key};
 	});
 var $elm$browser$Browser$Events$spawn = F3(
 	function (router, key, _v0) {
@@ -7366,7 +7374,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.b5,
+			state.b8,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -7412,7 +7420,7 @@ var $elm$core$List$filterMap = F2(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.bG;
+		var key = _v0.bI;
 		var event = _v0.bl;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
@@ -7422,7 +7430,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.cK);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.cN);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -7493,7 +7501,7 @@ var $author$project$Model$RaceConfig = function (singularName) {
 																													return function (researchBiotech) {
 																														return function (techsStartHigh) {
 																															return function (leftoverPointsOn) {
-																																return {da: colonistsPerResource, du: factoriesUseLessGerm, dv: factoryCost, dw: factoryCount, dx: factoryOutput, dB: gravityCenter, dC: gravityImmune, dD: gravityWidth, dE: growthRate, dK: icon, d$: leftoverPointsOn, d0: lrt, d5: mineCost, d6: mineCount, d7: mineOutput, er: password, ex: pluralName, ey: prt, eB: radiationCenter, eC: radiationImmune, eD: radiationWidth, eI: researchBiotech, eJ: researchConstruction, eK: researchElectronics, eL: researchEnergy, eM: researchPropulsion, eN: researchWeapons, e4: singularName, fc: techsStartHigh, fd: temperatureCenter, fe: temperatureImmune, ff: temperatureWidth};
+																																return {dd: colonistsPerResource, dx: factoriesUseLessGerm, dy: factoryCost, dz: factoryCount, dA: factoryOutput, dF: gravityCenter, dG: gravityImmune, dH: gravityWidth, dI: growthRate, dO: icon, d3: leftoverPointsOn, d4: lrt, d9: mineCost, ea: mineCount, eb: mineOutput, ev: password, eB: pluralName, eC: prt, eF: radiationCenter, eG: radiationImmune, eH: radiationWidth, eM: researchBiotech, eN: researchConstruction, eO: researchElectronics, eP: researchEnergy, eQ: researchPropulsion, eR: researchWeapons, e8: singularName, fg: techsStartHigh, fh: temperatureCenter, fi: temperatureImmune, fj: temperatureWidth};
 																															};
 																														};
 																													};
@@ -7670,7 +7678,7 @@ var $author$project$Ports$raceTemplateReceived = _Platform_incomingPort('raceTem
 var $author$project$Ports$raceUploaded = _Platform_incomingPort('raceUploaded', $elm$json$Json$Decode$value);
 var $author$project$Model$RaceValidation = F7(
 	function (points, isValid, errors, warnings, habitability, prtInfos, lrtInfos) {
-		return {bk: errors, by: habitability, bF: isValid, bL: lrtInfos, b7: points, cc: prtInfos, cW: warnings};
+		return {bk: errors, bA: habitability, bH: isValid, bN: lrtInfos, ca: points, cf: prtInfos, cZ: warnings};
 	});
 var $author$project$Model$HabitabilityDisplay = function (gravityMin) {
 	return function (gravityMax) {
@@ -7684,7 +7692,7 @@ var $author$project$Model$HabitabilityDisplay = function (gravityMin) {
 									return function (radiationMax) {
 										return function (radiationRange) {
 											return function (radiationImmune) {
-												return {dC: gravityImmune, bv: gravityMax, bw: gravityMin, bx: gravityRange, eC: radiationImmune, cf: radiationMax, cg: radiationMin, ch: radiationRange, fe: temperatureImmune, cN: temperatureMax, cO: temperatureMin, cP: temperatureRange};
+												return {dG: gravityImmune, bx: gravityMax, by: gravityMin, bz: gravityRange, eG: radiationImmune, ci: radiationMax, cj: radiationMin, ck: radiationRange, fi: temperatureImmune, cQ: temperatureMax, cR: temperatureMin, cS: temperatureRange};
 											};
 										};
 									};
@@ -7748,7 +7756,7 @@ var $author$project$Api$Decode$habitabilityDisplay = A3(
 												$elm$json$Json$Decode$succeed($author$project$Model$HabitabilityDisplay)))))))))))));
 var $author$project$Model$LRTInfo = F5(
 	function (index, code, name, desc, pointCost) {
-		return {a6: code, bf: desc, bB: index, ea: name, b6: pointCost};
+		return {a6: code, bf: desc, bD: index, ee: name, b9: pointCost};
 	});
 var $author$project$Api$Decode$lrtInfo = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
@@ -7773,7 +7781,7 @@ var $author$project$Api$Decode$lrtInfo = A3(
 					$elm$json$Json$Decode$succeed($author$project$Model$LRTInfo))))));
 var $author$project$Model$PRTInfo = F5(
 	function (index, code, name, desc, pointCost) {
-		return {a6: code, bf: desc, bB: index, ea: name, b6: pointCost};
+		return {a6: code, bf: desc, bD: index, ee: name, b9: pointCost};
 	});
 var $author$project$Api$Decode$prtInfo = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
@@ -7798,7 +7806,7 @@ var $author$project$Api$Decode$prtInfo = A3(
 					$elm$json$Json$Decode$succeed($author$project$Model$PRTInfo))))));
 var $author$project$Model$RaceValidationError = F2(
 	function (field, message) {
-		return {dz: field, bM: message};
+		return {dC: field, bO: message};
 	});
 var $author$project$Api$Decode$raceValidationError = A3(
 	$elm$json$Json$Decode$map2,
@@ -7848,7 +7856,7 @@ var $author$project$Ports$sentInvitationCanceled = _Platform_incomingPort('sentI
 var $author$project$Ports$sentInvitationsReceived = _Platform_incomingPort('sentInvitationsReceived', $elm$json$Json$Decode$value);
 var $author$project$Api$Server$Server = F7(
 	function (url, name, iconUrl, hasCredentials, defaultUsername, isConnected, order) {
-		return {dd: defaultUsername, dF: hasCredentials, dL: iconUrl, dV: isConnected, ea: name, eq: order, fm: url};
+		return {dg: defaultUsername, dJ: hasCredentials, dP: iconUrl, dZ: isConnected, ee: name, eu: order, fq: url};
 	});
 var $author$project$Api$Decode$server = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -7909,7 +7917,7 @@ var $author$project$Ports$uploadAndSetSessionRaceResult = _Platform_incomingPort
 var $author$project$Ports$useWineSet = _Platform_incomingPort('useWineSet', $elm$json$Json$Decode$value);
 var $author$project$Api$UserProfile$UserProfile = F6(
 	function (id, nickname, email, isActive, isManager, message) {
-		return {dp: email, dM: id, dT: isActive, dW: isManager, bM: message, ee: nickname};
+		return {ds: email, dQ: id, dX: isActive, d_: isManager, bO: message, ei: nickname};
 	});
 var $author$project$Api$Decode$userProfile = A4(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
@@ -7950,7 +7958,7 @@ var $author$project$Api$Decode$wineCheckResult = A3(
 	$elm$json$Json$Decode$map2,
 	F2(
 		function (v, m) {
-			return {bM: m, fq: v};
+			return {bO: m, fu: v};
 		}),
 	A2($elm$json$Json$Decode$field, 'valid', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string));
@@ -7960,7 +7968,7 @@ var $author$project$Ports$zoomKeyPressed = _Platform_incomingPort('zoomKeyPresse
 var $author$project$Ports$zoomLevelSet = _Platform_incomingPort('zoomLevelSet', $elm$json$Json$Decode$value);
 var $author$project$Subscriptions$subscriptions = function (model) {
 	var serverDragSubs = function () {
-		var _v6 = model.cv;
+		var _v6 = model.cy;
 		if (!_v6.$) {
 			return _List_fromArray(
 				[
@@ -7977,10 +7985,10 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 		}
 	}();
 	var playerDragSubs = function () {
-		var _v4 = model.cx;
+		var _v4 = model.cA;
 		if (!_v4.$) {
 			var detail = _v4.a;
-			var _v5 = detail.dj;
+			var _v5 = detail.dm;
 			if (!_v5.$) {
 				return _List_fromArray(
 					[
@@ -8004,7 +8012,7 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 		var _v1 = model.bg;
 		if ((!_v1.$) && (_v1.a.$ === 10)) {
 			var form = _v1.a.a;
-			var _v2 = form.bz;
+			var _v2 = form.bB;
 			if (!_v2.$) {
 				return _List_fromArray(
 					[
@@ -8195,6 +8203,13 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 								$author$project$Subscriptions$decodeResult,
 								$elm$json$Json$Decode$succeed(0),
 								$author$project$Msg$MapSaved)),
+							$author$project$Ports$animatedMapGenerated(
+							A2($author$project$Subscriptions$decodeResult, $elm$json$Json$Decode$string, $author$project$Msg$AnimatedMapGenerated)),
+							$author$project$Ports$gifSaved(
+							A2(
+								$author$project$Subscriptions$decodeResult,
+								$elm$json$Json$Decode$succeed(0),
+								$author$project$Msg$GifSaved)),
 							$author$project$Ports$zoomKeyPressed($author$project$Subscriptions$decodeZoomKey),
 							$author$project$Ports$resetApikeyResult(
 							A2($author$project$Subscriptions$decodeResult, $elm$json$Json$Decode$string, $author$project$Msg$ResetApikeyResult)),
@@ -8214,7 +8229,7 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 									$elm$json$Json$Decode$map3,
 									F3(
 										function (serverUrl, sessionId, hasStarsExe) {
-											return {dG: hasStarsExe, eT: serverUrl, eW: sessionId};
+											return {dK: hasStarsExe, eX: serverUrl, e_: sessionId};
 										}),
 									A2($elm$json$Json$Decode$field, 'serverUrl', $elm$json$Json$Decode$string),
 									A2($elm$json$Json$Decode$field, 'sessionId', $elm$json$Json$Decode$string),
@@ -8307,6 +8322,7 @@ var $author$project$Model$EditServerDialog = F2(
 		return {$: 1, a: a, b: b};
 	});
 var $author$project$Model$FromRacesDialog = {$: 0};
+var $author$project$Model$GIFFormat = 1;
 var $author$project$Msg$GotFetchEndTime = F3(
 	function (a, b, c) {
 		return {$: 34, a: a, b: b, c: c};
@@ -8360,6 +8376,7 @@ var $author$project$Model$ResettingApikey = F2(
 var $author$project$Model$RulesDialog = function (a) {
 	return {$: 11, a: a};
 };
+var $author$project$Model$SVGFormat = 0;
 var $author$project$Model$SettingsDialog = {$: 13};
 var $author$project$Model$SetupRaceDialog = function (a) {
 	return {$: 9, a: a};
@@ -8482,100 +8499,100 @@ var $author$project$Api$Encode$encodeRaceConfig = function (config) {
 			[
 				_Utils_Tuple2(
 				'singularName',
-				$elm$json$Json$Encode$string(config.e4)),
+				$elm$json$Json$Encode$string(config.e8)),
 				_Utils_Tuple2(
 				'pluralName',
-				$elm$json$Json$Encode$string(config.ex)),
+				$elm$json$Json$Encode$string(config.eB)),
 				_Utils_Tuple2(
 				'password',
-				$elm$json$Json$Encode$string(config.er)),
+				$elm$json$Json$Encode$string(config.ev)),
 				_Utils_Tuple2(
 				'icon',
-				$elm$json$Json$Encode$int(config.dK)),
+				$elm$json$Json$Encode$int(config.dO)),
 				_Utils_Tuple2(
 				'prt',
-				$elm$json$Json$Encode$int(config.ey)),
+				$elm$json$Json$Encode$int(config.eC)),
 				_Utils_Tuple2(
 				'lrt',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$int, config.d0)),
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$int, config.d4)),
 				_Utils_Tuple2(
 				'gravityCenter',
-				$elm$json$Json$Encode$int(config.dB)),
+				$elm$json$Json$Encode$int(config.dF)),
 				_Utils_Tuple2(
 				'gravityWidth',
-				$elm$json$Json$Encode$int(config.dD)),
+				$elm$json$Json$Encode$int(config.dH)),
 				_Utils_Tuple2(
 				'gravityImmune',
-				$elm$json$Json$Encode$bool(config.dC)),
+				$elm$json$Json$Encode$bool(config.dG)),
 				_Utils_Tuple2(
 				'temperatureCenter',
-				$elm$json$Json$Encode$int(config.fd)),
+				$elm$json$Json$Encode$int(config.fh)),
 				_Utils_Tuple2(
 				'temperatureWidth',
-				$elm$json$Json$Encode$int(config.ff)),
+				$elm$json$Json$Encode$int(config.fj)),
 				_Utils_Tuple2(
 				'temperatureImmune',
-				$elm$json$Json$Encode$bool(config.fe)),
+				$elm$json$Json$Encode$bool(config.fi)),
 				_Utils_Tuple2(
 				'radiationCenter',
-				$elm$json$Json$Encode$int(config.eB)),
+				$elm$json$Json$Encode$int(config.eF)),
 				_Utils_Tuple2(
 				'radiationWidth',
-				$elm$json$Json$Encode$int(config.eD)),
+				$elm$json$Json$Encode$int(config.eH)),
 				_Utils_Tuple2(
 				'radiationImmune',
-				$elm$json$Json$Encode$bool(config.eC)),
+				$elm$json$Json$Encode$bool(config.eG)),
 				_Utils_Tuple2(
 				'growthRate',
-				$elm$json$Json$Encode$int(config.dE)),
+				$elm$json$Json$Encode$int(config.dI)),
 				_Utils_Tuple2(
 				'colonistsPerResource',
-				$elm$json$Json$Encode$int(config.da)),
+				$elm$json$Json$Encode$int(config.dd)),
 				_Utils_Tuple2(
 				'factoryOutput',
-				$elm$json$Json$Encode$int(config.dx)),
+				$elm$json$Json$Encode$int(config.dA)),
 				_Utils_Tuple2(
 				'factoryCost',
-				$elm$json$Json$Encode$int(config.dv)),
+				$elm$json$Json$Encode$int(config.dy)),
 				_Utils_Tuple2(
 				'factoryCount',
-				$elm$json$Json$Encode$int(config.dw)),
+				$elm$json$Json$Encode$int(config.dz)),
 				_Utils_Tuple2(
 				'factoriesUseLessGerm',
-				$elm$json$Json$Encode$bool(config.du)),
+				$elm$json$Json$Encode$bool(config.dx)),
 				_Utils_Tuple2(
 				'mineOutput',
-				$elm$json$Json$Encode$int(config.d7)),
+				$elm$json$Json$Encode$int(config.eb)),
 				_Utils_Tuple2(
 				'mineCost',
-				$elm$json$Json$Encode$int(config.d5)),
+				$elm$json$Json$Encode$int(config.d9)),
 				_Utils_Tuple2(
 				'mineCount',
-				$elm$json$Json$Encode$int(config.d6)),
+				$elm$json$Json$Encode$int(config.ea)),
 				_Utils_Tuple2(
 				'researchEnergy',
-				$elm$json$Json$Encode$int(config.eL)),
+				$elm$json$Json$Encode$int(config.eP)),
 				_Utils_Tuple2(
 				'researchWeapons',
-				$elm$json$Json$Encode$int(config.eN)),
+				$elm$json$Json$Encode$int(config.eR)),
 				_Utils_Tuple2(
 				'researchPropulsion',
-				$elm$json$Json$Encode$int(config.eM)),
+				$elm$json$Json$Encode$int(config.eQ)),
 				_Utils_Tuple2(
 				'researchConstruction',
-				$elm$json$Json$Encode$int(config.eJ)),
+				$elm$json$Json$Encode$int(config.eN)),
 				_Utils_Tuple2(
 				'researchElectronics',
-				$elm$json$Json$Encode$int(config.eK)),
+				$elm$json$Json$Encode$int(config.eO)),
 				_Utils_Tuple2(
 				'researchBiotech',
-				$elm$json$Json$Encode$int(config.eI)),
+				$elm$json$Json$Encode$int(config.eM)),
 				_Utils_Tuple2(
 				'techsStartHigh',
-				$elm$json$Json$Encode$bool(config.fc)),
+				$elm$json$Json$Encode$bool(config.fg)),
 				_Utils_Tuple2(
 				'leftoverPointsOn',
-				$elm$json$Json$Encode$int(config.d$))
+				$elm$json$Json$Encode$int(config.d3))
 			]));
 };
 var $author$project$Api$Encode$buildAndSaveRace = F3(
@@ -8649,6 +8666,32 @@ var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
 		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
 	});
+var $author$project$Update$updateMapViewerForm = F2(
+	function (model, updater) {
+		var _v0 = model.bg;
+		if ((!_v0.$) && (_v0.a.$ === 17)) {
+			var form = _v0.a.a;
+			return _Utils_update(
+				model,
+				{
+					bg: $elm$core$Maybe$Just(
+						$author$project$Model$MapViewerDialog(
+							updater(form)))
+				});
+		} else {
+			return model;
+		}
+	});
+var $author$project$Update$clearMapContent = function (model) {
+	return A2(
+		$author$project$Update$updateMapViewerForm,
+		model,
+		function (form) {
+			return _Utils_update(
+				form,
+				{c: $elm$core$Maybe$Nothing, bq: $elm$core$Maybe$Nothing, br: $elm$core$Maybe$Nothing});
+		});
+};
 var $author$project$Ports$clearSelection = _Platform_outgoingPort(
 	'clearSelection',
 	function ($) {
@@ -8720,8 +8763,8 @@ var $author$project$Api$Encode$declineInvitation = F2(
 				]));
 	});
 var $author$project$Ports$declineInvitation = _Platform_outgoingPort('declineInvitation', $elm$core$Basics$identity);
-var $author$project$Model$defaultRaceConfig = {da: 1000, du: false, dv: 10, dw: 10, dx: 10, dB: 50, dC: false, dD: 35, dE: 15, dK: 1, d$: 0, d0: _List_Nil, d5: 5, d6: 10, d7: 10, er: '', ex: 'Humanoids', ey: 9, eB: 50, eC: false, eD: 35, eI: 1, eJ: 1, eK: 1, eL: 1, eM: 1, eN: 1, e4: 'Humanoid', fc: false, fd: 50, fe: false, ff: 35};
-var $author$project$Api$Rules$defaultRules = {c_: false, db: false, de: 1, dA: false, d2: false, ef: false, ez: false, eE: $elm$core$Maybe$Nothing, e5: false, e7: 1, fk: 1, fs: true, ft: 4, fu: 22, fv: true, fw: 100, fx: false, fy: 11000, fz: false, fA: 100, fB: false, fC: 100, fD: 50, fE: false, fF: 100, fG: true, fH: 60, fI: 1};
+var $author$project$Model$defaultRaceConfig = {dd: 1000, dx: false, dy: 10, dz: 10, dA: 10, dF: 50, dG: false, dH: 35, dI: 15, dO: 1, d3: 0, d4: _List_Nil, d9: 5, ea: 10, eb: 10, ev: '', eB: 'Humanoids', eC: 9, eF: 50, eG: false, eH: 35, eM: 1, eN: 1, eO: 1, eP: 1, eQ: 1, eR: 1, e8: 'Humanoid', fg: false, fh: 50, fi: false, fj: 35};
+var $author$project$Api$Rules$defaultRules = {c1: false, de: false, dh: 1, dD: false, d6: false, ej: false, eD: false, eI: $elm$core$Maybe$Nothing, e9: false, fb: 1, fo: 1, fw: true, fx: 4, fy: 22, fz: true, fA: 100, fB: false, fC: 11000, fD: false, fE: 100, fF: false, fG: 100, fH: 50, fI: false, fJ: 100, fK: true, fL: 60, fM: 1};
 var $author$project$Ports$deleteRace = _Platform_outgoingPort('deleteRace', $elm$core$Basics$identity);
 var $author$project$Ports$deleteSession = _Platform_outgoingPort('deleteSession', $elm$core$Basics$identity);
 var $author$project$Api$Encode$deleteUser = F2(
@@ -8744,44 +8787,44 @@ var $author$project$Ports$downloadRace = _Platform_outgoingPort('downloadRace', 
 var $author$project$Ports$downloadSessionBackup = _Platform_outgoingPort('downloadSessionBackup', $elm$core$Basics$identity);
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $author$project$Model$emptyConnectForm = {c: $elm$core$Maybe$Nothing, er: '', j: false, aZ: ''};
-var $author$project$Model$emptyCreateUserForm = {ba: $elm$core$Maybe$Nothing, dp: '', c: $elm$core$Maybe$Nothing, ee: '', j: false};
-var $author$project$Model$emptyHabitabilityDisplay = {dC: false, bv: '', bw: '', bx: '', eC: false, cf: '', cg: '', ch: '', fe: false, cN: '', cO: '', cP: ''};
+var $author$project$Model$emptyConnectForm = {c: $elm$core$Maybe$Nothing, ev: '', j: false, aZ: ''};
+var $author$project$Model$emptyCreateUserForm = {ba: $elm$core$Maybe$Nothing, ds: '', c: $elm$core$Maybe$Nothing, ei: '', j: false};
+var $author$project$Model$emptyHabitabilityDisplay = {dG: false, bx: '', by: '', bz: '', eG: false, ci: '', cj: '', ck: '', fi: false, cQ: '', cR: '', cS: ''};
 var $author$project$Model$emptyInviteForm = function (sessionId) {
-	return {c: $elm$core$Maybe$Nothing, ct: $elm$core$Maybe$Nothing, eW: sessionId, j: false};
+	return {c: $elm$core$Maybe$Nothing, cw: $elm$core$Maybe$Nothing, e_: sessionId, j: false};
 };
-var $author$project$Model$defaultMapOptions = {dH: 768, eY: 4, eZ: true, e$: true, e0: true, e1: false, e2: true, e3: true, fK: 1024};
+var $author$project$Model$defaultMapOptions = {dE: 500, dL: 768, b2: 0, e0: 4, e1: true, e3: true, e4: true, e5: false, e6: true, e7: true, fO: 1024};
 var $author$project$Model$emptyMapViewerForm = F4(
 	function (sessionId, year, raceName, playerNumber) {
-		return {c: $elm$core$Maybe$Nothing, bq: $elm$core$Maybe$Nothing, br: false, bX: $author$project$Model$defaultMapOptions, ay: playerNumber, az: raceName, cn: false, eW: sessionId, fP: year};
+		return {c: $elm$core$Maybe$Nothing, bq: $elm$core$Maybe$Nothing, br: $elm$core$Maybe$Nothing, bs: false, bt: false, bZ: $author$project$Model$defaultMapOptions, ay: playerNumber, az: raceName, cq: false, e_: sessionId, fT: year};
 	});
 var $author$project$Model$emptyRaceBuilderForm = function (origin) {
 	return {
 		a$: 0,
 		a7: $author$project$Model$defaultRaceConfig,
 		c: $elm$core$Maybe$Nothing,
-		bz: $elm$core$Maybe$Nothing,
+		bB: $elm$core$Maybe$Nothing,
 		I: false,
-		bN: $author$project$Model$EditMode,
-		b_: origin,
-		cs: 'humanoid',
+		bP: $author$project$Model$EditMode,
+		b0: origin,
+		cv: 'humanoid',
 		j: false,
-		cU: {bk: _List_Nil, by: $author$project$Model$emptyHabitabilityDisplay, bF: false, bL: _List_Nil, b7: 0, cc: _List_Nil, cW: _List_Nil}
+		cX: {bk: _List_Nil, bA: $author$project$Model$emptyHabitabilityDisplay, bH: false, bN: _List_Nil, ca: 0, cf: _List_Nil, cZ: _List_Nil}
 	};
 };
-var $author$project$Model$emptyRegisterForm = {dp: '', c: $elm$core$Maybe$Nothing, bM: '', ee: '', j: false, cL: false};
-var $author$project$Model$emptyServerData = {aH: $author$project$Model$Disconnected, bm: $elm$core$Maybe$Nothing, bn: false, bD: _List_Nil, bJ: $elm$core$Maybe$Nothing, bK: $elm$core$Maybe$Nothing, bY: $elm$core$Dict$empty, b2: 0, ce: _List_Nil, cu: _List_Nil, cz: $elm$core$Dict$empty, cA: $elm$core$Dict$empty, cB: $elm$core$Dict$empty, cC: $elm$core$Dict$empty, cD: $elm$core$Dict$empty, cE: _List_Nil, cS: _List_Nil};
-var $author$project$Model$emptyServerForm = {c: $elm$core$Maybe$Nothing, ea: '', b$: $elm$core$Maybe$Nothing, j: false, fm: ''};
+var $author$project$Model$emptyRegisterForm = {ds: '', c: $elm$core$Maybe$Nothing, bO: '', ei: '', j: false, cO: false};
+var $author$project$Model$emptyServerData = {aH: $author$project$Model$Disconnected, bm: $elm$core$Maybe$Nothing, bn: false, bF: _List_Nil, bL: $elm$core$Maybe$Nothing, bM: $elm$core$Maybe$Nothing, b_: $elm$core$Dict$empty, b5: 0, ch: _List_Nil, cx: _List_Nil, cC: $elm$core$Dict$empty, cD: $elm$core$Dict$empty, cE: $elm$core$Dict$empty, cF: $elm$core$Dict$empty, cG: $elm$core$Dict$empty, cH: _List_Nil, cV: _List_Nil};
+var $author$project$Model$emptyServerForm = {c: $elm$core$Maybe$Nothing, ee: '', b1: $elm$core$Maybe$Nothing, j: false, fq: ''};
 var $author$project$Model$emptySetupRaceForm = function (sessionId) {
-	return {c: $elm$core$Maybe$Nothing, cq: $elm$core$Maybe$Nothing, eW: sessionId, j: false};
+	return {c: $elm$core$Maybe$Nothing, ct: $elm$core$Maybe$Nothing, e_: sessionId, j: false};
 };
 var $author$project$Model$emptyTurnFilesForm = F5(
 	function (sessionId, year, raceName, playerNumber, isLatest) {
-		return {c: $elm$core$Maybe$Nothing, bE: isLatest, I: true, bZ: $elm$core$Maybe$Nothing, ay: playerNumber, az: raceName, eW: sessionId, cR: $elm$core$Maybe$Nothing, fP: year};
+		return {c: $elm$core$Maybe$Nothing, bG: isLatest, I: true, b$: $elm$core$Maybe$Nothing, ay: playerNumber, az: raceName, e_: sessionId, cU: $elm$core$Maybe$Nothing, fT: year};
 	});
 var $author$project$Model$emptyUsersListState = F2(
 	function (currentUserId, users) {
-		return {a_: 0, bb: currentUserId, be: $author$project$Model$NoDelete, bo: '', b1: $author$project$Model$NoPendingAction, b3: _List_Nil, ck: $author$project$Model$NoReset, cT: users};
+		return {a_: 0, bb: currentUserId, be: $author$project$Model$NoDelete, bo: '', b4: $author$project$Model$NoPendingAction, b6: _List_Nil, cn: $author$project$Model$NoReset, cW: users};
 	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -8800,33 +8843,53 @@ var $author$project$Api$Encode$encodeMapOptions = function (options) {
 			[
 				_Utils_Tuple2(
 				'width',
-				$elm$json$Json$Encode$int(options.fK)),
+				$elm$json$Json$Encode$int(options.fO)),
 				_Utils_Tuple2(
 				'height',
-				$elm$json$Json$Encode$int(options.dH)),
+				$elm$json$Json$Encode$int(options.dL)),
 				_Utils_Tuple2(
 				'showNames',
-				$elm$json$Json$Encode$bool(options.e1)),
+				$elm$json$Json$Encode$bool(options.e5)),
 				_Utils_Tuple2(
 				'showFleets',
-				$elm$json$Json$Encode$bool(options.eZ)),
+				$elm$json$Json$Encode$bool(options.e1)),
 				_Utils_Tuple2(
 				'showFleetPaths',
-				$elm$json$Json$Encode$int(options.eY)),
+				$elm$json$Json$Encode$int(options.e0)),
 				_Utils_Tuple2(
 				'showMines',
-				$elm$json$Json$Encode$bool(options.e0)),
+				$elm$json$Json$Encode$bool(options.e4)),
 				_Utils_Tuple2(
 				'showWormholes',
-				$elm$json$Json$Encode$bool(options.e3)),
+				$elm$json$Json$Encode$bool(options.e7)),
 				_Utils_Tuple2(
 				'showLegend',
-				$elm$json$Json$Encode$bool(options.e$)),
+				$elm$json$Json$Encode$bool(options.e3)),
 				_Utils_Tuple2(
 				'showScannerCoverage',
-				$elm$json$Json$Encode$bool(options.e2))
+				$elm$json$Json$Encode$bool(options.e6))
 			]));
 };
+var $author$project$Api$Encode$generateAnimatedMap = F3(
+	function (serverUrl, sessionId, options) {
+		return $elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'serverUrl',
+					$elm$json$Json$Encode$string(serverUrl)),
+					_Utils_Tuple2(
+					'sessionId',
+					$elm$json$Json$Encode$string(sessionId)),
+					_Utils_Tuple2(
+					'options',
+					$author$project$Api$Encode$encodeMapOptions(options)),
+					_Utils_Tuple2(
+					'delay',
+					$elm$json$Json$Encode$int(options.dE))
+				]));
+	});
+var $author$project$Ports$generateAnimatedMap = _Platform_outgoingPort('generateAnimatedMap', $elm$core$Basics$identity);
 var $author$project$Api$Encode$generateMap = F5(
 	function (serverUrl, sessionId, year, options, turnFiles) {
 		return $elm$json$Json$Encode$object(
@@ -8846,10 +8909,10 @@ var $author$project$Api$Encode$generateMap = F5(
 					$author$project$Api$Encode$encodeMapOptions(options)),
 					_Utils_Tuple2(
 					'universeB64',
-					$elm$json$Json$Encode$string(turnFiles.fj)),
+					$elm$json$Json$Encode$string(turnFiles.fn)),
 					_Utils_Tuple2(
 					'turnB64',
-					$elm$json$Json$Encode$string(turnFiles.fh))
+					$elm$json$Json$Encode$string(turnFiles.fl))
 				]));
 	});
 var $author$project$Ports$generateMap = _Platform_outgoingPort('generateMap', $elm$core$Basics$identity);
@@ -8975,7 +9038,7 @@ var $author$project$Model$getServerByUrl = F2(
 			A2(
 				$elm$core$List$filter,
 				function (s) {
-					return _Utils_eq(s.fm, url);
+					return _Utils_eq(s.fq, url);
 				},
 				servers));
 	});
@@ -8999,7 +9062,7 @@ var $author$project$Model$getSessionById = F2(
 			A2(
 				$elm$core$List$filter,
 				function (s) {
-					return _Utils_eq(s.dM, id);
+					return _Utils_eq(s.dQ, id);
 				},
 				sessions));
 	});
@@ -9344,7 +9407,7 @@ var $author$project$Update$updateRaceConfigAndValidate = F2(
 			var newConfig = configUpdater(form.a7);
 			var newForm = _Utils_update(
 				form,
-				{a7: newConfig, cs: 'custom'});
+				{a7: newConfig, cv: 'custom'});
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
@@ -9380,11 +9443,11 @@ var $author$project$Update$performHabButtonAction = F2(
 					$author$project$Update$updateRaceConfigAndValidate,
 					model,
 					function (c) {
-						var newWidth = A2(adjustWidth, c.dD, 1);
-						var newCenter = A2(clampCenter, c.dB, newWidth);
+						var newWidth = A2(adjustWidth, c.dH, 1);
+						var newCenter = A2(clampCenter, c.dF, newWidth);
 						return _Utils_update(
 							c,
-							{dB: newCenter, dD: newWidth});
+							{dF: newCenter, dH: newWidth});
 					});
 			case 1:
 				return A2(
@@ -9394,7 +9457,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								dD: A2(adjustWidth, c.dD, -1)
+								dH: A2(adjustWidth, c.dH, -1)
 							});
 					});
 			case 2:
@@ -9405,7 +9468,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								dB: A3(adjustCenter, c.dB, c.dD, -1)
+								dF: A3(adjustCenter, c.dF, c.dH, -1)
 							});
 					});
 			case 3:
@@ -9416,7 +9479,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								dB: A3(adjustCenter, c.dB, c.dD, 1)
+								dF: A3(adjustCenter, c.dF, c.dH, 1)
 							});
 					});
 			case 4:
@@ -9424,11 +9487,11 @@ var $author$project$Update$performHabButtonAction = F2(
 					$author$project$Update$updateRaceConfigAndValidate,
 					model,
 					function (c) {
-						var newWidth = A2(adjustWidth, c.ff, 1);
-						var newCenter = A2(clampCenter, c.fd, newWidth);
+						var newWidth = A2(adjustWidth, c.fj, 1);
+						var newCenter = A2(clampCenter, c.fh, newWidth);
 						return _Utils_update(
 							c,
-							{fd: newCenter, ff: newWidth});
+							{fh: newCenter, fj: newWidth});
 					});
 			case 5:
 				return A2(
@@ -9438,7 +9501,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								ff: A2(adjustWidth, c.ff, -1)
+								fj: A2(adjustWidth, c.fj, -1)
 							});
 					});
 			case 6:
@@ -9449,7 +9512,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								fd: A3(adjustCenter, c.fd, c.ff, -1)
+								fh: A3(adjustCenter, c.fh, c.fj, -1)
 							});
 					});
 			case 7:
@@ -9460,7 +9523,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								fd: A3(adjustCenter, c.fd, c.ff, 1)
+								fh: A3(adjustCenter, c.fh, c.fj, 1)
 							});
 					});
 			case 8:
@@ -9468,11 +9531,11 @@ var $author$project$Update$performHabButtonAction = F2(
 					$author$project$Update$updateRaceConfigAndValidate,
 					model,
 					function (c) {
-						var newWidth = A2(adjustWidth, c.eD, 1);
-						var newCenter = A2(clampCenter, c.eB, newWidth);
+						var newWidth = A2(adjustWidth, c.eH, 1);
+						var newCenter = A2(clampCenter, c.eF, newWidth);
 						return _Utils_update(
 							c,
-							{eB: newCenter, eD: newWidth});
+							{eF: newCenter, eH: newWidth});
 					});
 			case 9:
 				return A2(
@@ -9482,7 +9545,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								eD: A2(adjustWidth, c.eD, -1)
+								eH: A2(adjustWidth, c.eH, -1)
 							});
 					});
 			case 10:
@@ -9493,7 +9556,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								eB: A3(adjustCenter, c.eB, c.eD, -1)
+								eF: A3(adjustCenter, c.eF, c.eH, -1)
 							});
 					});
 			default:
@@ -9504,7 +9567,7 @@ var $author$project$Update$performHabButtonAction = F2(
 						return _Utils_update(
 							c,
 							{
-								eB: A3(adjustCenter, c.eB, c.eD, 1)
+								eF: A3(adjustCenter, c.eF, c.eH, 1)
 							});
 					});
 		}
@@ -9933,12 +9996,12 @@ var $author$project$Update$removeSessionTurn = F4(
 						var currentTurns = A2(
 							$elm$core$Maybe$withDefault,
 							$elm$core$Dict$empty,
-							A2($elm$core$Dict$get, sessionId, sd.cD));
+							A2($elm$core$Dict$get, sessionId, sd.cG));
 						var newTurns = A2($elm$core$Dict$remove, year, currentTurns);
 						return _Utils_update(
 							sd,
 							{
-								cD: A3($elm$core$Dict$insert, sessionId, newTurns, sd.cD)
+								cG: A3($elm$core$Dict$insert, sessionId, newTurns, sd.cG)
 							});
 					},
 					model.aT)
@@ -9948,6 +10011,29 @@ var $author$project$Ports$reorderPlayers = _Platform_outgoingPort('reorderPlayer
 var $author$project$Ports$reorderServers = _Platform_outgoingPort('reorderServers', $elm$core$Basics$identity);
 var $author$project$Ports$requestFullscreen = _Platform_outgoingPort('requestFullscreen', $elm$json$Json$Encode$string);
 var $author$project$Ports$resetUserApikey = _Platform_outgoingPort('resetUserApikey', $elm$core$Basics$identity);
+var $author$project$Api$Encode$saveGif = F5(
+	function (serverUrl, sessionId, raceName, playerNumber, gifContent) {
+		return $elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'serverUrl',
+					$elm$json$Json$Encode$string(serverUrl)),
+					_Utils_Tuple2(
+					'sessionId',
+					$elm$json$Json$Encode$string(sessionId)),
+					_Utils_Tuple2(
+					'raceName',
+					$elm$json$Json$Encode$string(raceName)),
+					_Utils_Tuple2(
+					'playerNumber',
+					$elm$json$Json$Encode$int(playerNumber)),
+					_Utils_Tuple2(
+					'gifContent',
+					$elm$json$Json$Encode$string(gifContent))
+				]));
+	});
+var $author$project$Ports$saveGif = _Platform_outgoingPort('saveGif', $elm$core$Basics$identity);
 var $author$project$Api$Encode$saveMap = F6(
 	function (serverUrl, sessionId, year, raceName, playerNumber, svgContent) {
 		return $elm$json$Json$Encode$object(
@@ -10023,90 +10109,90 @@ var $author$project$Api$Encode$encodeRules = function (r) {
 				[
 					_Utils_Tuple2(
 					'universeSize',
-					$elm$json$Json$Encode$int(r.fk)),
+					$elm$json$Json$Encode$int(r.fo)),
 					_Utils_Tuple2(
 					'density',
-					$elm$json$Json$Encode$int(r.de)),
+					$elm$json$Json$Encode$int(r.dh)),
 					_Utils_Tuple2(
 					'startingDistance',
-					$elm$json$Json$Encode$int(r.e7))
+					$elm$json$Json$Encode$int(r.fb))
 				]),
 			_Utils_ap(
-				A2($author$project$Api$Encode$encodeMaybeInt, 'randomSeed', r.eE),
+				A2($author$project$Api$Encode$encodeMaybeInt, 'randomSeed', r.eI),
 				_List_fromArray(
 					[
 						_Utils_Tuple2(
 						'maximumMinerals',
-						$elm$json$Json$Encode$bool(r.d2)),
+						$elm$json$Json$Encode$bool(r.d6)),
 						_Utils_Tuple2(
 						'slowerTechAdvances',
-						$elm$json$Json$Encode$bool(r.e5)),
+						$elm$json$Json$Encode$bool(r.e9)),
 						_Utils_Tuple2(
 						'acceleratedBbsPlay',
-						$elm$json$Json$Encode$bool(r.c_)),
+						$elm$json$Json$Encode$bool(r.c1)),
 						_Utils_Tuple2(
 						'noRandomEvents',
-						$elm$json$Json$Encode$bool(r.ef)),
+						$elm$json$Json$Encode$bool(r.ej)),
 						_Utils_Tuple2(
 						'computerPlayersFormAlliances',
-						$elm$json$Json$Encode$bool(r.db)),
+						$elm$json$Json$Encode$bool(r.de)),
 						_Utils_Tuple2(
 						'publicPlayerScores',
-						$elm$json$Json$Encode$bool(r.ez)),
+						$elm$json$Json$Encode$bool(r.eD)),
 						_Utils_Tuple2(
 						'galaxyClumping',
-						$elm$json$Json$Encode$bool(r.dA)),
+						$elm$json$Json$Encode$bool(r.dD)),
 						_Utils_Tuple2(
 						'vcOwnsPercentOfPlanets',
-						$elm$json$Json$Encode$bool(r.fG)),
+						$elm$json$Json$Encode$bool(r.fK)),
 						_Utils_Tuple2(
 						'vcOwnsPercentOfPlanetsValue',
-						$elm$json$Json$Encode$int(r.fH)),
+						$elm$json$Json$Encode$int(r.fL)),
 						_Utils_Tuple2(
 						'vcAttainTechInFields',
-						$elm$json$Json$Encode$bool(r.fs)),
+						$elm$json$Json$Encode$bool(r.fw)),
 						_Utils_Tuple2(
 						'vcAttainTechInFieldsTechValue',
-						$elm$json$Json$Encode$int(r.fu)),
-						_Utils_Tuple2(
-						'vcAttainTechInFieldsFieldsValue',
-						$elm$json$Json$Encode$int(r.ft)),
-						_Utils_Tuple2(
-						'vcExceedScoreOf',
-						$elm$json$Json$Encode$bool(r.fx)),
-						_Utils_Tuple2(
-						'vcExceedScoreOfValue',
 						$elm$json$Json$Encode$int(r.fy)),
 						_Utils_Tuple2(
-						'vcExceedNextPlayerScoreBy',
-						$elm$json$Json$Encode$bool(r.fv)),
+						'vcAttainTechInFieldsFieldsValue',
+						$elm$json$Json$Encode$int(r.fx)),
 						_Utils_Tuple2(
-						'vcExceedNextPlayerScoreByValue',
-						$elm$json$Json$Encode$int(r.fw)),
-						_Utils_Tuple2(
-						'vcHasProductionCapacityOf',
-						$elm$json$Json$Encode$bool(r.fz)),
-						_Utils_Tuple2(
-						'vcHasProductionCapacityOfValue',
-						$elm$json$Json$Encode$int(r.fA)),
-						_Utils_Tuple2(
-						'vcOwnsCapitalShips',
-						$elm$json$Json$Encode$bool(r.fE)),
-						_Utils_Tuple2(
-						'vcOwnsCapitalShipsValue',
-						$elm$json$Json$Encode$int(r.fF)),
-						_Utils_Tuple2(
-						'vcHaveHighestScoreAfterYears',
+						'vcExceedScoreOf',
 						$elm$json$Json$Encode$bool(r.fB)),
 						_Utils_Tuple2(
-						'vcHaveHighestScoreAfterYearsValue',
+						'vcExceedScoreOfValue',
 						$elm$json$Json$Encode$int(r.fC)),
 						_Utils_Tuple2(
+						'vcExceedNextPlayerScoreBy',
+						$elm$json$Json$Encode$bool(r.fz)),
+						_Utils_Tuple2(
+						'vcExceedNextPlayerScoreByValue',
+						$elm$json$Json$Encode$int(r.fA)),
+						_Utils_Tuple2(
+						'vcHasProductionCapacityOf',
+						$elm$json$Json$Encode$bool(r.fD)),
+						_Utils_Tuple2(
+						'vcHasProductionCapacityOfValue',
+						$elm$json$Json$Encode$int(r.fE)),
+						_Utils_Tuple2(
+						'vcOwnsCapitalShips',
+						$elm$json$Json$Encode$bool(r.fI)),
+						_Utils_Tuple2(
+						'vcOwnsCapitalShipsValue',
+						$elm$json$Json$Encode$int(r.fJ)),
+						_Utils_Tuple2(
+						'vcHaveHighestScoreAfterYears',
+						$elm$json$Json$Encode$bool(r.fF)),
+						_Utils_Tuple2(
+						'vcHaveHighestScoreAfterYearsValue',
+						$elm$json$Json$Encode$int(r.fG)),
+						_Utils_Tuple2(
 						'vcWinnerMustMeet',
-						$elm$json$Json$Encode$int(r.fI)),
+						$elm$json$Json$Encode$int(r.fM)),
 						_Utils_Tuple2(
 						'vcMinYearsBeforeWinner',
-						$elm$json$Json$Encode$int(r.fD))
+						$elm$json$Json$Encode$int(r.fH))
 					]))));
 };
 var $author$project$Api$Encode$setRules = F3(
@@ -10142,11 +10228,11 @@ var $author$project$Update$storeSessionTurn = F4(
 						var currentTurns = A2(
 							$elm$core$Maybe$withDefault,
 							$elm$core$Dict$empty,
-							A2($elm$core$Dict$get, sessionId, sd.cD));
+							A2($elm$core$Dict$get, sessionId, sd.cG));
 						var newTurns = function () {
 							if (!maybeTurnFiles.$) {
 								var turnFiles = maybeTurnFiles.a;
-								return A3($elm$core$Dict$insert, turnFiles.fP, turnFiles, currentTurns);
+								return A3($elm$core$Dict$insert, turnFiles.fT, turnFiles, currentTurns);
 							} else {
 								return currentTurns;
 							}
@@ -10154,7 +10240,7 @@ var $author$project$Update$storeSessionTurn = F4(
 						return _Utils_update(
 							sd,
 							{
-								cD: A3($elm$core$Dict$insert, sessionId, newTurns, sd.cD)
+								cG: A3($elm$core$Dict$insert, sessionId, newTurns, sd.cG)
 							});
 					},
 					model.aT)
@@ -10352,22 +10438,6 @@ var $author$project$Update$updateInviteForm = F2(
 			return model;
 		}
 	});
-var $author$project$Update$updateMapViewerForm = F2(
-	function (model, updater) {
-		var _v0 = model.bg;
-		if ((!_v0.$) && (_v0.a.$ === 17)) {
-			var form = _v0.a.a;
-			return _Utils_update(
-				model,
-				{
-					bg: $elm$core$Maybe$Just(
-						$author$project$Model$MapViewerDialog(
-							updater(form)))
-				});
-		} else {
-			return model;
-		}
-	});
 var $author$project$Update$updateMapOptions = F2(
 	function (model, optionsUpdater) {
 		return A2(
@@ -10377,7 +10447,7 @@ var $author$project$Update$updateMapOptions = F2(
 				return _Utils_update(
 					form,
 					{
-						bX: optionsUpdater(form.bX)
+						bZ: optionsUpdater(form.bZ)
 					});
 			});
 	});
@@ -10442,7 +10512,7 @@ var $author$project$Update$updateRules = F2(
 				return _Utils_update(
 					form,
 					{
-						cl: rulesUpdater(form.cl)
+						co: rulesUpdater(form.co)
 					});
 			});
 	});
@@ -10531,7 +10601,7 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{c: $elm$core$Maybe$Nothing, I: false, cw: servers}),
+							{c: $elm$core$Maybe$Nothing, I: false, cz: servers}),
 						$author$project$Ports$getAppSettings(0));
 				} else {
 					var err = result.a;
@@ -10547,7 +10617,7 @@ var $author$project$Update$update = F2(
 			case 2:
 				var serverUrl = msg.a;
 				var serverDataWithSavedView = function () {
-					var _v8 = _Utils_Tuple2(model.aS, model.cx);
+					var _v8 = _Utils_Tuple2(model.aS, model.cA);
 					if (!_v8.a.$) {
 						if (!_v8.b.$) {
 							var prevServerUrl = _v8.a.a;
@@ -10559,7 +10629,7 @@ var $author$project$Update$update = F2(
 									return _Utils_update(
 										sd,
 										{
-											bK: $elm$core$Maybe$Just(detail.eW)
+											bM: $elm$core$Maybe$Just(detail.e_)
 										});
 								},
 								model.aT);
@@ -10572,7 +10642,7 @@ var $author$project$Update$update = F2(
 								function (sd) {
 									return _Utils_update(
 										sd,
-										{bK: $elm$core$Maybe$Nothing});
+										{bM: $elm$core$Maybe$Nothing});
 								},
 								model.aT);
 						}
@@ -10581,23 +10651,23 @@ var $author$project$Update$update = F2(
 					}
 				}();
 				var newServerData = A2($author$project$Model$getServerData, serverUrl, serverDataWithSavedView);
-				var maybeServer = A2($author$project$Model$getServerByUrl, serverUrl, model.cw);
+				var maybeServer = A2($author$project$Model$getServerByUrl, serverUrl, model.cz);
 				var _v2 = function () {
-					var _v3 = newServerData.bK;
+					var _v3 = newServerData.bM;
 					if (!_v3.$) {
 						var sessionId = _v3.a;
 						var _v4 = $elm$core$List$head(
 							A2(
 								$elm$core$List$filter,
 								function (s) {
-									return _Utils_eq(s.dM, sessionId);
+									return _Utils_eq(s.dQ, sessionId);
 								},
-								newServerData.cE));
+								newServerData.cH));
 						if (!_v4.$) {
 							var session = _v4.a;
 							return _Utils_Tuple2(
 								$elm$core$Maybe$Just(
-									{dj: $elm$core$Maybe$Nothing, ew: !session.e6, eW: sessionId, e_: false}),
+									{dm: $elm$core$Maybe$Nothing, eA: !session.fa, e_: sessionId, e2: false}),
 								$elm$core$Maybe$Just(sessionId));
 						} else {
 							return _Utils_Tuple2($elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing);
@@ -10609,7 +10679,7 @@ var $author$project$Update$update = F2(
 				var restoredSessionDetail = _v2.a;
 				var restoredSelectedSessionId = _v2.b;
 				var finalServerData = function () {
-					var _v6 = _Utils_Tuple2(newServerData.bK, restoredSessionDetail);
+					var _v6 = _Utils_Tuple2(newServerData.bM, restoredSessionDetail);
 					if ((!_v6.a.$) && (_v6.b.$ === 1)) {
 						var _v7 = _v6.b;
 						return A3(
@@ -10618,7 +10688,7 @@ var $author$project$Update$update = F2(
 							function (sd) {
 								return _Utils_update(
 									sd,
-									{bK: $elm$core$Maybe$Nothing});
+									{bM: $elm$core$Maybe$Nothing});
 							},
 							serverDataWithSavedView);
 					} else {
@@ -10630,16 +10700,16 @@ var $author$project$Update$update = F2(
 					{
 						a8: $elm$core$Maybe$Nothing,
 						aS: $elm$core$Maybe$Just(serverUrl),
-						cr: restoredSelectedSessionId,
+						cu: restoredSelectedSessionId,
 						aT: finalServerData,
-						cx: restoredSessionDetail
+						cA: restoredSessionDetail
 					});
 				if (A2($author$project$Model$isConnected, serverUrl, model.aT)) {
 					return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
 				} else {
 					if (!maybeServer.$) {
 						var server = maybeServer.a;
-						return server.dF ? _Utils_Tuple2(
+						return server.dJ ? _Utils_Tuple2(
 							_Utils_update(
 								newModel,
 								{
@@ -10729,7 +10799,7 @@ var $author$project$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 7:
 				var serverUrl = msg.a;
-				var _v13 = A2($author$project$Model$getServerByUrl, serverUrl, model.cw);
+				var _v13 = A2($author$project$Model$getServerByUrl, serverUrl, model.cz);
 				if (!_v13.$) {
 					var server = _v13.a;
 					return _Utils_Tuple2(
@@ -10743,10 +10813,10 @@ var $author$project$Update$update = F2(
 										serverUrl,
 										{
 											c: $elm$core$Maybe$Nothing,
-											ea: server.ea,
-											b$: $elm$core$Maybe$Just(server.ea),
+											ee: server.ee,
+											b1: $elm$core$Maybe$Just(server.ee),
 											j: false,
-											fm: server.fm
+											fq: server.fq
 										}))
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -10780,7 +10850,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{ea: name});
+								{ee: name});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 11:
@@ -10792,14 +10862,14 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{fm: url});
+								{fq: url});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 12:
 				var _v14 = model.bg;
 				if ((!_v14.$) && (!_v14.a.$)) {
 					var form = _v14.a.a;
-					return ($elm$core$String$isEmpty(form.ea) || $elm$core$String$isEmpty(form.fm)) ? _Utils_Tuple2(
+					return ($elm$core$String$isEmpty(form.ee) || $elm$core$String$isEmpty(form.fq)) ? _Utils_Tuple2(
 						A2($author$project$Update$updateDialogError, model, 'Name and URL are required'),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 						A2(
@@ -10811,7 +10881,7 @@ var $author$project$Update$update = F2(
 									{c: $elm$core$Maybe$Nothing, j: true});
 							}),
 						$author$project$Ports$addServer(
-							A2($author$project$Api$Encode$addServer, form.ea, form.fm)));
+							A2($author$project$Api$Encode$addServer, form.ee, form.fq)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
@@ -10821,7 +10891,7 @@ var $author$project$Update$update = F2(
 				if ((!_v15.$) && (_v15.a.$ === 1)) {
 					var _v16 = _v15.a;
 					var form = _v16.b;
-					return ($elm$core$String$isEmpty(form.ea) || $elm$core$String$isEmpty(form.fm)) ? _Utils_Tuple2(
+					return ($elm$core$String$isEmpty(form.ee) || $elm$core$String$isEmpty(form.fq)) ? _Utils_Tuple2(
 						A2($author$project$Update$updateDialogError, model, 'Name and URL are required'),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 						A2(
@@ -10833,7 +10903,7 @@ var $author$project$Update$update = F2(
 									{c: $elm$core$Maybe$Nothing, j: true});
 							}),
 						$author$project$Ports$updateServer(
-							A3($author$project$Api$Encode$updateServer, oldUrl, form.ea, form.fm)));
+							A3($author$project$Api$Encode$updateServer, oldUrl, form.ee, form.fq)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
@@ -10853,7 +10923,7 @@ var $author$project$Update$update = F2(
 						model,
 						{
 							a8: $elm$core$Maybe$Just(
-								{eT: serverUrl, fN: x, fO: y})
+								{eX: serverUrl, fR: x, fS: y})
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 16:
@@ -10865,13 +10935,13 @@ var $author$project$Update$update = F2(
 			case 17:
 				var serverUrl = msg.a;
 				var form = function () {
-					var _v17 = A2($author$project$Model$getServerByUrl, serverUrl, model.cw);
+					var _v17 = A2($author$project$Model$getServerByUrl, serverUrl, model.cz);
 					if (!_v17.$) {
 						var server = _v17.a;
 						return _Utils_update(
 							$author$project$Model$emptyConnectForm,
 							{
-								aZ: A2($elm$core$Maybe$withDefault, '', server.dd)
+								aZ: A2($elm$core$Maybe$withDefault, '', server.dg)
 							});
 					} else {
 						return $author$project$Model$emptyConnectForm;
@@ -10950,7 +11020,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{er: password});
+								{ev: password});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 23:
@@ -10962,7 +11032,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{ee: nickname});
+								{ei: nickname});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 24:
@@ -10974,7 +11044,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{dp: email});
+								{ds: email});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 25:
@@ -10986,7 +11056,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{bM: message});
+								{bO: message});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 26:
@@ -10995,7 +11065,7 @@ var $author$project$Update$update = F2(
 				if ((!_v22.$) && (_v22.a.$ === 3)) {
 					var _v23 = _v22.a;
 					var form = _v23.b;
-					return ($elm$core$String$isEmpty(form.aZ) || $elm$core$String$isEmpty(form.er)) ? _Utils_Tuple2(
+					return ($elm$core$String$isEmpty(form.aZ) || $elm$core$String$isEmpty(form.ev)) ? _Utils_Tuple2(
 						A2($author$project$Update$updateDialogError, model, 'Username and password are required'),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 						A2(
@@ -11007,7 +11077,7 @@ var $author$project$Update$update = F2(
 									{c: $elm$core$Maybe$Nothing, j: true});
 							}),
 						$author$project$Ports$connect(
-							A3($author$project$Api$Encode$connect, serverUrl, form.aZ, form.er)));
+							A3($author$project$Api$Encode$connect, serverUrl, form.aZ, form.ev)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
@@ -11017,7 +11087,7 @@ var $author$project$Update$update = F2(
 				if ((!_v24.$) && (_v24.a.$ === 4)) {
 					var _v25 = _v24.a;
 					var form = _v25.b;
-					return ($elm$core$String$isEmpty(form.ee) || $elm$core$String$isEmpty(form.dp)) ? _Utils_Tuple2(
+					return ($elm$core$String$isEmpty(form.ei) || $elm$core$String$isEmpty(form.ds)) ? _Utils_Tuple2(
 						A2($author$project$Update$updateDialogError, model, 'Nickname and email are required'),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 						A2(
@@ -11029,7 +11099,7 @@ var $author$project$Update$update = F2(
 									{c: $elm$core$Maybe$Nothing, j: true});
 							}),
 						$author$project$Ports$register(
-							A4($author$project$Api$Encode$register, serverUrl, form.ee, form.dp, form.bM)));
+							A4($author$project$Api$Encode$register, serverUrl, form.ei, form.ds, form.bO)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
@@ -11045,7 +11115,7 @@ var $author$project$Update$update = F2(
 							$author$project$Ports$getSentInvitations(serverUrl),
 							$author$project$Ports$getUserProfiles(serverUrl)
 						]);
-					var allCmds = info.dW ? _Utils_ap(
+					var allCmds = info.d_ ? _Utils_ap(
 						baseCmds,
 						_List_fromArray(
 							[
@@ -11056,7 +11126,7 @@ var $author$project$Update$update = F2(
 							$author$project$Update$setConnectionState,
 							serverUrl,
 							$author$project$Model$Connected(
-								{dW: info.dW, eS: info.eS, fo: info.fo, aZ: info.aZ}),
+								{d_: info.d_, eW: info.eW, fs: info.fs, aZ: info.aZ}),
 							_Utils_update(
 								model,
 								{bg: $elm$core$Maybe$Nothing})),
@@ -11090,14 +11160,14 @@ var $author$project$Update$update = F2(
 						}
 					} else {
 						var form = function () {
-							var _v29 = A2($author$project$Model$getServerByUrl, serverUrl, model.cw);
+							var _v29 = A2($author$project$Model$getServerByUrl, serverUrl, model.cz);
 							if (!_v29.$) {
 								var server = _v29.a;
 								return _Utils_update(
 									$author$project$Model$emptyConnectForm,
 									{
 										c: $elm$core$Maybe$Just(err),
-										aZ: A2($elm$core$Maybe$withDefault, '', server.dd)
+										aZ: A2($elm$core$Maybe$withDefault, '', server.dg)
 									});
 							} else {
 								return _Utils_update(
@@ -11128,7 +11198,7 @@ var $author$project$Update$update = F2(
 							function (f) {
 								return _Utils_update(
 									f,
-									{j: false, cL: true});
+									{j: false, cO: true});
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11152,7 +11222,7 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a8: $elm$core$Maybe$Nothing, cF: false}),
+						{a8: $elm$core$Maybe$Nothing, cI: false}),
 					$author$project$Ports$disconnect(serverUrl));
 			case 31:
 				var serverUrl = msg.a;
@@ -11162,7 +11232,7 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							model,
 							{
-								cr: $elm$core$Maybe$Nothing,
+								cu: $elm$core$Maybe$Nothing,
 								aT: A3(
 									$author$project$Model$updateServerData,
 									serverUrl,
@@ -11170,8 +11240,8 @@ var $author$project$Update$update = F2(
 										return $author$project$Model$emptyServerData;
 									},
 									model.aT),
-								cx: $elm$core$Maybe$Nothing,
-								cF: false
+								cA: $elm$core$Maybe$Nothing,
+								cI: false
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11221,13 +11291,13 @@ var $author$project$Update$update = F2(
 				if (!result.$) {
 					var sessions = result.a;
 					var sessionDetailStillExists = function () {
-						var _v38 = model.cx;
+						var _v38 = model.cA;
 						if (!_v38.$) {
 							var detail = _v38.a;
 							return A2(
 								$elm$core$List$any,
 								function (s) {
-									return _Utils_eq(s.dM, detail.eW);
+									return _Utils_eq(s.dQ, detail.e_);
 								},
 								sessions);
 						} else {
@@ -11236,7 +11306,7 @@ var $author$project$Update$update = F2(
 					}();
 					var isUserInSession = F2(
 						function (userId, session) {
-							return A2($elm$core$List$member, userId, session.d3) || A2($elm$core$List$member, userId, session.d1);
+							return A2($elm$core$List$member, userId, session.d7) || A2($elm$core$List$member, userId, session.d5);
 						});
 					var isSelectedServer = _Utils_eq(
 						model.aS,
@@ -11249,8 +11319,8 @@ var $author$project$Update$update = F2(
 							var startMs = _v37.a;
 							return $elm$core$Maybe$Just(
 								{
-									dn: endMs - startMs,
-									eV: $elm$core$List$length(sessions)
+									dq: endMs - startMs,
+									eZ: $elm$core$List$length(sessions)
 								});
 						} else {
 							return $elm$core$Maybe$Nothing;
@@ -11260,7 +11330,7 @@ var $author$project$Update$update = F2(
 						var _v36 = currentData.aH;
 						if (_v36.$ === 2) {
 							var info = _v36.a;
-							return $elm$core$Maybe$Just(info.fo);
+							return $elm$core$Maybe$Just(info.fs);
 						} else {
 							return $elm$core$Maybe$Nothing;
 						}
@@ -11268,27 +11338,27 @@ var $author$project$Update$update = F2(
 					var sessionsNeedingOrders = A2(
 						$elm$core$List$filter,
 						function (s) {
-							return s.e6 && (!A2($elm$core$Dict$member, s.dM, currentData.cA));
+							return s.fa && (!A2($elm$core$Dict$member, s.dQ, currentData.cD));
 						},
 						sessions);
 					var ordersFetchCmds = A2(
 						$elm$core$List$map,
 						function (s) {
 							return $author$project$Ports$getOrdersStatus(
-								A2($author$project$Api$Encode$getOrdersStatus, serverUrl, s.dM));
+								A2($author$project$Api$Encode$getOrdersStatus, serverUrl, s.dQ));
 						},
 						sessionsNeedingOrders);
 					var sessionsNeedingRules = A2(
 						$elm$core$List$filter,
 						function (s) {
-							return s.eR && (!A2($elm$core$Dict$member, s.dM, currentData.cC));
+							return s.eV && (!A2($elm$core$Dict$member, s.dQ, currentData.cF));
 						},
 						sessions);
 					var rulesFetchCmds = A2(
 						$elm$core$List$map,
 						function (s) {
 							return $author$project$Ports$getRules(
-								A2($author$project$Api$Encode$getRules, serverUrl, s.dM));
+								A2($author$project$Api$Encode$getRules, serverUrl, s.dQ));
 						},
 						sessionsNeedingRules);
 					var sessionsNeedingTurns = function () {
@@ -11297,7 +11367,7 @@ var $author$project$Update$update = F2(
 							return A2(
 								$elm$core$List$filter,
 								function (s) {
-									return s.e6 && (A2(isUserInSession, userId, s) && (!A2($elm$core$Dict$member, s.dM, currentData.cD)));
+									return s.fa && (A2(isUserInSession, userId, s) && (!A2($elm$core$Dict$member, s.dQ, currentData.cG)));
 								},
 								sessions);
 						} else {
@@ -11308,28 +11378,28 @@ var $author$project$Update$update = F2(
 						$elm$core$List$map,
 						function (s) {
 							return $author$project$Ports$getLatestTurn(
-								A2($author$project$Api$Encode$getLatestTurn, serverUrl, s.dM));
+								A2($author$project$Api$Encode$getLatestTurn, serverUrl, s.dQ));
 						},
 						sessionsNeedingTurns);
 					var _v34 = (!isSelectedServer) ? _Utils_Tuple2(
-						model.cx,
+						model.cA,
 						A3(
 							$author$project$Model$updateServerData,
 							serverUrl,
 							function (sd) {
 								return _Utils_update(
 									sd,
-									{bm: $elm$core$Maybe$Nothing, bn: false, bJ: fetchResult, cE: sessions});
+									{bm: $elm$core$Maybe$Nothing, bn: false, bL: fetchResult, cH: sessions});
 							},
 							model.aT)) : (sessionDetailStillExists ? _Utils_Tuple2(
-						model.cx,
+						model.cA,
 						A3(
 							$author$project$Model$updateServerData,
 							serverUrl,
 							function (sd) {
 								return _Utils_update(
 									sd,
-									{bm: $elm$core$Maybe$Nothing, bn: false, bJ: fetchResult, cE: sessions});
+									{bm: $elm$core$Maybe$Nothing, bn: false, bL: fetchResult, cH: sessions});
 							},
 							model.aT)) : _Utils_Tuple2(
 						$elm$core$Maybe$Nothing,
@@ -11339,7 +11409,7 @@ var $author$project$Update$update = F2(
 							function (sd) {
 								return _Utils_update(
 									sd,
-									{bm: $elm$core$Maybe$Nothing, bn: false, bJ: fetchResult, bK: $elm$core$Maybe$Nothing, cE: sessions});
+									{bm: $elm$core$Maybe$Nothing, bn: false, bL: fetchResult, bM: $elm$core$Maybe$Nothing, cH: sessions});
 							},
 							model.aT)));
 					var updatedSessionDetail = _v34.a;
@@ -11347,7 +11417,7 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{aT: baseServerData, cx: updatedSessionDetail}),
+							{aT: baseServerData, cA: updatedSessionDetail}),
 						$elm$core$Platform$Cmd$batch(
 							_Utils_ap(
 								rulesFetchCmds,
@@ -11377,7 +11447,7 @@ var $author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{
-							cr: $elm$core$Maybe$Just(sessionId)
+							cu: $elm$core$Maybe$Just(sessionId)
 						}),
 					function () {
 						var _v39 = model.aS;
@@ -11394,7 +11464,7 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{cy: filter}),
+						{cB: filter}),
 					$elm$core$Platform$Cmd$none);
 			case 37:
 				var _v40 = model.aS;
@@ -11427,34 +11497,34 @@ var $author$project$Update$update = F2(
 				if (!result.$) {
 					var session = result.a;
 					var shouldOpenDetail = _Utils_eq(
-						model.b4,
-						$elm$core$Maybe$Just(session.dM)) && _Utils_eq(
+						model.b7,
+						$elm$core$Maybe$Just(session.dQ)) && _Utils_eq(
 						model.aS,
 						$elm$core$Maybe$Just(serverUrl));
 					var currentData = A2($author$project$Model$getServerData, serverUrl, model.aT);
 					var sessionExists = A2(
 						$elm$core$List$any,
 						function (s) {
-							return _Utils_eq(s.dM, session.dM);
+							return _Utils_eq(s.dQ, session.dQ);
 						},
-						currentData.cE);
+						currentData.cH);
 					var updatedSessions = sessionExists ? A2(
 						$elm$core$List$map,
 						function (s) {
-							return _Utils_eq(s.dM, session.dM) ? session : s;
+							return _Utils_eq(s.dQ, session.dQ) ? session : s;
 						},
-						currentData.cE) : A2($elm$core$List$cons, session, currentData.cE);
+						currentData.cH) : A2($elm$core$List$cons, session, currentData.cH);
 					var updatedModel = _Utils_update(
 						model,
 						{
-							b4: shouldOpenDetail ? $elm$core$Maybe$Nothing : model.b4,
+							b7: shouldOpenDetail ? $elm$core$Maybe$Nothing : model.b7,
 							aT: A3(
 								$author$project$Model$updateServerData,
 								serverUrl,
 								function (sd) {
 									return _Utils_update(
 										sd,
-										{cE: updatedSessions});
+										{cH: updatedSessions});
 								},
 								model.aT)
 						});
@@ -11462,15 +11532,15 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							updatedModel,
 							{
-								cx: $elm$core$Maybe$Just(
-									{dj: $elm$core$Maybe$Nothing, ew: !session.e6, eW: session.dM, e_: false})
+								cA: $elm$core$Maybe$Just(
+									{dm: $elm$core$Maybe$Nothing, eA: !session.fa, e_: session.dQ, e2: false})
 							}),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(updatedModel, $elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{b4: $elm$core$Maybe$Nothing}),
+							{b7: $elm$core$Maybe$Nothing}),
 						$elm$core$Platform$Cmd$none);
 				}
 			case 39:
@@ -11480,7 +11550,7 @@ var $author$project$Update$update = F2(
 						{
 							bg: $elm$core$Maybe$Just(
 								$author$project$Model$CreateSessionDialog(
-									{c: $elm$core$Maybe$Nothing, dX: true, ea: '', j: false}))
+									{c: $elm$core$Maybe$Nothing, d$: true, ee: '', j: false}))
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 40:
@@ -11492,7 +11562,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{ea: name});
+								{ee: name});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 41:
@@ -11504,7 +11574,7 @@ var $author$project$Update$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{dX: isPublic});
+								{d$: isPublic});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 42:
@@ -11512,7 +11582,7 @@ var $author$project$Update$update = F2(
 				if (((!_v42.a.$) && (_v42.a.a.$ === 5)) && (!_v42.b.$)) {
 					var form = _v42.a.a.a;
 					var serverUrl = _v42.b.a;
-					return $elm$core$String$isEmpty(form.ea) ? _Utils_Tuple2(
+					return $elm$core$String$isEmpty(form.ee) ? _Utils_Tuple2(
 						A2($author$project$Update$updateDialogError, model, 'Session name is required'),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 						A2(
@@ -11524,7 +11594,7 @@ var $author$project$Update$update = F2(
 									{c: $elm$core$Maybe$Nothing, j: true});
 							}),
 						$author$project$Ports$createSession(
-							A3($author$project$Api$Encode$createSession, serverUrl, form.ea, form.dX)));
+							A3($author$project$Api$Encode$createSession, serverUrl, form.ee, form.d$)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
@@ -11602,9 +11672,9 @@ var $author$project$Update$update = F2(
 					var maybeSessionId = A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.eW;
+							return $.e_;
 						},
-						model.cx);
+						model.cA);
 					var cleanedServerData = function () {
 						if (!maybeSessionId.$) {
 							var sessionId = maybeSessionId.a;
@@ -11615,8 +11685,8 @@ var $author$project$Update$update = F2(
 									return _Utils_update(
 										sd,
 										{
-											cC: A2($elm$core$Dict$remove, sessionId, sd.cC),
-											cD: A2($elm$core$Dict$remove, sessionId, sd.cD)
+											cF: A2($elm$core$Dict$remove, sessionId, sd.cF),
+											cG: A2($elm$core$Dict$remove, sessionId, sd.cG)
 										});
 								},
 								model.aT);
@@ -11627,7 +11697,7 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{aT: cleanedServerData, cx: $elm$core$Maybe$Nothing}),
+							{aT: cleanedServerData, cA: $elm$core$Maybe$Nothing}),
 						$author$project$Ports$getSessions(serverUrl));
 				} else {
 					var err = result.a;
@@ -11667,9 +11737,9 @@ var $author$project$Update$update = F2(
 					var maybeSessionId = A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.eW;
+							return $.e_;
 						},
-						model.cx);
+						model.cA);
 					var cleanedServerData = function () {
 						if (!maybeSessionId.$) {
 							var sessionId = maybeSessionId.a;
@@ -11680,8 +11750,8 @@ var $author$project$Update$update = F2(
 									return _Utils_update(
 										sd,
 										{
-											cC: A2($elm$core$Dict$remove, sessionId, sd.cC),
-											cD: A2($elm$core$Dict$remove, sessionId, sd.cD)
+											cF: A2($elm$core$Dict$remove, sessionId, sd.cF),
+											cG: A2($elm$core$Dict$remove, sessionId, sd.cG)
 										});
 								},
 								model.aT);
@@ -11692,7 +11762,7 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{aT: cleanedServerData, cx: $elm$core$Maybe$Nothing}),
+							{aT: cleanedServerData, cA: $elm$core$Maybe$Nothing}),
 						$author$project$Ports$getSessions(serverUrl));
 				} else {
 					var err = result.a;
@@ -11733,13 +11803,13 @@ var $author$project$Update$update = F2(
 				var serverUrl = msg.a;
 				var result = msg.b;
 				if (!result.$) {
-					var _v54 = model.cx;
+					var _v54 = model.cA;
 					if (!_v54.$) {
 						var detail = _v54.a;
 						return _Utils_Tuple2(
 							model,
 							$author$project$Ports$getSession(
-								A2($author$project$Api$Encode$getSession, serverUrl, detail.eW)));
+								A2($author$project$Api$Encode$getSession, serverUrl, detail.e_)));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
@@ -11766,7 +11836,7 @@ var $author$project$Update$update = F2(
 								return _Utils_update(
 									sd,
 									{
-										bK: $elm$core$Maybe$Just(sessionId)
+										bM: $elm$core$Maybe$Just(sessionId)
 									});
 							},
 							model.aT);
@@ -11779,16 +11849,16 @@ var $author$project$Update$update = F2(
 					A2(
 						$elm$core$List$filter,
 						function (s) {
-							return _Utils_eq(s.dM, sessionId);
+							return _Utils_eq(s.dQ, sessionId);
 						},
-						serverData.cE));
+						serverData.cH));
 				var isStarted = A2(
 					$elm$core$Maybe$withDefault,
 					false,
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.e6;
+							return $.fa;
 						},
 						maybeSession));
 				var cmds = function () {
@@ -11796,7 +11866,7 @@ var $author$project$Update$update = F2(
 					if ((!_v55.a.$) && (!_v55.b.$)) {
 						var session = _v55.a.a;
 						var serverUrl = _v55.b.a;
-						var turnCmds = session.e6 ? _List_fromArray(
+						var turnCmds = session.fa ? _List_fromArray(
 							[
 								$author$project$Ports$getLatestTurn(
 								A2($author$project$Api$Encode$getLatestTurn, serverUrl, sessionId)),
@@ -11818,8 +11888,8 @@ var $author$project$Update$update = F2(
 						model,
 						{
 							aT: updatedServerData,
-							cx: $elm$core$Maybe$Just(
-								{dj: $elm$core$Maybe$Nothing, ew: !isStarted, eW: sessionId, e_: false})
+							cA: $elm$core$Maybe$Just(
+								{dm: $elm$core$Maybe$Nothing, eA: !isStarted, e_: sessionId, e2: false})
 						}),
 					$elm$core$Platform$Cmd$batch(cmds));
 			case 53:
@@ -11833,7 +11903,7 @@ var $author$project$Update$update = F2(
 							function (sd) {
 								return _Utils_update(
 									sd,
-									{bK: $elm$core$Maybe$Nothing});
+									{bM: $elm$core$Maybe$Nothing});
 							},
 							model.aT);
 					} else {
@@ -11843,20 +11913,20 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aT: updatedServerData, cx: $elm$core$Maybe$Nothing}),
+						{aT: updatedServerData, cA: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
 			case 54:
-				var _v58 = model.cx;
+				var _v58 = model.cA;
 				if (!_v58.$) {
 					var detail = _v58.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								cx: $elm$core$Maybe$Just(
+								cA: $elm$core$Maybe$Just(
 									_Utils_update(
 										detail,
-										{ew: !detail.ew}))
+										{eA: !detail.eA}))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11888,7 +11958,7 @@ var $author$project$Update$update = F2(
 								function (sd) {
 									return _Utils_update(
 										sd,
-										{cS: profiles});
+										{cV: profiles});
 								},
 								model.aT)
 						});
@@ -11903,7 +11973,7 @@ var $author$project$Update$update = F2(
 										$author$project$Model$UsersListDialog(
 											_Utils_update(
 												state,
-												{cT: profiles})))
+												{cW: profiles})))
 								});
 						} else {
 							return updatedModel;
@@ -11914,7 +11984,7 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 57:
-				var _v62 = model.cx;
+				var _v62 = model.cA;
 				if (!_v62.$) {
 					var detail = _v62.a;
 					return _Utils_Tuple2(
@@ -11923,7 +11993,7 @@ var $author$project$Update$update = F2(
 							{
 								bg: $elm$core$Maybe$Just(
 									$author$project$Model$InviteUserDialog(
-										$author$project$Model$emptyInviteForm(detail.eW)))
+										$author$project$Model$emptyInviteForm(detail.e_)))
 							}),
 						function () {
 							var _v63 = model.aS;
@@ -11953,7 +12023,7 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								f,
 								{
-									ct: $elm$core$Maybe$Just(userId)
+									cw: $elm$core$Maybe$Just(userId)
 								});
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -11961,7 +12031,7 @@ var $author$project$Update$update = F2(
 				var _v64 = model.bg;
 				if ((!_v64.$) && (_v64.a.$ === 6)) {
 					var form = _v64.a.a;
-					var _v65 = _Utils_Tuple2(model.aS, form.ct);
+					var _v65 = _Utils_Tuple2(model.aS, form.cw);
 					if ((!_v65.a.$) && (!_v65.b.$)) {
 						var serverUrl = _v65.a.a;
 						var userId = _v65.b.a;
@@ -11983,7 +12053,7 @@ var $author$project$Update$update = F2(
 											$elm$json$Json$Encode$string(serverUrl)),
 											_Utils_Tuple2(
 											'sessionId',
-											$elm$json$Json$Encode$string(form.eW)),
+											$elm$json$Json$Encode$string(form.e_)),
 											_Utils_Tuple2(
 											'userProfileId',
 											$elm$json$Json$Encode$string(userId))
@@ -12028,7 +12098,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								bg: $elm$core$Maybe$Just($author$project$Model$InvitationsDialog),
-								cF: false
+								cI: false
 							}),
 						$elm$core$Platform$Cmd$batch(
 							_List_fromArray(
@@ -12049,7 +12119,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								bg: $elm$core$Maybe$Nothing,
-								b4: $elm$core$Maybe$Just(sessionId)
+								b7: $elm$core$Maybe$Just(sessionId)
 							}),
 						$author$project$Ports$getSession(
 							A2($author$project$Api$Encode$getSession, serverUrl, sessionId)));
@@ -12066,7 +12136,7 @@ var $author$project$Update$update = F2(
 							$elm$core$List$map,
 							function (inv) {
 								return $author$project$Ports$getSession(
-									A2($author$project$Api$Encode$getSession, serverUrl, inv.eW));
+									A2($author$project$Api$Encode$getSession, serverUrl, inv.e_));
 							},
 							invitations));
 					return _Utils_Tuple2(
@@ -12079,7 +12149,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{bD: invitations});
+											{bF: invitations});
 									},
 									model.aT)
 							}),
@@ -12095,7 +12165,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{bD: _List_Nil});
+											{bF: _List_Nil});
 									},
 									model.aT)
 							}),
@@ -12116,7 +12186,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{cu: invitations});
+											{cx: invitations});
 									},
 									model.aT)
 							}),
@@ -12132,7 +12202,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{cu: _List_Nil});
+											{cx: _List_Nil});
 									},
 									model.aT)
 							}),
@@ -12165,7 +12235,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{bD: _List_Nil});
+											{bF: _List_Nil});
 									},
 									model.aT)
 							}),
@@ -12227,7 +12297,7 @@ var $author$project$Update$update = F2(
 							{
 								bg: $elm$core$Maybe$Just(
 									$author$project$Model$RacesDialog($elm$core$Maybe$Nothing)),
-								cF: false
+								cI: false
 							}),
 						$author$project$Ports$getRaces(serverUrl));
 				} else {
@@ -12248,7 +12318,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{ce: races});
+											{ch: races});
 									},
 									model.aT)
 							}),
@@ -12264,7 +12334,7 @@ var $author$project$Update$update = F2(
 									function (sd) {
 										return _Utils_update(
 											sd,
-											{ce: _List_Nil});
+											{ch: _List_Nil});
 									},
 									model.aT)
 							}),
@@ -12304,7 +12374,7 @@ var $author$project$Update$update = F2(
 										return _Utils_update(
 											sd,
 											{
-												ce: A2($elm$core$List$cons, newRace, currentData.ce)
+												ch: A2($elm$core$List$cons, newRace, currentData.ch)
 											});
 									},
 									model.aT)
@@ -12427,7 +12497,7 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								f,
 								{
-									cq: $elm$core$Maybe$Just(raceId)
+									ct: $elm$core$Maybe$Just(raceId)
 								});
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -12435,7 +12505,7 @@ var $author$project$Update$update = F2(
 				var _v86 = model.bg;
 				if ((!_v86.$) && (_v86.a.$ === 9)) {
 					var form = _v86.a.a;
-					var _v87 = _Utils_Tuple2(model.aS, form.cq);
+					var _v87 = _Utils_Tuple2(model.aS, form.ct);
 					if ((!_v87.a.$) && (!_v87.b.$)) {
 						var serverUrl = _v87.a.a;
 						var raceId = _v87.b.a;
@@ -12457,7 +12527,7 @@ var $author$project$Update$update = F2(
 											$elm$json$Json$Encode$string(serverUrl)),
 											_Utils_Tuple2(
 											'sessionId',
-											$elm$json$Json$Encode$string(form.eW)),
+											$elm$json$Json$Encode$string(form.e_)),
 											_Utils_Tuple2(
 											'raceId',
 											$elm$json$Json$Encode$string(raceId))
@@ -12478,7 +12548,7 @@ var $author$project$Update$update = F2(
 						var _v90 = model.bg;
 						if ((!_v90.$) && (_v90.a.$ === 9)) {
 							var form = _v90.a.a;
-							return $elm$core$Maybe$Just(form.eW);
+							return $elm$core$Maybe$Just(form.e_);
 						} else {
 							return $elm$core$Maybe$Nothing;
 						}
@@ -12535,7 +12605,7 @@ var $author$project$Update$update = F2(
 										return _Utils_update(
 											sd,
 											{
-												cB: A3($elm$core$Dict$insert, sessionId, race, sd.cB)
+												cE: A3($elm$core$Dict$insert, sessionId, race, sd.cE)
 											});
 									},
 									model.aT)
@@ -12562,7 +12632,7 @@ var $author$project$Update$update = F2(
 											$elm$json$Json$Encode$string(serverUrl)),
 											_Utils_Tuple2(
 											'sessionId',
-											$elm$json$Json$Encode$string(form.eW))
+											$elm$json$Json$Encode$string(form.e_))
 										]))));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -12612,7 +12682,7 @@ var $author$project$Update$update = F2(
 							function (f) {
 								return _Utils_update(
 									f,
-									{cs: templateName});
+									{cv: templateName});
 							}),
 						$author$project$Ports$getRaceTemplate(
 							A2($author$project$Api$Encode$getRaceTemplate, serverUrl, templateName)));
@@ -12652,7 +12722,7 @@ var $author$project$Update$update = F2(
 									f,
 									{
 										c: $elm$core$Maybe$Just(err),
-										cs: 'custom'
+										cv: 'custom'
 									});
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -12665,7 +12735,7 @@ var $author$project$Update$update = F2(
 						function (f) {
 							return _Utils_update(
 								f,
-								{cs: 'custom'});
+								{cv: 'custom'});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 91:
@@ -12676,7 +12746,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{e4: name});
+							{e8: name});
 					});
 			case 92:
 				var name = msg.a;
@@ -12686,7 +12756,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{ex: name});
+							{eB: name});
 					});
 			case 93:
 				var password = msg.a;
@@ -12696,7 +12766,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{er: password});
+							{ev: password});
 					});
 			case 94:
 				var icon = msg.a;
@@ -12706,7 +12776,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dK: icon});
+							{dO: icon});
 					});
 			case 95:
 				var option = msg.a;
@@ -12716,7 +12786,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{d$: option});
+							{d3: option});
 					});
 			case 96:
 				var prt = msg.a;
@@ -12726,7 +12796,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{ey: prt});
+							{eC: prt});
 					});
 			case 97:
 				var lrtIndex = msg.a;
@@ -12734,19 +12804,19 @@ var $author$project$Update$update = F2(
 					$author$project$Update$updateRaceConfigAndValidate,
 					model,
 					function (c) {
-						return A2($elm$core$List$member, lrtIndex, c.d0) ? _Utils_update(
+						return A2($elm$core$List$member, lrtIndex, c.d4) ? _Utils_update(
 							c,
 							{
-								d0: A2(
+								d4: A2(
 									$elm$core$List$filter,
 									function (i) {
 										return !_Utils_eq(i, lrtIndex);
 									},
-									c.d0)
+									c.d4)
 							}) : _Utils_update(
 							c,
 							{
-								d0: A2($elm$core$List$cons, lrtIndex, c.d0)
+								d4: A2($elm$core$List$cons, lrtIndex, c.d4)
 							});
 					});
 			case 98:
@@ -12757,7 +12827,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dB: val});
+							{dF: val});
 					});
 			case 99:
 				var val = msg.a;
@@ -12767,7 +12837,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dD: val});
+							{dH: val});
 					});
 			case 100:
 				var val = msg.a;
@@ -12777,7 +12847,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dC: val});
+							{dG: val});
 					});
 			case 101:
 				var minVal = msg.a;
@@ -12790,7 +12860,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dB: newCenter, dD: newWidth});
+							{dF: newCenter, dH: newWidth});
 					});
 			case 102:
 				var val = msg.a;
@@ -12800,7 +12870,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{fd: val});
+							{fh: val});
 					});
 			case 103:
 				var val = msg.a;
@@ -12810,7 +12880,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{ff: val});
+							{fj: val});
 					});
 			case 104:
 				var val = msg.a;
@@ -12820,7 +12890,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{fe: val});
+							{fi: val});
 					});
 			case 105:
 				var minVal = msg.a;
@@ -12833,7 +12903,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{fd: newCenter, ff: newWidth});
+							{fh: newCenter, fj: newWidth});
 					});
 			case 106:
 				var val = msg.a;
@@ -12843,7 +12913,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eB: val});
+							{eF: val});
 					});
 			case 107:
 				var val = msg.a;
@@ -12853,7 +12923,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eD: val});
+							{eH: val});
 					});
 			case 108:
 				var val = msg.a;
@@ -12863,7 +12933,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eC: val});
+							{eG: val});
 					});
 			case 109:
 				var minVal = msg.a;
@@ -12876,7 +12946,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eB: newCenter, eD: newWidth});
+							{eF: newCenter, eH: newWidth});
 					});
 			case 110:
 				var val = msg.a;
@@ -12886,7 +12956,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dE: val});
+							{dI: val});
 					});
 			case 111:
 				var btn = msg.a;
@@ -12896,7 +12966,7 @@ var $author$project$Update$update = F2(
 					var newForm = _Utils_update(
 						form,
 						{
-							bz: $elm$core$Maybe$Just(btn)
+							bB: $elm$core$Maybe$Just(btn)
 						});
 					var modelWithHeld = _Utils_update(
 						model,
@@ -12914,7 +12984,7 @@ var $author$project$Update$update = F2(
 					var form = _v99.a.a;
 					var newForm = _Utils_update(
 						form,
-						{bz: $elm$core$Maybe$Nothing});
+						{bB: $elm$core$Maybe$Nothing});
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -12930,7 +13000,7 @@ var $author$project$Update$update = F2(
 				var _v100 = model.bg;
 				if ((!_v100.$) && (_v100.a.$ === 10)) {
 					var form = _v100.a.a;
-					var _v101 = form.bz;
+					var _v101 = form.bB;
 					if (!_v101.$) {
 						var btn = _v101.a;
 						return A2($author$project$Update$performHabButtonAction, model, btn);
@@ -12948,7 +13018,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{da: val});
+							{dd: val});
 					});
 			case 115:
 				var val = msg.a;
@@ -12958,7 +13028,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dx: val});
+							{dA: val});
 					});
 			case 116:
 				var val = msg.a;
@@ -12968,7 +13038,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dv: val});
+							{dy: val});
 					});
 			case 117:
 				var val = msg.a;
@@ -12978,7 +13048,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{dw: val});
+							{dz: val});
 					});
 			case 118:
 				var val = msg.a;
@@ -12988,7 +13058,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{du: val});
+							{dx: val});
 					});
 			case 119:
 				var val = msg.a;
@@ -12998,7 +13068,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{d7: val});
+							{eb: val});
 					});
 			case 120:
 				var val = msg.a;
@@ -13008,7 +13078,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{d5: val});
+							{d9: val});
 					});
 			case 121:
 				var val = msg.a;
@@ -13018,7 +13088,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{d6: val});
+							{ea: val});
 					});
 			case 122:
 				var val = msg.a;
@@ -13028,7 +13098,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eL: val});
+							{eP: val});
 					});
 			case 123:
 				var val = msg.a;
@@ -13038,7 +13108,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eN: val});
+							{eR: val});
 					});
 			case 124:
 				var val = msg.a;
@@ -13048,7 +13118,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eM: val});
+							{eQ: val});
 					});
 			case 125:
 				var val = msg.a;
@@ -13058,7 +13128,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eJ: val});
+							{eN: val});
 					});
 			case 126:
 				var val = msg.a;
@@ -13068,7 +13138,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eK: val});
+							{eO: val});
 					});
 			case 127:
 				var val = msg.a;
@@ -13078,7 +13148,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{eI: val});
+							{eM: val});
 					});
 			case 128:
 				var val = msg.a;
@@ -13088,7 +13158,7 @@ var $author$project$Update$update = F2(
 					function (c) {
 						return _Utils_update(
 							c,
-							{fc: val});
+							{fg: val});
 					});
 			case 129:
 				var result = msg.a;
@@ -13101,7 +13171,7 @@ var $author$project$Update$update = F2(
 							function (f) {
 								return _Utils_update(
 									f,
-									{cU: validation});
+									{cX: validation});
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -13124,9 +13194,9 @@ var $author$project$Update$update = F2(
 				if (((!_v103.a.$) && (_v103.a.a.$ === 10)) && (!_v103.b.$)) {
 					var form = _v103.a.a.a;
 					var serverUrl = _v103.b.a;
-					if (form.cU.bF) {
+					if (form.cX.bH) {
 						var maybeSessionId = function () {
-							var _v104 = form.b_;
+							var _v104 = form.b0;
 							if (_v104.$ === 1) {
 								var sessionId = _v104.a;
 								return $elm$core$Maybe$Just(sessionId);
@@ -13163,7 +13233,7 @@ var $author$project$Update$update = F2(
 								$author$project$Ports$getRaces(serverUrl)
 							]);
 						var allCmds = function () {
-							var _v107 = form.b_;
+							var _v107 = form.b0;
 							if (_v107.$ === 1) {
 								var sessionId = _v107.a;
 								return _Utils_ap(
@@ -13216,14 +13286,14 @@ var $author$project$Update$update = F2(
 						a$: 0,
 						a7: $author$project$Model$defaultRaceConfig,
 						c: $elm$core$Maybe$Nothing,
-						bz: $elm$core$Maybe$Nothing,
+						bB: $elm$core$Maybe$Nothing,
 						I: true,
-						bN: $author$project$Model$ViewMode(
-							{eA: raceId, az: raceName}),
-						b_: $author$project$Model$FromRacesDialog,
-						cs: 'custom',
+						bP: $author$project$Model$ViewMode(
+							{eE: raceId, az: raceName}),
+						b0: $author$project$Model$FromRacesDialog,
+						cv: 'custom',
 						j: false,
-						cU: {bk: _List_Nil, by: $author$project$Model$emptyHabitabilityDisplay, bF: false, bL: _List_Nil, b7: 0, cc: _List_Nil, cW: _List_Nil}
+						cX: {bk: _List_Nil, bA: $author$project$Model$emptyHabitabilityDisplay, bH: false, bN: _List_Nil, ca: 0, cf: _List_Nil, cZ: _List_Nil}
 					};
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -13291,7 +13361,7 @@ var $author$project$Update$update = F2(
 						function (f) {
 							return _Utils_update(
 								f,
-								{bN: $author$project$Model$EditMode});
+								{bP: $author$project$Model$EditMode});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 135:
@@ -13323,13 +13393,13 @@ var $author$project$Update$update = F2(
 				var serverUrl = msg.a;
 				var result = msg.b;
 				if (!result.$) {
-					var _v113 = model.cx;
+					var _v113 = model.cA;
 					if (!_v113.$) {
 						var detail = _v113.a;
 						return _Utils_Tuple2(
 							model,
 							$author$project$Ports$getSession(
-								A2($author$project$Api$Encode$getSession, serverUrl, detail.eW)));
+								A2($author$project$Api$Encode$getSession, serverUrl, detail.e_)));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
@@ -13352,7 +13422,7 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							model,
 							{
-								cH: $elm$core$Maybe$Just(sessionId)
+								cK: $elm$core$Maybe$Just(sessionId)
 							}),
 						$author$project$Ports$startGame(
 							$elm$json$Json$Encode$object(
@@ -13372,20 +13442,20 @@ var $author$project$Update$update = F2(
 				var serverUrl = msg.a;
 				var result = msg.b;
 				if (!result.$) {
-					var _v116 = model.cx;
+					var _v116 = model.cA;
 					if (!_v116.$) {
 						var detail = _v116.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{cH: $elm$core$Maybe$Nothing}),
+								{cK: $elm$core$Maybe$Nothing}),
 							$author$project$Ports$getSession(
-								A2($author$project$Api$Encode$getSession, serverUrl, detail.eW)));
+								A2($author$project$Api$Encode$getSession, serverUrl, detail.e_)));
 					} else {
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{cH: $elm$core$Maybe$Nothing}),
+								{cK: $elm$core$Maybe$Nothing}),
 							$elm$core$Platform$Cmd$none);
 					}
 				} else {
@@ -13395,7 +13465,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								c: $elm$core$Maybe$Just(err),
-								cH: $elm$core$Maybe$Nothing
+								cK: $elm$core$Maybe$Nothing
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -13404,19 +13474,19 @@ var $author$project$Update$update = F2(
 				var playerName = msg.b;
 				var mouseX = msg.c;
 				var mouseY = msg.d;
-				var _v117 = model.cx;
+				var _v117 = model.cA;
 				if (!_v117.$) {
 					var detail = _v117.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								cx: $elm$core$Maybe$Just(
+								cA: $elm$core$Maybe$Just(
 									_Utils_update(
 										detail,
 										{
-											dj: $elm$core$Maybe$Just(
-												{dh: $elm$core$Maybe$Nothing, dk: playerId, dl: playerName, d9: mouseX, bP: mouseY})
+											dm: $elm$core$Maybe$Just(
+												{dk: $elm$core$Maybe$Nothing, dn: playerId, $7: playerName, ed: mouseX, bR: mouseY})
 										}))
 							}),
 						$author$project$Ports$clearSelection(0));
@@ -13426,24 +13496,24 @@ var $author$project$Update$update = F2(
 			case 140:
 				var mouseX = msg.a;
 				var mouseY = msg.b;
-				var _v118 = model.cx;
+				var _v118 = model.cA;
 				if (!_v118.$) {
 					var detail = _v118.a;
-					var _v119 = detail.dj;
+					var _v119 = detail.dm;
 					if (!_v119.$) {
 						var dragState = _v119.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
-									cx: $elm$core$Maybe$Just(
+									cA: $elm$core$Maybe$Just(
 										_Utils_update(
 											detail,
 											{
-												dj: $elm$core$Maybe$Just(
+												dm: $elm$core$Maybe$Just(
 													_Utils_update(
 														dragState,
-														{d9: mouseX, bP: mouseY}))
+														{ed: mouseX, bR: mouseY}))
 											}))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -13455,25 +13525,25 @@ var $author$project$Update$update = F2(
 				}
 			case 141:
 				var playerId = msg.a;
-				var _v120 = model.cx;
+				var _v120 = model.cA;
 				if (!_v120.$) {
 					var detail = _v120.a;
-					var _v121 = detail.dj;
+					var _v121 = detail.dm;
 					if (!_v121.$) {
 						var dragState = _v121.a;
-						return (!_Utils_eq(dragState.dk, playerId)) ? _Utils_Tuple2(
+						return (!_Utils_eq(dragState.dn, playerId)) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
-									cx: $elm$core$Maybe$Just(
+									cA: $elm$core$Maybe$Just(
 										_Utils_update(
 											detail,
 											{
-												dj: $elm$core$Maybe$Just(
+												dm: $elm$core$Maybe$Just(
 													_Utils_update(
 														dragState,
 														{
-															dh: $elm$core$Maybe$Just(playerId)
+															dk: $elm$core$Maybe$Just(playerId)
 														}))
 											}))
 								}),
@@ -13485,24 +13555,24 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 142:
-				var _v122 = model.cx;
+				var _v122 = model.cA;
 				if (!_v122.$) {
 					var detail = _v122.a;
-					var _v123 = detail.dj;
+					var _v123 = detail.dm;
 					if (!_v123.$) {
 						var dragState = _v123.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
-									cx: $elm$core$Maybe$Just(
+									cA: $elm$core$Maybe$Just(
 										_Utils_update(
 											detail,
 											{
-												dj: $elm$core$Maybe$Just(
+												dm: $elm$core$Maybe$Just(
 													_Utils_update(
 														dragState,
-														{dh: $elm$core$Maybe$Nothing}))
+														{dk: $elm$core$Maybe$Nothing}))
 											}))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -13513,18 +13583,18 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 143:
-				var _v124 = _Utils_Tuple2(model.aS, model.cx);
+				var _v124 = _Utils_Tuple2(model.aS, model.cA);
 				if ((!_v124.a.$) && (!_v124.b.$)) {
 					var serverUrl = _v124.a.a;
 					var detail = _v124.b.a;
-					var _v125 = detail.dj;
+					var _v125 = detail.dm;
 					if (!_v125.$) {
 						var dragState = _v125.a;
-						var _v126 = dragState.dh;
+						var _v126 = dragState.dk;
 						if (!_v126.$) {
 							var targetPlayerId = _v126.a;
 							var currentData = A2($author$project$Model$getServerData, serverUrl, model.aT);
-							var maybeSession = A2($author$project$Model$getSessionById, detail.eW, currentData.cE);
+							var maybeSession = A2($author$project$Model$getSessionById, detail.e_, currentData.cH);
 							if (!maybeSession.$) {
 								var session = maybeSession.a;
 								var targetIndex = A2(
@@ -13535,9 +13605,9 @@ var $author$project$Update$update = F2(
 											$elm$core$List$filter,
 											function (_v130) {
 												var p = _v130.b;
-												return _Utils_eq(p.fp, targetPlayerId);
+												return _Utils_eq(p.ft, targetPlayerId);
 											},
-											A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ev))));
+											A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ez))));
 								var draggedIndex = A2(
 									$elm$core$Maybe$map,
 									$elm$core$Tuple$first,
@@ -13546,15 +13616,15 @@ var $author$project$Update$update = F2(
 											$elm$core$List$filter,
 											function (_v129) {
 												var p = _v129.b;
-												return _Utils_eq(p.fp, dragState.dk);
+												return _Utils_eq(p.ft, dragState.dn);
 											},
-											A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ev))));
+											A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ez))));
 								var _v128 = _Utils_Tuple2(draggedIndex, targetIndex);
 								if ((!_v128.a.$) && (!_v128.b.$)) {
 									var fromIdx = _v128.a.a;
 									var toIdx = _v128.b.a;
 									if (!_Utils_eq(fromIdx, toIdx)) {
-										var reorderedPlayers = A3($author$project$Update$moveItem, fromIdx, toIdx, session.ev);
+										var reorderedPlayers = A3($author$project$Update$moveItem, fromIdx, toIdx, session.ez);
 										var playerOrders = A2(
 											$elm$core$List$indexedMap,
 											F2(
@@ -13564,7 +13634,7 @@ var $author$project$Update$update = F2(
 															[
 																_Utils_Tuple2(
 																'userProfileId',
-																$elm$json$Json$Encode$string(p.fp)),
+																$elm$json$Json$Encode$string(p.ft)),
 																_Utils_Tuple2(
 																'playerOrder',
 																$elm$json$Json$Encode$int(idx))
@@ -13575,10 +13645,10 @@ var $author$project$Update$update = F2(
 											_Utils_update(
 												model,
 												{
-													cx: $elm$core$Maybe$Just(
+													cA: $elm$core$Maybe$Just(
 														_Utils_update(
 															detail,
-															{dj: $elm$core$Maybe$Nothing}))
+															{dm: $elm$core$Maybe$Nothing}))
 												}),
 											$author$project$Ports$reorderPlayers(
 												$elm$json$Json$Encode$object(
@@ -13589,7 +13659,7 @@ var $author$project$Update$update = F2(
 															$elm$json$Json$Encode$string(serverUrl)),
 															_Utils_Tuple2(
 															'sessionId',
-															$elm$json$Json$Encode$string(detail.eW)),
+															$elm$json$Json$Encode$string(detail.e_)),
 															_Utils_Tuple2(
 															'playerOrders',
 															A2($elm$json$Json$Encode$list, $elm$core$Basics$identity, playerOrders))
@@ -13599,10 +13669,10 @@ var $author$project$Update$update = F2(
 											_Utils_update(
 												model,
 												{
-													cx: $elm$core$Maybe$Just(
+													cA: $elm$core$Maybe$Just(
 														_Utils_update(
 															detail,
-															{dj: $elm$core$Maybe$Nothing}))
+															{dm: $elm$core$Maybe$Nothing}))
 												}),
 											$elm$core$Platform$Cmd$none);
 									}
@@ -13611,10 +13681,10 @@ var $author$project$Update$update = F2(
 										_Utils_update(
 											model,
 											{
-												cx: $elm$core$Maybe$Just(
+												cA: $elm$core$Maybe$Just(
 													_Utils_update(
 														detail,
-														{dj: $elm$core$Maybe$Nothing}))
+														{dm: $elm$core$Maybe$Nothing}))
 											}),
 										$elm$core$Platform$Cmd$none);
 								}
@@ -13623,10 +13693,10 @@ var $author$project$Update$update = F2(
 									_Utils_update(
 										model,
 										{
-											cx: $elm$core$Maybe$Just(
+											cA: $elm$core$Maybe$Just(
 												_Utils_update(
 													detail,
-													{dj: $elm$core$Maybe$Nothing}))
+													{dm: $elm$core$Maybe$Nothing}))
 										}),
 									$elm$core$Platform$Cmd$none);
 							}
@@ -13635,10 +13705,10 @@ var $author$project$Update$update = F2(
 								_Utils_update(
 									model,
 									{
-										cx: $elm$core$Maybe$Just(
+										cA: $elm$core$Maybe$Just(
 											_Utils_update(
 												detail,
-												{dj: $elm$core$Maybe$Nothing}))
+												{dm: $elm$core$Maybe$Nothing}))
 									}),
 								$elm$core$Platform$Cmd$none);
 						}
@@ -13652,13 +13722,13 @@ var $author$project$Update$update = F2(
 				var serverUrl = msg.a;
 				var result = msg.b;
 				if (!result.$) {
-					var _v132 = model.cx;
+					var _v132 = model.cA;
 					if (!_v132.$) {
 						var detail = _v132.a;
 						return _Utils_Tuple2(
 							model,
 							$author$project$Ports$getSession(
-								A2($author$project$Api$Encode$getSession, serverUrl, detail.eW)));
+								A2($author$project$Api$Encode$getSession, serverUrl, detail.e_)));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
@@ -13679,23 +13749,23 @@ var $author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{
-							cv: $elm$core$Maybe$Just(
-								{di: $elm$core$Maybe$Nothing, dm: serverUrl, bP: mouseY})
+							cy: $elm$core$Maybe$Just(
+								{dl: $elm$core$Maybe$Nothing, dp: serverUrl, bR: mouseY})
 						}),
 					$author$project$Ports$clearSelection(0));
 			case 146:
 				var mouseY = msg.a;
-				var _v133 = model.cv;
+				var _v133 = model.cy;
 				if (!_v133.$) {
 					var dragState = _v133.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								cv: $elm$core$Maybe$Just(
+								cy: $elm$core$Maybe$Just(
 									_Utils_update(
 										dragState,
-										{bP: mouseY}))
+										{bR: mouseY}))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -13703,18 +13773,18 @@ var $author$project$Update$update = F2(
 				}
 			case 147:
 				var serverUrl = msg.a;
-				var _v134 = model.cv;
+				var _v134 = model.cy;
 				if (!_v134.$) {
 					var dragState = _v134.a;
-					return (!_Utils_eq(dragState.dm, serverUrl)) ? _Utils_Tuple2(
+					return (!_Utils_eq(dragState.dp, serverUrl)) ? _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								cv: $elm$core$Maybe$Just(
+								cy: $elm$core$Maybe$Just(
 									_Utils_update(
 										dragState,
 										{
-											di: $elm$core$Maybe$Just(serverUrl)
+											dl: $elm$core$Maybe$Just(serverUrl)
 										}))
 							}),
 						$elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -13722,27 +13792,27 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 148:
-				var _v135 = model.cv;
+				var _v135 = model.cy;
 				if (!_v135.$) {
 					var dragState = _v135.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								cv: $elm$core$Maybe$Just(
+								cy: $elm$core$Maybe$Just(
 									_Utils_update(
 										dragState,
-										{di: $elm$core$Maybe$Nothing}))
+										{dl: $elm$core$Maybe$Nothing}))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 149:
-				var _v136 = model.cv;
+				var _v136 = model.cy;
 				if (!_v136.$) {
 					var dragState = _v136.a;
-					var _v137 = dragState.di;
+					var _v137 = dragState.dl;
 					if (!_v137.$) {
 						var targetUrl = _v137.a;
 						var targetIndex = A2(
@@ -13753,9 +13823,9 @@ var $author$project$Update$update = F2(
 									$elm$core$List$filter,
 									function (_v140) {
 										var s = _v140.b;
-										return _Utils_eq(s.fm, targetUrl);
+										return _Utils_eq(s.fq, targetUrl);
 									},
-									A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, model.cw))));
+									A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, model.cz))));
 						var draggedIndex = A2(
 							$elm$core$Maybe$map,
 							$elm$core$Tuple$first,
@@ -13764,15 +13834,15 @@ var $author$project$Update$update = F2(
 									$elm$core$List$filter,
 									function (_v139) {
 										var s = _v139.b;
-										return _Utils_eq(s.fm, dragState.dm);
+										return _Utils_eq(s.fq, dragState.dp);
 									},
-									A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, model.cw))));
+									A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, model.cz))));
 						var _v138 = _Utils_Tuple2(draggedIndex, targetIndex);
 						if ((!_v138.a.$) && (!_v138.b.$)) {
 							var fromIdx = _v138.a.a;
 							var toIdx = _v138.b.a;
 							if (!_Utils_eq(fromIdx, toIdx)) {
-								var reorderedServers = A3($author$project$Update$moveItem, fromIdx, toIdx, model.cw);
+								var reorderedServers = A3($author$project$Update$moveItem, fromIdx, toIdx, model.cz);
 								var serverOrders = A2(
 									$elm$core$List$indexedMap,
 									F2(
@@ -13782,7 +13852,7 @@ var $author$project$Update$update = F2(
 													[
 														_Utils_Tuple2(
 														'url',
-														$elm$json$Json$Encode$string(s.fm)),
+														$elm$json$Json$Encode$string(s.fq)),
 														_Utils_Tuple2(
 														'order',
 														$elm$json$Json$Encode$int(idx))
@@ -13792,7 +13862,7 @@ var $author$project$Update$update = F2(
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{cv: $elm$core$Maybe$Nothing, cw: reorderedServers}),
+										{cy: $elm$core$Maybe$Nothing, cz: reorderedServers}),
 									$author$project$Ports$reorderServers(
 										$elm$json$Json$Encode$object(
 											_List_fromArray(
@@ -13805,21 +13875,21 @@ var $author$project$Update$update = F2(
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{cv: $elm$core$Maybe$Nothing}),
+										{cy: $elm$core$Maybe$Nothing}),
 									$elm$core$Platform$Cmd$none);
 							}
 						} else {
 							return _Utils_Tuple2(
 								_Utils_update(
 									model,
-									{cv: $elm$core$Maybe$Nothing}),
+									{cy: $elm$core$Maybe$Nothing}),
 								$elm$core$Platform$Cmd$none);
 						}
 					} else {
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{cv: $elm$core$Maybe$Nothing}),
+								{cy: $elm$core$Maybe$Nothing}),
 							$elm$core$Platform$Cmd$none);
 					}
 				} else {
@@ -13850,7 +13920,7 @@ var $author$project$Update$update = F2(
 						var _v147 = currentData.aH;
 						if (_v147.$ === 2) {
 							var info = _v147.a;
-							return $elm$core$Maybe$Just(info.fo);
+							return $elm$core$Maybe$Just(info.fs);
 						} else {
 							return $elm$core$Maybe$Nothing;
 						}
@@ -13858,34 +13928,34 @@ var $author$project$Update$update = F2(
 					var isManager = function () {
 						var _v146 = _Utils_Tuple2(
 							currentUserId,
-							A2($author$project$Model$getSessionById, sessionId, currentData.cE));
+							A2($author$project$Model$getSessionById, sessionId, currentData.cH));
 						if ((!_v146.a.$) && (!_v146.b.$)) {
 							var userId = _v146.a.a;
 							var session = _v146.b.a;
-							return A2($elm$core$List$member, userId, session.d1);
+							return A2($elm$core$List$member, userId, session.d5);
 						} else {
 							return false;
 						}
 					}();
-					var cachedRules = A2($elm$core$Dict$get, sessionId, currentData.cC);
+					var cachedRules = A2($elm$core$Dict$get, sessionId, currentData.cF);
 					var _v143 = function () {
 						var _v144 = _Utils_Tuple2(rulesIsSet, cachedRules);
 						if (_v144.a) {
 							if (!_v144.b.$) {
 								var rules = _v144.b.a;
 								return _Utils_Tuple2(
-									{c: $elm$core$Maybe$Nothing, dW: isManager, I: false, cl: rules, eW: sessionId, j: false},
+									{c: $elm$core$Maybe$Nothing, d_: isManager, I: false, co: rules, e_: sessionId, j: false},
 									$elm$core$Platform$Cmd$none);
 							} else {
 								var _v145 = _v144.b;
 								return _Utils_Tuple2(
-									{c: $elm$core$Maybe$Nothing, dW: isManager, I: true, cl: $author$project$Api$Rules$defaultRules, eW: sessionId, j: false},
+									{c: $elm$core$Maybe$Nothing, d_: isManager, I: true, co: $author$project$Api$Rules$defaultRules, e_: sessionId, j: false},
 									$author$project$Ports$getRules(
 										A2($author$project$Api$Encode$getRules, serverUrl, sessionId)));
 							}
 						} else {
 							return _Utils_Tuple2(
-								{c: $elm$core$Maybe$Nothing, dW: isManager, I: false, cl: $author$project$Api$Rules$defaultRules, eW: sessionId, j: false},
+								{c: $elm$core$Maybe$Nothing, d_: isManager, I: false, co: $author$project$Api$Rules$defaultRules, e_: sessionId, j: false},
 								$elm$core$Platform$Cmd$none);
 						}
 					}();
@@ -13920,7 +13990,7 @@ var $author$project$Update$update = F2(
 											$author$project$Model$RulesDialog(
 												_Utils_update(
 													form,
-													{I: false, cl: rules})));
+													{I: false, co: rules})));
 									} else {
 										var other = _v149;
 										return other;
@@ -13933,7 +14003,7 @@ var $author$project$Update$update = F2(
 										return _Utils_update(
 											sd,
 											{
-												cC: A3($elm$core$Dict$insert, sessionId, rules, sd.cC)
+												cF: A3($elm$core$Dict$insert, sessionId, rules, sd.cF)
 											});
 									},
 									model.aT)
@@ -13964,7 +14034,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{fk: val});
+								{fo: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 156:
@@ -13976,7 +14046,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{de: val});
+								{dh: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 157:
@@ -13988,7 +14058,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{e7: val});
+								{fb: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 158:
@@ -14001,7 +14071,7 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								r,
 								{
-									eE: $elm$core$String$toInt(val)
+									eI: $elm$core$String$toInt(val)
 								});
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -14014,7 +14084,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{d2: val});
+								{d6: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 160:
@@ -14026,7 +14096,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{e5: val});
+								{e9: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 161:
@@ -14038,7 +14108,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{c_: val});
+								{c1: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 162:
@@ -14050,7 +14120,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{ef: val});
+								{ej: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 163:
@@ -14062,7 +14132,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{db: val});
+								{de: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 164:
@@ -14074,7 +14144,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{ez: val});
+								{eD: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 165:
@@ -14086,7 +14156,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{dA: val});
+								{dD: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 166:
@@ -14098,7 +14168,7 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{fG: val});
+								{fK: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 167:
@@ -14111,9 +14181,9 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								r,
 								{
-									fH: A2(
+									fL: A2(
 										$elm$core$Maybe$withDefault,
-										r.fH,
+										r.fL,
 										$elm$core$String$toInt(val))
 								});
 						}),
@@ -14127,56 +14197,10 @@ var $author$project$Update$update = F2(
 						function (r) {
 							return _Utils_update(
 								r,
-								{fs: val});
+								{fw: val});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 169:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{
-									fu: A2(
-										$elm$core$Maybe$withDefault,
-										r.fu,
-										$elm$core$String$toInt(val))
-								});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 170:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{
-									ft: A2(
-										$elm$core$Maybe$withDefault,
-										r.ft,
-										$elm$core$String$toInt(val))
-								});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 171:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{fx: val});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 172:
 				var val = msg.a;
 				return _Utils_Tuple2(
 					A2(
@@ -14193,19 +14217,7 @@ var $author$project$Update$update = F2(
 								});
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 173:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{fv: val});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 174:
+			case 170:
 				var val = msg.a;
 				return _Utils_Tuple2(
 					A2(
@@ -14215,72 +14227,14 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								r,
 								{
-									fw: A2(
+									fx: A2(
 										$elm$core$Maybe$withDefault,
-										r.fw,
+										r.fx,
 										$elm$core$String$toInt(val))
 								});
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 175:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{fz: val});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 176:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{
-									fA: A2(
-										$elm$core$Maybe$withDefault,
-										r.fA,
-										$elm$core$String$toInt(val))
-								});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 177:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{fE: val});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 178:
-				var val = msg.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Update$updateRules,
-						model,
-						function (r) {
-							return _Utils_update(
-								r,
-								{
-									fF: A2(
-										$elm$core$Maybe$withDefault,
-										r.fF,
-										$elm$core$String$toInt(val))
-								});
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 179:
+			case 171:
 				var val = msg.a;
 				return _Utils_Tuple2(
 					A2(
@@ -14292,7 +14246,7 @@ var $author$project$Update$update = F2(
 								{fB: val});
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 180:
+			case 172:
 				var val = msg.a;
 				return _Utils_Tuple2(
 					A2(
@@ -14309,6 +14263,122 @@ var $author$project$Update$update = F2(
 								});
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 173:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{fz: val});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 174:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{
+									fA: A2(
+										$elm$core$Maybe$withDefault,
+										r.fA,
+										$elm$core$String$toInt(val))
+								});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 175:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{fD: val});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 176:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{
+									fE: A2(
+										$elm$core$Maybe$withDefault,
+										r.fE,
+										$elm$core$String$toInt(val))
+								});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 177:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{fI: val});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 178:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{
+									fJ: A2(
+										$elm$core$Maybe$withDefault,
+										r.fJ,
+										$elm$core$String$toInt(val))
+								});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 179:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{fF: val});
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 180:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Update$updateRules,
+						model,
+						function (r) {
+							return _Utils_update(
+								r,
+								{
+									fG: A2(
+										$elm$core$Maybe$withDefault,
+										r.fG,
+										$elm$core$String$toInt(val))
+								});
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 181:
 				var val = msg.a;
 				return _Utils_Tuple2(
@@ -14319,9 +14389,9 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								r,
 								{
-									fI: A2(
+									fM: A2(
 										$elm$core$Maybe$withDefault,
-										r.fI,
+										r.fM,
 										$elm$core$String$toInt(val))
 								});
 						}),
@@ -14336,9 +14406,9 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								r,
 								{
-									fD: A2(
+									fH: A2(
 										$elm$core$Maybe$withDefault,
-										r.fD,
+										r.fH,
 										$elm$core$String$toInt(val))
 								});
 						}),
@@ -14360,7 +14430,7 @@ var $author$project$Update$update = F2(
 										{c: $elm$core$Maybe$Nothing, j: true});
 								}),
 							$author$project$Ports$setRules(
-								A3($author$project$Api$Encode$setRules, serverUrl, form.eW, form.cl)));
+								A3($author$project$Api$Encode$setRules, serverUrl, form.e_, form.co)));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
@@ -14387,13 +14457,13 @@ var $author$project$Update$update = F2(
 											return _Utils_update(
 												sd,
 												{
-													cC: A3($elm$core$Dict$insert, form.eW, rules, sd.cC)
+													cF: A3($elm$core$Dict$insert, form.e_, rules, sd.cF)
 												});
 										},
 										model.aT)
 								}),
 							$author$project$Ports$getSession(
-								A2($author$project$Api$Encode$getSession, serverUrl, form.eW)));
+								A2($author$project$Api$Encode$getSession, serverUrl, form.e_)));
 					} else {
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -14445,7 +14515,7 @@ var $author$project$Update$update = F2(
 									return _Utils_update(
 										sd,
 										{
-											cC: A3($elm$core$Dict$insert, sessionId, rules, sd.cC)
+											cF: A3($elm$core$Dict$insert, sessionId, rules, sd.cF)
 										});
 								},
 								model.aT)
@@ -14453,7 +14523,7 @@ var $author$project$Update$update = F2(
 					var _v155 = model.bg;
 					if ((!_v155.$) && (_v155.a.$ === 11)) {
 						var form = _v155.a.a;
-						return _Utils_eq(form.eW, sessionId) ? _Utils_Tuple2(
+						return _Utils_eq(form.e_, sessionId) ? _Utils_Tuple2(
 							_Utils_update(
 								modelWithCachedRules,
 								{
@@ -14461,7 +14531,7 @@ var $author$project$Update$update = F2(
 										$author$project$Model$RulesDialog(
 											_Utils_update(
 												form,
-												{I: false, cl: rules})))
+												{I: false, co: rules})))
 								}),
 							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(modelWithCachedRules, $elm$core$Platform$Cmd$none);
 					} else {
@@ -14507,11 +14577,11 @@ var $author$project$Update$update = F2(
 						A2(
 							$elm$core$Maybe$withDefault,
 							$elm$core$Set$empty,
-							A2($elm$core$Dict$get, sessionId, data.bY)));
+							A2($elm$core$Dict$get, sessionId, data.b_)));
 					return _Utils_update(
 						data,
 						{
-							bY: A3($elm$core$Dict$insert, sessionId, sessionConflicts, data.bY)
+							b_: A3($elm$core$Dict$insert, sessionId, sessionConflicts, data.b_)
 						});
 				};
 				return _Utils_Tuple2(
@@ -14534,17 +14604,17 @@ var $author$project$Update$update = F2(
 						serverUrl,
 						function (sd) {
 							return _Utils_eq(
-								sd.bK,
+								sd.bM,
 								$elm$core$Maybe$Just(sessionId)) ? _Utils_update(
 								sd,
-								{bK: $elm$core$Maybe$Nothing}) : sd;
+								{bM: $elm$core$Maybe$Nothing}) : sd;
 						},
 						model.aT);
 					var closeDetail = isSelectedServer && function () {
-						var _v158 = model.cx;
+						var _v158 = model.cA;
 						if (!_v158.$) {
 							var detail = _v158.a;
-							return _Utils_eq(detail.eW, sessionId);
+							return _Utils_eq(detail.e_, sessionId);
 						} else {
 							return false;
 						}
@@ -14552,7 +14622,7 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(
 						closeDetail ? _Utils_update(
 							model,
-							{aT: updatedServerData, cx: $elm$core$Maybe$Nothing}) : _Utils_update(
+							{aT: updatedServerData, cA: $elm$core$Maybe$Nothing}) : _Utils_update(
 							model,
 							{aT: updatedServerData}),
 						$author$project$Ports$getSessions(serverUrl));
@@ -14565,10 +14635,10 @@ var $author$project$Update$update = F2(
 									$author$project$Ports$getSessions(serverUrl),
 									function () {
 									if (isSelectedServer) {
-										var _v159 = model.cx;
+										var _v159 = model.cA;
 										if (!_v159.$) {
 											var detail = _v159.a;
-											return _Utils_eq(detail.eW, sessionId) ? $author$project$Ports$getSession(
+											return _Utils_eq(detail.e_, sessionId) ? $author$project$Ports$getSession(
 												A2($author$project$Api$Encode$getSession, serverUrl, sessionId)) : $elm$core$Platform$Cmd$none;
 										} else {
 											return $elm$core$Platform$Cmd$none;
@@ -14595,18 +14665,18 @@ var $author$project$Update$update = F2(
 										return _Utils_update(
 											sd,
 											{
-												bD: A2(
+												bF: A2(
 													$elm$core$List$filter,
 													function (inv) {
-														return !_Utils_eq(inv.dM, invitationId);
+														return !_Utils_eq(inv.dQ, invitationId);
 													},
-													sd.bD),
-												cu: A2(
+													sd.bF),
+												cx: A2(
 													$elm$core$List$filter,
 													function (inv) {
-														return !_Utils_eq(inv.dM, invitationId);
+														return !_Utils_eq(inv.dQ, invitationId);
 													},
-													sd.cu)
+													sd.cx)
 											});
 									},
 									model.aT)
@@ -14644,7 +14714,7 @@ var $author$project$Update$update = F2(
 									return _Utils_update(
 										sd,
 										{
-											cC: A2($elm$core$Dict$remove, sessionId, sd.cC)
+											cF: A2($elm$core$Dict$remove, sessionId, sd.cF)
 										});
 								},
 								model.aT)
@@ -14654,7 +14724,7 @@ var $author$project$Update$update = F2(
 							var _v161 = model.bg;
 							if ((!_v161.$) && (_v161.a.$ === 11)) {
 								var form = _v161.a.a;
-								return _Utils_eq(form.eW, sessionId) ? $author$project$Ports$getRules(
+								return _Utils_eq(form.e_, sessionId) ? $author$project$Ports$getRules(
 									A2($author$project$Api$Encode$getRules, serverUrl, sessionId)) : $elm$core$Platform$Cmd$none;
 							} else {
 								return $elm$core$Platform$Cmd$none;
@@ -14676,11 +14746,11 @@ var $author$project$Update$update = F2(
 								$author$project$Ports$getSessions(serverUrl),
 								function () {
 								if (isSelectedServer) {
-									var _v162 = model.cx;
+									var _v162 = model.cA;
 									if (!_v162.$) {
 										var detail = _v162.a;
 										return $author$project$Ports$getSession(
-											A2($author$project$Api$Encode$getSession, serverUrl, detail.eW));
+											A2($author$project$Api$Encode$getSession, serverUrl, detail.e_));
 									} else {
 										return $elm$core$Platform$Cmd$none;
 									}
@@ -14762,14 +14832,14 @@ var $author$project$Update$update = F2(
 						A2(
 							$elm$core$Maybe$map,
 							function ($) {
-								return $.ec;
+								return $.eg;
 							},
-							A2($elm$core$Dict$get, sessionId, serverData.cB)));
+							A2($elm$core$Dict$get, sessionId, serverData.cE)));
 					var currentUserId = function () {
 						var _v172 = serverData.aH;
 						if (_v172.$ === 2) {
 							var info = _v172.a;
-							return $elm$core$Maybe$Just(info.fo);
+							return $elm$core$Maybe$Just(info.fs);
 						} else {
 							return $elm$core$Maybe$Nothing;
 						}
@@ -14779,9 +14849,9 @@ var $author$project$Update$update = F2(
 							A2(
 								$elm$core$List$filter,
 								function (s) {
-									return _Utils_eq(s.dM, sessionId);
+									return _Utils_eq(s.dQ, sessionId);
 								},
-								serverData.cE));
+								serverData.cH));
 						if (!_v168.$) {
 							var session = _v168.a;
 							if (!currentUserId.$) {
@@ -14800,9 +14870,9 @@ var $author$project$Update$update = F2(
 												$elm$core$List$filter,
 												function (_v170) {
 													var p = _v170.b;
-													return _Utils_eq(p.fp, userId);
+													return _Utils_eq(p.ft, userId);
 												},
-												A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ev)))));
+												A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ez)))));
 							} else {
 								return 1;
 							}
@@ -14813,7 +14883,7 @@ var $author$project$Update$update = F2(
 					var cachedTurnFiles = A2(
 						$elm$core$Maybe$andThen,
 						$elm$core$Dict$get(year),
-						A2($elm$core$Dict$get, sessionId, serverData.cD));
+						A2($elm$core$Dict$get, sessionId, serverData.cG));
 					var turnCmd = function () {
 						if (!cachedTurnFiles.$) {
 							return $elm$core$Platform$Cmd$none;
@@ -14825,26 +14895,26 @@ var $author$project$Update$update = F2(
 					var cachedOrdersStatus = A2(
 						$elm$core$Maybe$andThen,
 						$elm$core$Dict$get(year),
-						A2($elm$core$Dict$get, sessionId, serverData.cA));
+						A2($elm$core$Dict$get, sessionId, serverData.cD));
 					var form = function () {
 						if (!cachedTurnFiles.$) {
 							var turnFiles = cachedTurnFiles.a;
 							return {
 								c: $elm$core$Maybe$Nothing,
-								bE: isLatestYear,
+								bG: isLatestYear,
 								I: false,
-								bZ: cachedOrdersStatus,
+								b$: cachedOrdersStatus,
 								ay: playerNumber,
 								az: raceName,
-								eW: sessionId,
-								cR: $elm$core$Maybe$Just(turnFiles),
-								fP: year
+								e_: sessionId,
+								cU: $elm$core$Maybe$Just(turnFiles),
+								fT: year
 							};
 						} else {
 							var emptyForm = A5($author$project$Model$emptyTurnFilesForm, sessionId, year, raceName, playerNumber, isLatestYear);
 							return _Utils_update(
 								emptyForm,
-								{bZ: cachedOrdersStatus});
+								{b$: cachedOrdersStatus});
 						}
 					}();
 					var ordersCmd = (isLatestYear && _Utils_eq(cachedOrdersStatus, $elm$core$Maybe$Nothing)) ? $author$project$Ports$getOrdersStatus(
@@ -14874,7 +14944,7 @@ var $author$project$Update$update = F2(
 						return A4(
 							$author$project$Update$storeSessionTurn,
 							serverUrl,
-							turnFiles.eW,
+							turnFiles.e_,
 							$elm$core$Maybe$Just(turnFiles),
 							model);
 					} else {
@@ -14897,7 +14967,7 @@ var $author$project$Update$update = F2(
 												{
 													c: $elm$core$Maybe$Nothing,
 													I: false,
-													cR: $elm$core$Maybe$Just(turnFiles)
+													cU: $elm$core$Maybe$Just(turnFiles)
 												})))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -14930,7 +15000,7 @@ var $author$project$Update$update = F2(
 						A4(
 							$author$project$Update$storeSessionTurn,
 							serverUrl,
-							turnFiles.eW,
+							turnFiles.e_,
 							$elm$core$Maybe$Just(turnFiles),
 							model),
 						$elm$core$Platform$Cmd$none);
@@ -14952,12 +15022,12 @@ var $author$project$Update$update = F2(
 									var existingYears = A2(
 										$elm$core$Maybe$withDefault,
 										$elm$core$Dict$empty,
-										A2($elm$core$Dict$get, ordersStatus.eW, sd.cA));
-									var updatedYears = A3($elm$core$Dict$insert, ordersStatus.et, ordersStatus, existingYears);
+										A2($elm$core$Dict$get, ordersStatus.e_, sd.cD));
+									var updatedYears = A3($elm$core$Dict$insert, ordersStatus.ex, ordersStatus, existingYears);
 									return _Utils_update(
 										sd,
 										{
-											cA: A3($elm$core$Dict$insert, ordersStatus.eW, updatedYears, sd.cA)
+											cD: A3($elm$core$Dict$insert, ordersStatus.e_, updatedYears, sd.cD)
 										});
 								},
 								model.aT)
@@ -14969,7 +15039,7 @@ var $author$project$Update$update = F2(
 						var _v178 = _Utils_Tuple2(model.bg, isSelectedServer);
 						if (((!_v178.a.$) && (_v178.a.a.$ === 12)) && _v178.b) {
 							var form = _v178.a.a.a;
-							return (_Utils_eq(form.eW, ordersStatus.eW) && _Utils_eq(form.fP, ordersStatus.et)) ? _Utils_update(
+							return (_Utils_eq(form.e_, ordersStatus.e_) && _Utils_eq(form.fT, ordersStatus.ex)) ? _Utils_update(
 								updatedModel,
 								{
 									bg: $elm$core$Maybe$Just(
@@ -14977,7 +15047,7 @@ var $author$project$Update$update = F2(
 											_Utils_update(
 												form,
 												{
-													bZ: $elm$core$Maybe$Just(ordersStatus)
+													b$: $elm$core$Maybe$Just(ordersStatus)
 												})))
 								}) : updatedModel;
 						} else {
@@ -15041,9 +15111,9 @@ var $author$project$Update$update = F2(
 			case 196:
 				var result = msg.a;
 				if (!result.$) {
-					var serverUrl = result.a.eT;
-					var sessionId = result.a.eW;
-					var hasStarsExe = result.a.dG;
+					var serverUrl = result.a.eX;
+					var sessionId = result.a.e_;
+					var hasStarsExe = result.a.dK;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15055,7 +15125,7 @@ var $author$project$Update$update = F2(
 										return _Utils_update(
 											data,
 											{
-												cz: A3($elm$core$Dict$insert, sessionId, hasStarsExe, data.cz)
+												cC: A3($elm$core$Dict$insert, sessionId, hasStarsExe, data.cC)
 											});
 									},
 									model.aT)
@@ -15155,7 +15225,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: $elm$core$Maybe$Just(
-									{c1: settings.c1, eU: settings.eU, fn: settings.fn, fr: settings.fr, fL: settings.fL, fQ: settings.fQ})
+									{c4: settings.c4, eY: settings.eY, fr: settings.fr, fv: settings.fv, fP: settings.fP, fU: settings.fU})
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15170,7 +15240,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: $elm$core$Maybe$Just(
-									{c1: settings.c1, eU: settings.eU, fn: settings.fn, fr: settings.fr, fL: settings.fL, fQ: settings.fQ})
+									{c4: settings.c4, eY: settings.eY, fr: settings.fr, fv: settings.fv, fP: settings.fP, fU: settings.fU})
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15190,7 +15260,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: $elm$core$Maybe$Just(
-									{c1: settings.c1, eU: settings.eU, fn: settings.fn, fr: settings.fr, fL: settings.fL, fQ: settings.fQ})
+									{c4: settings.c4, eY: settings.eY, fr: settings.fr, fv: settings.fv, fP: settings.fP, fU: settings.fU})
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15210,8 +15280,8 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: $elm$core$Maybe$Just(
-									{c1: settings.c1, eU: settings.eU, fn: settings.fn, fr: settings.fr, fL: settings.fL, fQ: settings.fQ}),
-								cZ: $elm$core$Maybe$Nothing
+									{c4: settings.c4, eY: settings.eY, fr: settings.fr, fv: settings.fv, fP: settings.fP, fU: settings.fU}),
+								c0: $elm$core$Maybe$Nothing
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15230,7 +15300,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: $elm$core$Maybe$Just(
-									{c1: settings.c1, eU: settings.eU, fn: settings.fn, fr: settings.fr, fL: settings.fL, fQ: settings.fQ})
+									{c4: settings.c4, eY: settings.eY, fr: settings.fr, fv: settings.fv, fP: settings.fP, fU: settings.fU})
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15240,7 +15310,7 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{cY: true, cZ: $elm$core$Maybe$Nothing}),
+						{c$: true, c0: $elm$core$Maybe$Nothing}),
 					$author$project$Ports$checkWineInstall(0));
 			case 213:
 				var result = msg.a;
@@ -15251,7 +15321,7 @@ var $author$project$Update$update = F2(
 						function (s) {
 							return _Utils_update(
 								s,
-								{fr: checkResult.fq});
+								{fv: checkResult.fu});
 						},
 						model.a2);
 					return _Utils_Tuple2(
@@ -15259,8 +15329,8 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: updatedSettings,
-								cY: false,
-								cZ: $elm$core$Maybe$Just(checkResult.bM)
+								c$: false,
+								c0: $elm$core$Maybe$Just(checkResult.bO)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15269,8 +15339,8 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							model,
 							{
-								cY: false,
-								cZ: $elm$core$Maybe$Just('Check failed: ' + errMsg)
+								c$: false,
+								c0: $elm$core$Maybe$Just('Check failed: ' + errMsg)
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -15278,7 +15348,7 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bU: true}),
+						{bW: true}),
 					$author$project$Ports$checkNtvdmSupport(0));
 			case 215:
 				var result = msg.a;
@@ -15288,8 +15358,8 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							model,
 							{
-								bU: false,
-								bV: $elm$core$Maybe$Just(checkResult)
+								bW: false,
+								bX: $elm$core$Maybe$Just(checkResult)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15298,9 +15368,9 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							model,
 							{
-								bU: false,
-								bV: $elm$core$Maybe$Just(
-									{c2: false, dI: $elm$core$Maybe$Nothing, dS: false, bM: 'Check failed: ' + errMsg})
+								bW: false,
+								bX: $elm$core$Maybe$Just(
+									{c5: false, dM: $elm$core$Maybe$Nothing, dW: false, bO: 'Check failed: ' + errMsg})
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -15331,7 +15401,7 @@ var $author$project$Update$update = F2(
 								return _Utils_update(
 									opts,
 									{
-										fK: A3($elm$core$Basics$clamp, 400, 4096, width)
+										fO: A3($elm$core$Basics$clamp, 400, 4096, width)
 									});
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -15351,7 +15421,7 @@ var $author$project$Update$update = F2(
 								return _Utils_update(
 									opts,
 									{
-										dH: A3($elm$core$Basics$clamp, 300, 4096, height)
+										dL: A3($elm$core$Basics$clamp, 300, 4096, height)
 									});
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -15383,7 +15453,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{dH: height, fK: width});
+								{dL: height, fO: width});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 268:
@@ -15394,7 +15464,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{e1: !opts.e1});
+								{e5: !opts.e5});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 269:
@@ -15405,7 +15475,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{eZ: !opts.eZ});
+								{e1: !opts.e1});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 270:
@@ -15421,7 +15491,7 @@ var $author$project$Update$update = F2(
 								return _Utils_update(
 									opts,
 									{
-										eY: A3($elm$core$Basics$clamp, 0, 10, years)
+										e0: A3($elm$core$Basics$clamp, 0, 10, years)
 									});
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -15436,7 +15506,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{e0: !opts.e0});
+								{e4: !opts.e4});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 272:
@@ -15447,7 +15517,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{e3: !opts.e3});
+								{e7: !opts.e7});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 273:
@@ -15458,7 +15528,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{e$: !opts.e$});
+								{e3: !opts.e3});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 274:
@@ -15469,7 +15539,7 @@ var $author$project$Update$update = F2(
 						function (opts) {
 							return _Utils_update(
 								opts,
-								{e2: !opts.e2});
+								{e6: !opts.e6});
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 275:
@@ -15482,8 +15552,8 @@ var $author$project$Update$update = F2(
 						var serverData = A2($author$project$Model$getServerData, serverUrl, model.aT);
 						var maybeTurnFiles = A2(
 							$elm$core$Maybe$andThen,
-							$elm$core$Dict$get(form.fP),
-							A2($elm$core$Dict$get, form.eW, serverData.cD));
+							$elm$core$Dict$get(form.fT),
+							A2($elm$core$Dict$get, form.e_, serverData.cG));
 						if (!maybeTurnFiles.$) {
 							var turnFiles = maybeTurnFiles.a;
 							return _Utils_Tuple2(
@@ -15494,10 +15564,10 @@ var $author$project$Update$update = F2(
 											$author$project$Model$MapViewerDialog(
 												_Utils_update(
 													form,
-													{c: $elm$core$Maybe$Nothing, br: true})))
+													{c: $elm$core$Maybe$Nothing, bs: true})))
 									}),
 								$author$project$Ports$generateMap(
-									A5($author$project$Api$Encode$generateMap, serverUrl, form.eW, form.fP, form.bX, turnFiles)));
+									A5($author$project$Api$Encode$generateMap, serverUrl, form.e_, form.fT, form.bZ, turnFiles)));
 						} else {
 							return _Utils_Tuple2(
 								_Utils_update(
@@ -15535,8 +15605,8 @@ var $author$project$Update$update = F2(
 											_Utils_update(
 												form,
 												{
-													bq: $elm$core$Maybe$Just(svg),
-													br: false
+													br: $elm$core$Maybe$Just(svg),
+													bs: false
 												})))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -15552,7 +15622,7 @@ var $author$project$Update$update = F2(
 												form,
 												{
 													c: $elm$core$Maybe$Just(err),
-													br: false
+													bs: false
 												})))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -15564,7 +15634,7 @@ var $author$project$Update$update = F2(
 				var _v205 = model.bg;
 				if ((!_v205.$) && (_v205.a.$ === 17)) {
 					var form = _v205.a.a;
-					var _v206 = _Utils_Tuple2(model.aS, form.bq);
+					var _v206 = _Utils_Tuple2(model.aS, form.br);
 					if ((!_v206.a.$) && (!_v206.b.$)) {
 						var serverUrl = _v206.a.a;
 						var svg = _v206.b.a;
@@ -15576,10 +15646,10 @@ var $author$project$Update$update = F2(
 										$author$project$Model$MapViewerDialog(
 											_Utils_update(
 												form,
-												{cn: true})))
+												{cq: true})))
 								}),
 							$author$project$Ports$saveMap(
-								A6($author$project$Api$Encode$saveMap, serverUrl, form.eW, form.fP, form.az, form.ay, svg)));
+								A6($author$project$Api$Encode$saveMap, serverUrl, form.e_, form.fT, form.az, form.ay, svg)));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
@@ -15600,7 +15670,7 @@ var $author$project$Update$update = F2(
 										$author$project$Model$MapViewerDialog(
 											_Utils_update(
 												form,
-												{cn: false})))
+												{cq: false})))
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
@@ -15615,7 +15685,7 @@ var $author$project$Update$update = F2(
 												form,
 												{
 													c: $elm$core$Maybe$Just(err),
-													cn: false
+													cq: false
 												})))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -15627,16 +15697,180 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Ports$requestFullscreen('map-viewer-frame'));
-			case 216:
-				var _v209 = model.aS;
+			case 280:
+				var formatStr = msg.a;
+				var format = (formatStr === 'gif') ? 1 : 0;
+				return _Utils_Tuple2(
+					$author$project$Update$clearMapContent(
+						A2(
+							$author$project$Update$updateMapOptions,
+							model,
+							function (opts) {
+								return _Utils_update(
+									opts,
+									{b2: format});
+							})),
+					$elm$core$Platform$Cmd$none);
+			case 281:
+				var delayStr = msg.a;
+				var _v209 = $elm$core$String$toInt(delayStr);
 				if (!_v209.$) {
-					var serverUrl = _v209.a;
+					var delay = _v209.a;
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Update$updateMapOptions,
+							model,
+							function (opts) {
+								return _Utils_update(
+									opts,
+									{
+										dE: A3($elm$core$Basics$clamp, 100, 2000, delay)
+									});
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 282:
+				var _v210 = model.bg;
+				if ((!_v210.$) && (_v210.a.$ === 17)) {
+					var form = _v210.a.a;
+					var _v211 = model.aS;
+					if (!_v211.$) {
+						var serverUrl = _v211.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$MapViewerDialog(
+											_Utils_update(
+												form,
+												{c: $elm$core$Maybe$Nothing, bq: $elm$core$Maybe$Nothing, bt: true})))
+								}),
+							$author$project$Ports$generateAnimatedMap(
+								A3($author$project$Api$Encode$generateAnimatedMap, serverUrl, form.e_, form.bZ)));
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 283:
+				var result = msg.a;
+				var _v212 = model.bg;
+				if ((!_v212.$) && (_v212.a.$ === 17)) {
+					var form = _v212.a.a;
+					if (!result.$) {
+						var gifB64 = result.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$MapViewerDialog(
+											_Utils_update(
+												form,
+												{
+													bq: $elm$core$Maybe$Just(gifB64),
+													br: $elm$core$Maybe$Nothing,
+													bt: false
+												})))
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var err = result.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$MapViewerDialog(
+											_Utils_update(
+												form,
+												{
+													c: $elm$core$Maybe$Just(err),
+													bt: false
+												})))
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 284:
+				var _v214 = model.bg;
+				if ((!_v214.$) && (_v214.a.$ === 17)) {
+					var form = _v214.a.a;
+					var _v215 = _Utils_Tuple2(model.aS, form.bq);
+					if ((!_v215.a.$) && (!_v215.b.$)) {
+						var serverUrl = _v215.a.a;
+						var gifB64 = _v215.b.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$MapViewerDialog(
+											_Utils_update(
+												form,
+												{cq: true})))
+								}),
+							$author$project$Ports$saveGif(
+								A5($author$project$Api$Encode$saveGif, serverUrl, form.e_, form.az, form.ay, gifB64)));
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 285:
+				var result = msg.a;
+				var _v216 = model.bg;
+				if ((!_v216.$) && (_v216.a.$ === 17)) {
+					var form = _v216.a.a;
+					if (!result.$) {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$MapViewerDialog(
+											_Utils_update(
+												form,
+												{cq: false})))
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var err = result.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$MapViewerDialog(
+											_Utils_update(
+												form,
+												{
+													c: $elm$core$Maybe$Just(err),
+													cq: false
+												})))
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 216:
+				var _v218 = model.aS;
+				if (!_v218.$) {
+					var serverUrl = _v218.a;
 					var serverData = A2($author$project$Model$getServerData, serverUrl, model.aT);
 					var currentUserId = function () {
-						var _v210 = serverData.aH;
-						if (_v210.$ === 2) {
-							var info = _v210.a;
-							return info.fo;
+						var _v219 = serverData.aH;
+						if (_v219.$ === 2) {
+							var info = _v219.a;
+							return info.fs;
 						} else {
 							return '';
 						}
@@ -15647,7 +15881,7 @@ var $author$project$Update$update = F2(
 							{
 								bg: $elm$core$Maybe$Just(
 									$author$project$Model$UsersListDialog(
-										A2($author$project$Model$emptyUsersListState, currentUserId, serverData.cS)))
+										A2($author$project$Model$emptyUsersListState, currentUserId, serverData.cV)))
 							}),
 						$elm$core$Platform$Cmd$batch(
 							_List_fromArray(
@@ -15660,9 +15894,9 @@ var $author$project$Update$update = F2(
 				}
 			case 217:
 				var query = msg.a;
-				var _v211 = model.bg;
-				if ((!_v211.$) && (_v211.a.$ === 14)) {
-					var state = _v211.a.a;
+				var _v220 = model.bg;
+				if ((!_v220.$) && (_v220.a.$ === 14)) {
+					var state = _v220.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15688,9 +15922,9 @@ var $author$project$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 219:
 				var nickname = msg.a;
-				var _v212 = model.bg;
-				if ((!_v212.$) && (_v212.a.$ === 15)) {
-					var form = _v212.a.a;
+				var _v221 = model.bg;
+				if ((!_v221.$) && (_v221.a.$ === 15)) {
+					var form = _v221.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15699,7 +15933,7 @@ var $author$project$Update$update = F2(
 									$author$project$Model$CreateUserDialog(
 										_Utils_update(
 											form,
-											{ee: nickname})))
+											{ei: nickname})))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15707,9 +15941,9 @@ var $author$project$Update$update = F2(
 				}
 			case 220:
 				var email = msg.a;
-				var _v213 = model.bg;
-				if ((!_v213.$) && (_v213.a.$ === 15)) {
-					var form = _v213.a.a;
+				var _v222 = model.bg;
+				if ((!_v222.$) && (_v222.a.$ === 15)) {
+					var form = _v222.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15718,18 +15952,18 @@ var $author$project$Update$update = F2(
 									$author$project$Model$CreateUserDialog(
 										_Utils_update(
 											form,
-											{dp: email})))
+											{ds: email})))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 221:
-				var _v214 = _Utils_Tuple2(model.bg, model.aS);
-				if (((!_v214.a.$) && (_v214.a.a.$ === 15)) && (!_v214.b.$)) {
-					var form = _v214.a.a.a;
-					var serverUrl = _v214.b.a;
-					return ($elm$core$String$isEmpty(form.ee) || $elm$core$String$isEmpty(form.dp)) ? _Utils_Tuple2(
+				var _v223 = _Utils_Tuple2(model.bg, model.aS);
+				if (((!_v223.a.$) && (_v223.a.a.$ === 15)) && (!_v223.b.$)) {
+					var form = _v223.a.a.a;
+					var serverUrl = _v223.b.a;
+					return ($elm$core$String$isEmpty(form.ei) || $elm$core$String$isEmpty(form.ds)) ? _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
@@ -15752,19 +15986,19 @@ var $author$project$Update$update = F2(
 											{c: $elm$core$Maybe$Nothing, j: true})))
 							}),
 						$author$project$Ports$createUser(
-							A3($author$project$Api$Encode$createUser, serverUrl, form.ee, form.dp)));
+							A3($author$project$Api$Encode$createUser, serverUrl, form.ei, form.ds)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 222:
 				var serverUrl = msg.a;
 				var result = msg.b;
-				var _v215 = model.bg;
-				if ((!_v215.$) && (_v215.a.$ === 15)) {
-					var form = _v215.a.a;
+				var _v224 = model.bg;
+				if ((!_v224.$) && (_v224.a.$ === 15)) {
+					var form = _v224.a.a;
 					if (!result.$) {
 						var user = result.a;
-						var createdProfile = {dp: user.dp, dM: user.dM, dT: false, dW: false, bM: $elm$core$Maybe$Nothing, ee: user.ee};
+						var createdProfile = {ds: user.ds, dQ: user.dQ, dX: false, d_: false, bO: $elm$core$Maybe$Nothing, ei: user.ei};
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -15802,9 +16036,9 @@ var $author$project$Update$update = F2(
 			case 223:
 				var userId = msg.a;
 				var nickname = msg.b;
-				var _v217 = model.bg;
-				if ((!_v217.$) && (_v217.a.$ === 14)) {
-					var state = _v217.a.a;
+				var _v226 = model.bg;
+				if ((!_v226.$) && (_v226.a.$ === 14)) {
+					var state = _v226.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15822,9 +16056,9 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 224:
-				var _v218 = model.bg;
-				if ((!_v218.$) && (_v218.a.$ === 14)) {
-					var state = _v218.a.a;
+				var _v227 = model.bg;
+				if ((!_v227.$) && (_v227.a.$ === 14)) {
+					var state = _v227.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15841,25 +16075,25 @@ var $author$project$Update$update = F2(
 				}
 			case 225:
 				var userId = msg.a;
-				var _v219 = _Utils_Tuple2(model.aS, model.bg);
-				if (((!_v219.a.$) && (!_v219.b.$)) && (_v219.b.a.$ === 14)) {
-					var serverUrl = _v219.a.a;
-					var state = _v219.b.a.a;
+				var _v228 = _Utils_Tuple2(model.aS, model.bg);
+				if (((!_v228.a.$) && (!_v228.b.$)) && (_v228.b.a.$ === 14)) {
+					var serverUrl = _v228.a.a;
+					var state = _v228.b.a.a;
 					var nickname = A2(
 						$elm$core$Maybe$withDefault,
 						userId,
 						A2(
 							$elm$core$Maybe$map,
 							function ($) {
-								return $.ee;
+								return $.ei;
 							},
 							$elm$core$List$head(
 								A2(
 									$elm$core$List$filter,
 									function (u) {
-										return _Utils_eq(u.dM, userId);
+										return _Utils_eq(u.dQ, userId);
 									},
-									state.cT))));
+									state.cW))));
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15880,14 +16114,14 @@ var $author$project$Update$update = F2(
 			case 226:
 				var serverUrl = msg.a;
 				var result = msg.b;
-				var _v220 = model.bg;
-				if ((!_v220.$) && (_v220.a.$ === 14)) {
-					var state = _v220.a.a;
+				var _v229 = model.bg;
+				if ((!_v229.$) && (_v229.a.$ === 14)) {
+					var state = _v229.a.a;
 					if (!result.$) {
 						var deletedUserId = function () {
-							var _v222 = state.be;
-							if (_v222.$ === 2) {
-								var uid = _v222.a;
+							var _v231 = state.be;
+							if (_v231.$ === 2) {
+								var uid = _v231.a;
 								return uid;
 							} else {
 								return '';
@@ -15896,9 +16130,9 @@ var $author$project$Update$update = F2(
 						var updatedUsers = A2(
 							$elm$core$List$filter,
 							function (u) {
-								return !_Utils_eq(u.dM, deletedUserId);
+								return !_Utils_eq(u.dQ, deletedUserId);
 							},
-							state.cT);
+							state.cW);
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -15907,15 +16141,15 @@ var $author$project$Update$update = F2(
 										$author$project$Model$UsersListDialog(
 											_Utils_update(
 												state,
-												{be: $author$project$Model$NoDelete, cT: updatedUsers})))
+												{be: $author$project$Model$NoDelete, cW: updatedUsers})))
 								}),
 							$author$project$Ports$getUserProfiles(serverUrl));
 					} else {
 						var err = result.a;
 						var nickname = function () {
-							var _v223 = state.be;
-							if (_v223.$ === 2) {
-								var n = _v223.b;
+							var _v232 = state.be;
+							if (_v232.$ === 2) {
+								var n = _v232.b;
 								return n;
 							} else {
 								return 'User';
@@ -15940,24 +16174,24 @@ var $author$project$Update$update = F2(
 				}
 			case 227:
 				var userId = msg.a;
-				var _v224 = model.bg;
-				if ((!_v224.$) && (_v224.a.$ === 14)) {
-					var state = _v224.a.a;
+				var _v233 = model.bg;
+				if ((!_v233.$) && (_v233.a.$ === 14)) {
+					var state = _v233.a.a;
 					var nickname = A2(
 						$elm$core$Maybe$withDefault,
 						userId,
 						A2(
 							$elm$core$Maybe$map,
 							function ($) {
-								return $.ee;
+								return $.ei;
 							},
 							$elm$core$List$head(
 								A2(
 									$elm$core$List$filter,
 									function (u) {
-										return _Utils_eq(u.dM, userId);
+										return _Utils_eq(u.dQ, userId);
 									},
-									state.cT))));
+									state.cW))));
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15967,7 +16201,7 @@ var $author$project$Update$update = F2(
 										_Utils_update(
 											state,
 											{
-												ck: A2($author$project$Model$ConfirmingReset, userId, nickname)
+												cn: A2($author$project$Model$ConfirmingReset, userId, nickname)
 											})))
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -15975,9 +16209,9 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 228:
-				var _v225 = model.bg;
-				if ((!_v225.$) && (_v225.a.$ === 14)) {
-					var state = _v225.a.a;
+				var _v234 = model.bg;
+				if ((!_v234.$) && (_v234.a.$ === 14)) {
+					var state = _v234.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -15986,7 +16220,7 @@ var $author$project$Update$update = F2(
 									$author$project$Model$UsersListDialog(
 										_Utils_update(
 											state,
-											{ck: $author$project$Model$NoReset})))
+											{cn: $author$project$Model$NoReset})))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -15994,25 +16228,25 @@ var $author$project$Update$update = F2(
 				}
 			case 229:
 				var userId = msg.a;
-				var _v226 = _Utils_Tuple2(model.bg, model.aS);
-				if (((!_v226.a.$) && (_v226.a.a.$ === 14)) && (!_v226.b.$)) {
-					var state = _v226.a.a.a;
-					var serverUrl = _v226.b.a;
+				var _v235 = _Utils_Tuple2(model.bg, model.aS);
+				if (((!_v235.a.$) && (_v235.a.a.$ === 14)) && (!_v235.b.$)) {
+					var state = _v235.a.a.a;
+					var serverUrl = _v235.b.a;
 					var nickname = A2(
 						$elm$core$Maybe$withDefault,
 						userId,
 						A2(
 							$elm$core$Maybe$map,
 							function ($) {
-								return $.ee;
+								return $.ei;
 							},
 							$elm$core$List$head(
 								A2(
 									$elm$core$List$filter,
 									function (u) {
-										return _Utils_eq(u.dM, userId);
+										return _Utils_eq(u.dQ, userId);
 									},
-									state.cT))));
+									state.cW))));
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -16022,7 +16256,7 @@ var $author$project$Update$update = F2(
 										_Utils_update(
 											state,
 											{
-												ck: A2($author$project$Model$ResettingApikey, userId, nickname)
+												cn: A2($author$project$Model$ResettingApikey, userId, nickname)
 											})))
 							}),
 						$author$project$Ports$resetUserApikey(
@@ -16041,19 +16275,19 @@ var $author$project$Update$update = F2(
 				}
 			case 230:
 				var result = msg.a;
-				var _v227 = model.bg;
-				if ((!_v227.$) && (_v227.a.$ === 14)) {
-					var state = _v227.a.a;
+				var _v236 = model.bg;
+				if ((!_v236.$) && (_v236.a.$ === 14)) {
+					var state = _v236.a.a;
 					if (!result.$) {
 						var newApikey = result.a;
 						var nickname = function () {
-							var _v229 = state.ck;
-							switch (_v229.$) {
+							var _v238 = state.cn;
+							switch (_v238.$) {
 								case 2:
-									var n = _v229.b;
+									var n = _v238.b;
 									return n;
 								case 1:
-									var n = _v229.b;
+									var n = _v238.b;
 									return n;
 								default:
 									return 'User';
@@ -16068,7 +16302,7 @@ var $author$project$Update$update = F2(
 											_Utils_update(
 												state,
 												{
-													ck: A2($author$project$Model$ResetComplete, nickname, newApikey)
+													cn: A2($author$project$Model$ResetComplete, nickname, newApikey)
 												})))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -16082,7 +16316,7 @@ var $author$project$Update$update = F2(
 										$author$project$Model$UsersListDialog(
 											_Utils_update(
 												state,
-												{ck: $author$project$Model$NoReset}))),
+												{cn: $author$project$Model$NoReset}))),
 									c: $elm$core$Maybe$Just(err)
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -16091,22 +16325,22 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 231:
-				var _v230 = model.bg;
-				if ((!_v230.$) && (_v230.a.$ === 14)) {
-					var state = _v230.a.a;
+				var _v239 = model.bg;
+				if ((!_v239.$) && (_v239.a.$ === 14)) {
+					var state = _v239.a.a;
 					var newPane = function () {
-						var _v233 = state.a_;
-						if (!_v233) {
+						var _v242 = state.a_;
+						if (!_v242) {
 							return 1;
 						} else {
 							return 0;
 						}
 					}();
 					var cmd = function () {
-						var _v231 = _Utils_Tuple2(newPane, model.aS);
-						if ((_v231.a === 1) && (!_v231.b.$)) {
-							var _v232 = _v231.a;
-							var serverUrl = _v231.b.a;
+						var _v240 = _Utils_Tuple2(newPane, model.aS);
+						if ((_v240.a === 1) && (!_v240.b.$)) {
+							var _v241 = _v240.a;
+							var serverUrl = _v240.b.a;
 							return $author$project$Ports$getPendingRegistrations(serverUrl);
 						} else {
 							return $elm$core$Platform$Cmd$none;
@@ -16138,27 +16372,27 @@ var $author$project$Update$update = F2(
 							return _Utils_update(
 								sd,
 								{
-									b2: $elm$core$List$length(pendingList)
+									b5: $elm$core$List$length(pendingList)
 								});
 						},
 						model.aT);
 					var pendingProfiles = A2(
 						$elm$core$List$map,
 						function (p) {
-							return {dp: p.dp, dM: p.dM, dT: false, dW: false, bM: p.bM, ee: p.ee};
+							return {ds: p.ds, dQ: p.dQ, dX: false, d_: false, bO: p.bO, ei: p.ei};
 						},
 						pendingList);
 					var updatedDialog = function () {
-						var _v235 = model.bg;
-						if ((!_v235.$) && (_v235.a.$ === 14)) {
-							var state = _v235.a.a;
+						var _v244 = model.bg;
+						if ((!_v244.$) && (_v244.a.$ === 14)) {
+							var state = _v244.a.a;
 							return $elm$core$Maybe$Just(
 								$author$project$Model$UsersListDialog(
 									_Utils_update(
 										state,
-										{b3: pendingProfiles})));
+										{b6: pendingProfiles})));
 						} else {
-							var other = _v235;
+							var other = _v244;
 							return other;
 						}
 					}();
@@ -16174,9 +16408,9 @@ var $author$project$Update$update = F2(
 				var userId = msg.a;
 				var nickname = msg.b;
 				var message = msg.c;
-				var _v236 = model.bg;
-				if ((!_v236.$) && (_v236.a.$ === 14)) {
-					var state = _v236.a.a;
+				var _v245 = model.bg;
+				if ((!_v245.$) && (_v245.a.$ === 14)) {
+					var state = _v245.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -16186,7 +16420,7 @@ var $author$project$Update$update = F2(
 										_Utils_update(
 											state,
 											{
-												b1: A3($author$project$Model$ViewingMessage, userId, nickname, message)
+												b4: A3($author$project$Model$ViewingMessage, userId, nickname, message)
 											})))
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -16194,178 +16428,6 @@ var $author$project$Update$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 234:
-				var _v237 = model.bg;
-				if ((!_v237.$) && (_v237.a.$ === 14)) {
-					var state = _v237.a.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								bg: $elm$core$Maybe$Just(
-									$author$project$Model$UsersListDialog(
-										_Utils_update(
-											state,
-											{b1: $author$project$Model$NoPendingAction})))
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 235:
-				var userId = msg.a;
-				var nickname = msg.b;
-				var _v238 = model.bg;
-				if ((!_v238.$) && (_v238.a.$ === 14)) {
-					var state = _v238.a.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								bg: $elm$core$Maybe$Just(
-									$author$project$Model$UsersListDialog(
-										_Utils_update(
-											state,
-											{
-												b1: A2($author$project$Model$ConfirmingApprove, userId, nickname)
-											})))
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 236:
-				var _v239 = model.bg;
-				if ((!_v239.$) && (_v239.a.$ === 14)) {
-					var state = _v239.a.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								bg: $elm$core$Maybe$Just(
-									$author$project$Model$UsersListDialog(
-										_Utils_update(
-											state,
-											{b1: $author$project$Model$NoPendingAction})))
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 237:
-				var userId = msg.a;
-				var _v240 = _Utils_Tuple2(model.aS, model.bg);
-				if (((!_v240.a.$) && (!_v240.b.$)) && (_v240.b.a.$ === 14)) {
-					var serverUrl = _v240.a.a;
-					var state = _v240.b.a.a;
-					var nickname = A2(
-						$elm$core$Maybe$withDefault,
-						userId,
-						A2(
-							$elm$core$Maybe$map,
-							function ($) {
-								return $.ee;
-							},
-							$elm$core$List$head(
-								A2(
-									$elm$core$List$filter,
-									function (u) {
-										return _Utils_eq(u.dM, userId);
-									},
-									state.b3))));
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								bg: $elm$core$Maybe$Just(
-									$author$project$Model$UsersListDialog(
-										_Utils_update(
-											state,
-											{
-												b1: A2($author$project$Model$ApprovingUser, userId, nickname)
-											})))
-							}),
-						$author$project$Ports$approveRegistration(
-							A2($author$project$Api$Encode$approveRegistration, serverUrl, userId)));
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 238:
-				var serverUrl = msg.a;
-				var result = msg.b;
-				var _v241 = model.bg;
-				if ((!_v241.$) && (_v241.a.$ === 14)) {
-					var state = _v241.a.a;
-					if (!result.$) {
-						var apikey = result.a;
-						var nickname = function () {
-							var _v244 = state.b1;
-							if (_v244.$ === 3) {
-								var n = _v244.b;
-								return n;
-							} else {
-								return 'User';
-							}
-						}();
-						var approvedUserId = function () {
-							var _v243 = state.b1;
-							if (_v243.$ === 3) {
-								var uid = _v243.a;
-								return uid;
-							} else {
-								return '';
-							}
-						}();
-						var updatedPending = A2(
-							$elm$core$List$filter,
-							function (u) {
-								return !_Utils_eq(u.dM, approvedUserId);
-							},
-							state.b3);
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									bg: $elm$core$Maybe$Just(
-										$author$project$Model$UsersListDialog(
-											_Utils_update(
-												state,
-												{
-													b1: A2($author$project$Model$ApproveComplete, nickname, apikey),
-													b3: updatedPending
-												})))
-								}),
-							$author$project$Ports$getUserProfiles(serverUrl));
-					} else {
-						var err = result.a;
-						var nickname = function () {
-							var _v245 = state.b1;
-							if (_v245.$ === 3) {
-								var n = _v245.b;
-								return n;
-							} else {
-								return 'User';
-							}
-						}();
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									bg: $elm$core$Maybe$Just(
-										$author$project$Model$UsersListDialog(
-											_Utils_update(
-												state,
-												{
-													b1: A2($author$project$Model$ApproveError, nickname, err)
-												})))
-								}),
-							$elm$core$Platform$Cmd$none);
-					}
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 239:
-				var userId = msg.a;
-				var nickname = msg.b;
 				var _v246 = model.bg;
 				if ((!_v246.$) && (_v246.a.$ === 14)) {
 					var state = _v246.a.a;
@@ -16377,15 +16439,15 @@ var $author$project$Update$update = F2(
 									$author$project$Model$UsersListDialog(
 										_Utils_update(
 											state,
-											{
-												b1: A2($author$project$Model$ConfirmingReject, userId, nickname)
-											})))
+											{b4: $author$project$Model$NoPendingAction})))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 240:
+			case 235:
+				var userId = msg.a;
+				var nickname = msg.b;
 				var _v247 = model.bg;
 				if ((!_v247.$) && (_v247.a.$ === 14)) {
 					var state = _v247.a.a;
@@ -16397,33 +16459,53 @@ var $author$project$Update$update = F2(
 									$author$project$Model$UsersListDialog(
 										_Utils_update(
 											state,
-											{b1: $author$project$Model$NoPendingAction})))
+											{
+												b4: A2($author$project$Model$ConfirmingApprove, userId, nickname)
+											})))
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 241:
+			case 236:
+				var _v248 = model.bg;
+				if ((!_v248.$) && (_v248.a.$ === 14)) {
+					var state = _v248.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								bg: $elm$core$Maybe$Just(
+									$author$project$Model$UsersListDialog(
+										_Utils_update(
+											state,
+											{b4: $author$project$Model$NoPendingAction})))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 237:
 				var userId = msg.a;
-				var _v248 = _Utils_Tuple2(model.aS, model.bg);
-				if (((!_v248.a.$) && (!_v248.b.$)) && (_v248.b.a.$ === 14)) {
-					var serverUrl = _v248.a.a;
-					var state = _v248.b.a.a;
+				var _v249 = _Utils_Tuple2(model.aS, model.bg);
+				if (((!_v249.a.$) && (!_v249.b.$)) && (_v249.b.a.$ === 14)) {
+					var serverUrl = _v249.a.a;
+					var state = _v249.b.a.a;
 					var nickname = A2(
 						$elm$core$Maybe$withDefault,
 						userId,
 						A2(
 							$elm$core$Maybe$map,
 							function ($) {
-								return $.ee;
+								return $.ei;
 							},
 							$elm$core$List$head(
 								A2(
 									$elm$core$List$filter,
 									function (u) {
-										return _Utils_eq(u.dM, userId);
+										return _Utils_eq(u.dQ, userId);
 									},
-									state.b3))));
+									state.b6))));
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -16433,24 +16515,35 @@ var $author$project$Update$update = F2(
 										_Utils_update(
 											state,
 											{
-												b1: A2($author$project$Model$RejectingUser, userId, nickname)
+												b4: A2($author$project$Model$ApprovingUser, userId, nickname)
 											})))
 							}),
-						$author$project$Ports$rejectRegistration(
-							A2($author$project$Api$Encode$rejectRegistration, serverUrl, userId)));
+						$author$project$Ports$approveRegistration(
+							A2($author$project$Api$Encode$approveRegistration, serverUrl, userId)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 242:
+			case 238:
+				var serverUrl = msg.a;
 				var result = msg.b;
-				var _v249 = model.bg;
-				if ((!_v249.$) && (_v249.a.$ === 14)) {
-					var state = _v249.a.a;
+				var _v250 = model.bg;
+				if ((!_v250.$) && (_v250.a.$ === 14)) {
+					var state = _v250.a.a;
 					if (!result.$) {
-						var rejectedUserId = function () {
-							var _v251 = state.b1;
-							if (_v251.$ === 7) {
-								var uid = _v251.a;
+						var apikey = result.a;
+						var nickname = function () {
+							var _v253 = state.b4;
+							if (_v253.$ === 3) {
+								var n = _v253.b;
+								return n;
+							} else {
+								return 'User';
+							}
+						}();
+						var approvedUserId = function () {
+							var _v252 = state.b4;
+							if (_v252.$ === 3) {
+								var uid = _v252.a;
 								return uid;
 							} else {
 								return '';
@@ -16459,9 +16552,9 @@ var $author$project$Update$update = F2(
 						var updatedPending = A2(
 							$elm$core$List$filter,
 							function (u) {
-								return !_Utils_eq(u.dM, rejectedUserId);
+								return !_Utils_eq(u.dQ, approvedUserId);
 							},
-							state.b3);
+							state.b6);
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -16470,15 +16563,18 @@ var $author$project$Update$update = F2(
 										$author$project$Model$UsersListDialog(
 											_Utils_update(
 												state,
-												{b1: $author$project$Model$NoPendingAction, b3: updatedPending})))
+												{
+													b4: A2($author$project$Model$ApproveComplete, nickname, apikey),
+													b6: updatedPending
+												})))
 								}),
-							$elm$core$Platform$Cmd$none);
+							$author$project$Ports$getUserProfiles(serverUrl));
 					} else {
 						var err = result.a;
 						var nickname = function () {
-							var _v252 = state.b1;
-							if (_v252.$ === 7) {
-								var n = _v252.b;
+							var _v254 = state.b4;
+							if (_v254.$ === 3) {
+								var n = _v254.b;
 								return n;
 							} else {
 								return 'User';
@@ -16493,7 +16589,145 @@ var $author$project$Update$update = F2(
 											_Utils_update(
 												state,
 												{
-													b1: A2($author$project$Model$RejectError, nickname, err)
+													b4: A2($author$project$Model$ApproveError, nickname, err)
+												})))
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 239:
+				var userId = msg.a;
+				var nickname = msg.b;
+				var _v255 = model.bg;
+				if ((!_v255.$) && (_v255.a.$ === 14)) {
+					var state = _v255.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								bg: $elm$core$Maybe$Just(
+									$author$project$Model$UsersListDialog(
+										_Utils_update(
+											state,
+											{
+												b4: A2($author$project$Model$ConfirmingReject, userId, nickname)
+											})))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 240:
+				var _v256 = model.bg;
+				if ((!_v256.$) && (_v256.a.$ === 14)) {
+					var state = _v256.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								bg: $elm$core$Maybe$Just(
+									$author$project$Model$UsersListDialog(
+										_Utils_update(
+											state,
+											{b4: $author$project$Model$NoPendingAction})))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 241:
+				var userId = msg.a;
+				var _v257 = _Utils_Tuple2(model.aS, model.bg);
+				if (((!_v257.a.$) && (!_v257.b.$)) && (_v257.b.a.$ === 14)) {
+					var serverUrl = _v257.a.a;
+					var state = _v257.b.a.a;
+					var nickname = A2(
+						$elm$core$Maybe$withDefault,
+						userId,
+						A2(
+							$elm$core$Maybe$map,
+							function ($) {
+								return $.ei;
+							},
+							$elm$core$List$head(
+								A2(
+									$elm$core$List$filter,
+									function (u) {
+										return _Utils_eq(u.dQ, userId);
+									},
+									state.b6))));
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								bg: $elm$core$Maybe$Just(
+									$author$project$Model$UsersListDialog(
+										_Utils_update(
+											state,
+											{
+												b4: A2($author$project$Model$RejectingUser, userId, nickname)
+											})))
+							}),
+						$author$project$Ports$rejectRegistration(
+							A2($author$project$Api$Encode$rejectRegistration, serverUrl, userId)));
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 242:
+				var result = msg.b;
+				var _v258 = model.bg;
+				if ((!_v258.$) && (_v258.a.$ === 14)) {
+					var state = _v258.a.a;
+					if (!result.$) {
+						var rejectedUserId = function () {
+							var _v260 = state.b4;
+							if (_v260.$ === 7) {
+								var uid = _v260.a;
+								return uid;
+							} else {
+								return '';
+							}
+						}();
+						var updatedPending = A2(
+							$elm$core$List$filter,
+							function (u) {
+								return !_Utils_eq(u.dQ, rejectedUserId);
+							},
+							state.b6);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$UsersListDialog(
+											_Utils_update(
+												state,
+												{b4: $author$project$Model$NoPendingAction, b6: updatedPending})))
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var err = result.a;
+						var nickname = function () {
+							var _v261 = state.b4;
+							if (_v261.$ === 7) {
+								var n = _v261.b;
+								return n;
+							} else {
+								return 'User';
+							}
+						}();
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									bg: $elm$core$Maybe$Just(
+										$author$project$Model$UsersListDialog(
+											_Utils_update(
+												state,
+												{
+													b4: A2($author$project$Model$RejectError, nickname, err)
 												})))
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -16508,7 +16742,7 @@ var $author$project$Update$update = F2(
 						{
 							bg: $elm$core$Maybe$Just(
 								$author$project$Model$ChangeApikeyDialog($author$project$Model$ConfirmingChange)),
-							cF: false
+							cI: false
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 244:
@@ -16518,9 +16752,9 @@ var $author$project$Update$update = F2(
 						{bg: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
 			case 245:
-				var _v253 = model.aS;
-				if (!_v253.$) {
-					var serverUrl = _v253.a;
+				var _v262 = model.aS;
+				if (!_v262.$) {
+					var serverUrl = _v262.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -16534,8 +16768,8 @@ var $author$project$Update$update = F2(
 				}
 			case 246:
 				var result = msg.a;
-				var _v254 = model.bg;
-				if ((!_v254.$) && (_v254.a.$ === 16)) {
+				var _v263 = model.bg;
+				if ((!_v263.$) && (_v263.a.$ === 16)) {
 					if (!result.$) {
 						var newApikey = result.a;
 						return _Utils_Tuple2(
@@ -16565,13 +16799,13 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{cF: !model.cF}),
+						{cI: !model.cI}),
 					$elm$core$Platform$Cmd$none);
 			case 255:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bh: $elm$core$Maybe$Nothing, cF: false}),
+						{bh: $elm$core$Maybe$Nothing, cI: false}),
 					$elm$core$Platform$Cmd$none);
 			case 256:
 				var serverUrl = msg.a;
@@ -16610,17 +16844,17 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Ports$copyToClipboard(text));
-			case 280:
+			case 286:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{c: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
-			case 281:
+			case 287:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a8: $elm$core$Maybe$Nothing, bg: $elm$core$Maybe$Nothing, cF: false}),
+						{a8: $elm$core$Maybe$Nothing, bg: $elm$core$Maybe$Nothing, cI: false}),
 					$elm$core$Platform$Cmd$none);
 			case 260:
 				var currentLevel = A2(
@@ -16629,7 +16863,7 @@ var $author$project$Update$update = F2(
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.fQ;
+							return $.fU;
 						},
 						model.a2));
 				var newLevel = A2($elm$core$Basics$min, 200, currentLevel + 10);
@@ -16643,7 +16877,7 @@ var $author$project$Update$update = F2(
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.fQ;
+							return $.fU;
 						},
 						model.a2));
 				var newLevel = A2($elm$core$Basics$max, 50, currentLevel - 10);
@@ -16663,7 +16897,7 @@ var $author$project$Update$update = F2(
 							model,
 							{
 								a2: $elm$core$Maybe$Just(
-									{c1: settings.c1, eU: settings.eU, fn: settings.fn, fr: settings.fr, fL: settings.fL, fQ: settings.fQ})
+									{c4: settings.c4, eY: settings.eY, fr: settings.fr, fv: settings.fv, fP: settings.fP, fU: settings.fU})
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -16737,7 +16971,7 @@ var $author$project$View$Menus$viewContextMenu = F2(
 			return $elm$html$Html$text('');
 		} else {
 			var menu = maybeMenu.a;
-			var isServerConnected = A2($author$project$Model$isConnected, menu.eT, serverData);
+			var isServerConnected = A2($author$project$Model$isConnected, menu.eX, serverData);
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -16759,11 +16993,11 @@ var $author$project$View$Menus$viewContextMenu = F2(
 								A2(
 								$elm$html$Html$Attributes$style,
 								'left',
-								$elm$core$String$fromFloat(menu.fN) + 'px'),
+								$elm$core$String$fromFloat(menu.fR) + 'px'),
 								A2(
 								$elm$html$Html$Attributes$style,
 								'top',
-								$elm$core$String$fromFloat(menu.fO) + 'px')
+								$elm$core$String$fromFloat(menu.fS) + 'px')
 							]),
 						_Utils_ap(
 							_List_fromArray(
@@ -16784,7 +17018,7 @@ var $author$project$View$Menus$viewContextMenu = F2(
 										[
 											$elm$html$Html$Attributes$class('context-menu__item'),
 											$elm$html$Html$Events$onClick(
-											$author$project$Msg$OpenEditServerDialog(menu.eT))
+											$author$project$Msg$OpenEditServerDialog(menu.eX))
 										]),
 									_List_fromArray(
 										[
@@ -16807,7 +17041,7 @@ var $author$project$View$Menus$viewContextMenu = F2(
 											[
 												$elm$html$Html$Attributes$class('context-menu__item'),
 												$elm$html$Html$Events$onClick(
-												$author$project$Msg$Disconnect(menu.eT))
+												$author$project$Msg$Disconnect(menu.eX))
 											]),
 										_List_fromArray(
 											[
@@ -16829,7 +17063,7 @@ var $author$project$View$Menus$viewContextMenu = F2(
 											[
 												$elm$html$Html$Attributes$class('context-menu__item is-danger'),
 												$elm$html$Html$Events$onClick(
-												A2($author$project$Msg$OpenRemoveServerDialog, menu.eT, ''))
+												A2($author$project$Msg$OpenRemoveServerDialog, menu.eX, ''))
 											]),
 										_List_fromArray(
 											[
@@ -16997,7 +17231,7 @@ var $author$project$View$Dialog$Server$viewAddServerDialog = function (form) {
 										$elm$html$Html$Attributes$class('form-input'),
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$placeholder('My Server'),
-										$elm$html$Html$Attributes$value(form.ea),
+										$elm$html$Html$Attributes$value(form.ee),
 										$elm$html$Html$Events$onInput($author$project$Msg$UpdateServerFormName)
 									]),
 								_List_Nil)
@@ -17027,7 +17261,7 @@ var $author$project$View$Dialog$Server$viewAddServerDialog = function (form) {
 										$elm$html$Html$Attributes$class('form-input'),
 										$elm$html$Html$Attributes$type_('url'),
 										$elm$html$Html$Attributes$placeholder('https://neper.example.com'),
-										$elm$html$Html$Attributes$value(form.fm),
+										$elm$html$Html$Attributes$value(form.fq),
 										$elm$html$Html$Events$onInput($author$project$Msg$UpdateServerFormUrl)
 									]),
 								_List_Nil)
@@ -17440,7 +17674,7 @@ var $author$project$View$Dialog$Auth$viewConnectDialog = F2(
 											$elm$html$Html$Attributes$class('form-input'),
 											$elm$html$Html$Attributes$type_('password'),
 											$elm$html$Html$Attributes$placeholder('Your API key'),
-											$elm$html$Html$Attributes$value(form.er),
+											$elm$html$Html$Attributes$value(form.ev),
 											$elm$html$Html$Events$onInput($author$project$Msg$UpdateConnectPassword)
 										]),
 									_List_Nil)
@@ -17565,7 +17799,7 @@ var $author$project$View$Dialog$Session$viewCreateSessionDialog = function (form
 										$elm$html$Html$Attributes$class('form-input'),
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$placeholder('My Game Session'),
-										$elm$html$Html$Attributes$value(form.ea),
+										$elm$html$Html$Attributes$value(form.ee),
 										$elm$html$Html$Events$onInput($author$project$Msg$UpdateCreateSessionName)
 									]),
 								_List_Nil)
@@ -17584,7 +17818,7 @@ var $author$project$View$Dialog$Session$viewCreateSessionDialog = function (form
 									[
 										$elm$html$Html$Attributes$class('form-checkbox'),
 										$elm$html$Html$Events$onClick(
-										$author$project$Msg$UpdateCreateSessionPublic(!form.dX))
+										$author$project$Msg$UpdateCreateSessionPublic(!form.d$))
 									]),
 								_List_fromArray(
 									[
@@ -17593,7 +17827,7 @@ var $author$project$View$Dialog$Session$viewCreateSessionDialog = function (form
 										_List_fromArray(
 											[
 												$elm$html$Html$Attributes$type_('checkbox'),
-												$elm$html$Html$Attributes$checked(form.dX)
+												$elm$html$Html$Attributes$checked(form.d$)
 											]),
 										_List_Nil),
 										A2(
@@ -17698,7 +17932,7 @@ var $author$project$View$Dialog$Users$viewCreateUserForm = function (form) {
 								$elm$html$Html$Attributes$class('form-input'),
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('User\'s nickname'),
-								$elm$html$Html$Attributes$value(form.ee),
+								$elm$html$Html$Attributes$value(form.ei),
 								$elm$html$Html$Events$onInput($author$project$Msg$UpdateCreateUserNickname)
 							]),
 						_List_Nil)
@@ -17728,7 +17962,7 @@ var $author$project$View$Dialog$Users$viewCreateUserForm = function (form) {
 								$elm$html$Html$Attributes$class('form-input'),
 								$elm$html$Html$Attributes$type_('email'),
 								$elm$html$Html$Attributes$placeholder('user@example.com'),
-								$elm$html$Html$Attributes$value(form.dp),
+								$elm$html$Html$Attributes$value(form.ds),
 								$elm$html$Html$Events$onInput($author$project$Msg$UpdateCreateUserEmail)
 							]),
 						_List_Nil)
@@ -17798,7 +18032,7 @@ var $author$project$View$Dialog$Users$viewCreateUserSuccess = function (user) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(user.ee)
+										$elm$html$Html$text(user.ei)
 									]))
 							])),
 						A2(
@@ -17827,7 +18061,7 @@ var $author$project$View$Dialog$Users$viewCreateUserSuccess = function (user) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(user.dp)
+										$elm$html$Html$text(user.ds)
 									]))
 							]))
 					])),
@@ -17965,10 +18199,10 @@ var $author$project$Msg$SubmitEditServer = function (a) {
 var $author$project$View$Dialog$Server$viewEditServerDialog = F2(
 	function (serverUrl, form) {
 		var isRenaming = function () {
-			var _v0 = form.b$;
+			var _v0 = form.b1;
 			if (!_v0.$) {
 				var originalName = _v0.a;
-				return !_Utils_eq(form.ea, originalName);
+				return !_Utils_eq(form.ee, originalName);
 			} else {
 				return false;
 			}
@@ -18041,7 +18275,7 @@ var $author$project$View$Dialog$Server$viewEditServerDialog = F2(
 										[
 											$elm$html$Html$Attributes$class('form-input'),
 											$elm$html$Html$Attributes$type_('text'),
-											$elm$html$Html$Attributes$value(form.ea),
+											$elm$html$Html$Attributes$value(form.ee),
 											$elm$html$Html$Events$onInput($author$project$Msg$UpdateServerFormName)
 										]),
 									_List_Nil)
@@ -18070,7 +18304,7 @@ var $author$project$View$Dialog$Server$viewEditServerDialog = F2(
 										[
 											$elm$html$Html$Attributes$class('form-input'),
 											$elm$html$Html$Attributes$type_('url'),
-											$elm$html$Html$Attributes$value(form.fm),
+											$elm$html$Html$Attributes$value(form.fq),
 											$elm$html$Html$Events$onInput($author$project$Msg$UpdateServerFormUrl)
 										]),
 									_List_Nil)
@@ -18186,7 +18420,7 @@ var $author$project$View$Dialog$Users$viewReceivedInvitationCard = function (inv
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(invitation.eX)
+								$elm$html$Html$text(invitation.e$)
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -18196,7 +18430,7 @@ var $author$project$View$Dialog$Users$viewReceivedInvitationCard = function (inv
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Invited by ' + invitation.dR)
+								$elm$html$Html$text('Invited by ' + invitation.dV)
 							]))
 					])),
 				A2(
@@ -18213,7 +18447,7 @@ var $author$project$View$Dialog$Users$viewReceivedInvitationCard = function (inv
 							[
 								$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$ViewInvitedSession(invitation.eW))
+								$author$project$Msg$ViewInvitedSession(invitation.e_))
 							]),
 						_List_fromArray(
 							[
@@ -18225,7 +18459,7 @@ var $author$project$View$Dialog$Users$viewReceivedInvitationCard = function (inv
 							[
 								$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$DeclineInvitation(invitation.dM))
+								$author$project$Msg$DeclineInvitation(invitation.dQ))
 							]),
 						_List_fromArray(
 							[
@@ -18237,7 +18471,7 @@ var $author$project$View$Dialog$Users$viewReceivedInvitationCard = function (inv
 							[
 								$elm$html$Html$Attributes$class('btn btn--primary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$AcceptInvitation(invitation.dM))
+								$author$project$Msg$AcceptInvitation(invitation.dQ))
 							]),
 						_List_fromArray(
 							[
@@ -18274,7 +18508,7 @@ var $author$project$View$Dialog$Users$viewSentInvitationCard = function (invitat
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(invitation.eX)
+								$elm$html$Html$text(invitation.e$)
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -18284,7 +18518,7 @@ var $author$project$View$Dialog$Users$viewSentInvitationCard = function (invitat
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Sent to ' + invitation.dP)
+								$elm$html$Html$text('Sent to ' + invitation.dT)
 							]))
 					])),
 				A2(
@@ -18301,7 +18535,7 @@ var $author$project$View$Dialog$Users$viewSentInvitationCard = function (invitat
 							[
 								$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$ViewInvitedSession(invitation.eW))
+								$author$project$Msg$ViewInvitedSession(invitation.e_))
 							]),
 						_List_fromArray(
 							[
@@ -18313,7 +18547,7 @@ var $author$project$View$Dialog$Users$viewSentInvitationCard = function (invitat
 							[
 								$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$CancelSentInvitation(invitation.dM))
+								$author$project$Msg$CancelSentInvitation(invitation.dQ))
 							]),
 						_List_fromArray(
 							[
@@ -18468,7 +18702,7 @@ var $author$project$View$Dialog$Users$viewUserOption = F2(
 	function (selectedUserId, user) {
 		var isSelected = _Utils_eq(
 			selectedUserId,
-			$elm$core$Maybe$Just(user.dM));
+			$elm$core$Maybe$Just(user.dQ));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -18480,7 +18714,7 @@ var $author$project$View$Dialog$Users$viewUserOption = F2(
 							_Utils_Tuple2('is-selected', isSelected)
 						])),
 					$elm$html$Html$Events$onClick(
-					$author$project$Msg$SelectUserToInvite(user.dM))
+					$author$project$Msg$SelectUserToInvite(user.dQ))
 				]),
 			_List_fromArray(
 				[
@@ -18492,7 +18726,7 @@ var $author$project$View$Dialog$Users$viewUserOption = F2(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(user.ee)
+							$elm$html$Html$text(user.ei)
 						])),
 					A2(
 					$elm$html$Html$span,
@@ -18502,7 +18736,7 @@ var $author$project$View$Dialog$Users$viewUserOption = F2(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(user.dp)
+							$elm$html$Html$text(user.ds)
 						]))
 				]));
 	});
@@ -18569,7 +18803,7 @@ var $author$project$View$Dialog$Users$viewInviteUserDialog = F2(
 								]),
 							A2(
 								$elm$core$List$map,
-								$author$project$View$Dialog$Users$viewUserOption(form.ct),
+								$author$project$View$Dialog$Users$viewUserOption(form.cw),
 								userProfiles))
 						])),
 					A2(
@@ -18597,7 +18831,7 @@ var $author$project$View$Dialog$Users$viewInviteUserDialog = F2(
 								[
 									$elm$html$Html$Attributes$class('btn btn--primary'),
 									$elm$html$Html$Attributes$disabled(
-									_Utils_eq(form.ct, $elm$core$Maybe$Nothing) || form.j),
+									_Utils_eq(form.cw, $elm$core$Maybe$Nothing) || form.j),
 									$elm$html$Html$Events$onClick($author$project$Msg$SubmitInvite)
 								]),
 							_List_fromArray(
@@ -18609,15 +18843,117 @@ var $author$project$View$Dialog$Users$viewInviteUserDialog = F2(
 				]));
 	});
 var $author$project$Msg$ToggleMapFullscreen = {$: 279};
+var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
+var $author$project$View$Dialog$MapViewer$viewPlaceholder = function (form) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('map-viewer-dialog__placeholder')
+			]),
+		_List_fromArray(
+			[
+				function () {
+				if (form.bs) {
+					return $elm$html$Html$text('Generating SVG map...');
+				} else {
+					if (form.bt) {
+						return $elm$html$Html$text('Generating animated GIF (this may take a moment)...');
+					} else {
+						var _v0 = form.bZ.b2;
+						if (!_v0) {
+							return $elm$html$Html$text('Click \"Generate Map\" to create the map');
+						} else {
+							return $elm$html$Html$text('Click \"Generate Animated Map\" to create the animation');
+						}
+					}
+				}
+			}()
+			]));
+};
 var $author$project$View$Dialog$MapViewer$wrapSvgInHtml = function (svg) {
 	return '<!DOCTYPE html>\n<html>\n<head>\n<style>\nhtml, body {\n    margin: 0;\n    padding: 0;\n    width: 100%;\n    height: 100%;\n    background: #1a1a2e;\n}\nbody {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    min-height: 100%;\n}\nsvg {\n    max-width: 100%;\n    max-height: 100%;\n}\n</style>\n</head>\n<body>\n' + (svg + '\n</body>\n</html>');
+};
+var $author$project$View$Dialog$MapViewer$viewMapContent = function (form) {
+	var _v0 = _Utils_Tuple2(form.br, form.bq);
+	if (!_v0.a.$) {
+		var svg = _v0.a.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('map-viewer-dialog__svg-container')
+				]),
+			_List_fromArray(
+				[
+					A3(
+					$elm$html$Html$node,
+					'iframe',
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$id('map-viewer-frame'),
+							A2(
+							$elm$html$Html$Attributes$attribute,
+							'srcdoc',
+							$author$project$View$Dialog$MapViewer$wrapSvgInHtml(svg)),
+							$elm$html$Html$Attributes$class('map-viewer-dialog__svg-frame')
+						]),
+					_List_Nil),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('map-viewer-dialog__fullscreen-btn'),
+							$elm$html$Html$Events$onClick($author$project$Msg$ToggleMapFullscreen),
+							$elm$html$Html$Attributes$title('View fullscreen')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('⛶')
+						]))
+				]));
+	} else {
+		if (!_v0.b.$) {
+			var _v1 = _v0.a;
+			var gifB64 = _v0.b.a;
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('map-viewer-dialog__gif-container')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('data:image/gif;base64,' + gifB64),
+								$elm$html$Html$Attributes$class('map-viewer-dialog__gif-image'),
+								$elm$html$Html$Attributes$alt('Animated game map')
+							]),
+						_List_Nil)
+					]));
+		} else {
+			var _v2 = _v0.a;
+			var _v3 = _v0.b;
+			return $author$project$View$Dialog$MapViewer$viewPlaceholder(form);
+		}
+	}
 };
 var $author$project$View$Dialog$MapViewer$viewMapDisplay = function (form) {
 	return A2(
@@ -18646,57 +18982,7 @@ var $author$project$View$Dialog$MapViewer$viewMapDisplay = function (form) {
 					return $elm$html$Html$text('');
 				}
 			}(),
-				function () {
-				var _v1 = form.bq;
-				if (!_v1.$) {
-					var svg = _v1.a;
-					return A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('map-viewer-dialog__svg-container')
-							]),
-						_List_fromArray(
-							[
-								A3(
-								$elm$html$Html$node,
-								'iframe',
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$id('map-viewer-frame'),
-										A2(
-										$elm$html$Html$Attributes$attribute,
-										'srcdoc',
-										$author$project$View$Dialog$MapViewer$wrapSvgInHtml(svg)),
-										$elm$html$Html$Attributes$class('map-viewer-dialog__svg-frame')
-									]),
-								_List_Nil),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('map-viewer-dialog__fullscreen-btn'),
-										$elm$html$Html$Events$onClick($author$project$Msg$ToggleMapFullscreen),
-										$elm$html$Html$Attributes$title('View fullscreen')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('⛶')
-									]))
-							]));
-				} else {
-					return A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('map-viewer-dialog__placeholder')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Click \"Generate Map\" to create the map')
-							]));
-				}
-			}()
+				$author$project$View$Dialog$MapViewer$viewMapContent(form)
 			]));
 };
 var $author$project$Msg$ToggleShowFleets = {$: 269};
@@ -18772,13 +19058,115 @@ var $author$project$View$Dialog$MapViewer$viewDisplayOptions = function (options
 			]),
 		_List_fromArray(
 			[
-				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show planet names', options.e1, $author$project$Msg$ToggleShowNames),
-				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show fleets', options.eZ, $author$project$Msg$ToggleShowFleets),
-				$author$project$View$Dialog$MapViewer$viewFleetPathsInput(options.eY),
-				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show minefields', options.e0, $author$project$Msg$ToggleShowMines),
-				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show wormholes', options.e3, $author$project$Msg$ToggleShowWormholes),
-				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show legend', options.e$, $author$project$Msg$ToggleShowLegend),
-				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show scanner coverage', options.e2, $author$project$Msg$ToggleShowScannerCoverage)
+				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show planet names', options.e5, $author$project$Msg$ToggleShowNames),
+				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show fleets', options.e1, $author$project$Msg$ToggleShowFleets),
+				$author$project$View$Dialog$MapViewer$viewFleetPathsInput(options.e0),
+				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show minefields', options.e4, $author$project$Msg$ToggleShowMines),
+				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show wormholes', options.e7, $author$project$Msg$ToggleShowWormholes),
+				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show legend', options.e3, $author$project$Msg$ToggleShowLegend),
+				A3($author$project$View$Dialog$MapViewer$viewCheckbox, 'Show scanner coverage', options.e6, $author$project$Msg$ToggleShowScannerCoverage)
+			]));
+};
+var $author$project$Msg$SelectMapFormat = function (a) {
+	return {$: 280, a: a};
+};
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $author$project$Msg$UpdateGifDelay = function (a) {
+	return {$: 281, a: a};
+};
+var $elm$html$Html$Attributes$step = function (n) {
+	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
+};
+var $author$project$View$Dialog$MapViewer$viewGifDelayInput = function (delay) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('map-viewer-dialog__gif-delay')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Frame delay (ms):')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('number'),
+						$elm$html$Html$Attributes$value(
+						$elm$core$String$fromInt(delay)),
+						$elm$html$Html$Events$onInput($author$project$Msg$UpdateGifDelay),
+						$elm$html$Html$Attributes$min('100'),
+						$elm$html$Html$Attributes$max('2000'),
+						$elm$html$Html$Attributes$step('100')
+					]),
+				_List_Nil)
+			]));
+};
+var $author$project$View$Dialog$MapViewer$viewFormatOptions = function (options) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('map-viewer-dialog__format-options')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('map-viewer-dialog__radio')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('radio'),
+								$elm$html$Html$Attributes$name('mapFormat'),
+								$elm$html$Html$Attributes$checked(!options.b2),
+								$elm$html$Html$Events$onClick(
+								$author$project$Msg$SelectMapFormat('svg'))
+							]),
+						_List_Nil),
+						$elm$html$Html$text('Static Map (SVG) - current year')
+					])),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('map-viewer-dialog__radio')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('radio'),
+								$elm$html$Html$Attributes$name('mapFormat'),
+								$elm$html$Html$Attributes$checked(options.b2 === 1),
+								$elm$html$Html$Events$onClick(
+								$author$project$Msg$SelectMapFormat('gif'))
+							]),
+						_List_Nil),
+						$elm$html$Html$text('Animated Map (GIF) - full history')
+					])),
+				function () {
+				var _v0 = options.b2;
+				if (_v0 === 1) {
+					return $author$project$View$Dialog$MapViewer$viewGifDelayInput(options.dE);
+				} else {
+					return $elm$html$Html$text('');
+				}
+			}()
 			]));
 };
 var $author$project$Msg$SelectMapPreset = function (a) {
@@ -18830,7 +19218,7 @@ var $author$project$View$Dialog$MapViewer$viewResolutionOptions = function (opti
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$value('800x600'),
-										$elm$html$Html$Attributes$selected((options.fK === 800) && (options.dH === 600))
+										$elm$html$Html$Attributes$selected((options.fO === 800) && (options.dL === 600))
 									]),
 								_List_fromArray(
 									[
@@ -18841,7 +19229,7 @@ var $author$project$View$Dialog$MapViewer$viewResolutionOptions = function (opti
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$value('1024x768'),
-										$elm$html$Html$Attributes$selected((options.fK === 1024) && (options.dH === 768))
+										$elm$html$Html$Attributes$selected((options.fO === 1024) && (options.dL === 768))
 									]),
 								_List_fromArray(
 									[
@@ -18852,7 +19240,7 @@ var $author$project$View$Dialog$MapViewer$viewResolutionOptions = function (opti
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$value('1920x1080'),
-										$elm$html$Html$Attributes$selected((options.fK === 1920) && (options.dH === 1080))
+										$elm$html$Html$Attributes$selected((options.fO === 1920) && (options.dL === 1080))
 									]),
 								_List_fromArray(
 									[
@@ -18863,7 +19251,7 @@ var $author$project$View$Dialog$MapViewer$viewResolutionOptions = function (opti
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$value('2560x1440'),
-										$elm$html$Html$Attributes$selected((options.fK === 2560) && (options.dH === 1440))
+										$elm$html$Html$Attributes$selected((options.fO === 2560) && (options.dL === 1440))
 									]),
 								_List_fromArray(
 									[
@@ -18902,7 +19290,7 @@ var $author$project$View$Dialog$MapViewer$viewResolutionOptions = function (opti
 							[
 								$elm$html$Html$Attributes$type_('number'),
 								$elm$html$Html$Attributes$value(
-								$elm$core$String$fromInt(options.fK)),
+								$elm$core$String$fromInt(options.fO)),
 								$elm$html$Html$Events$onInput($author$project$Msg$UpdateMapWidth),
 								$elm$html$Html$Attributes$min('400'),
 								$elm$html$Html$Attributes$max('4096')
@@ -18921,7 +19309,7 @@ var $author$project$View$Dialog$MapViewer$viewResolutionOptions = function (opti
 							[
 								$elm$html$Html$Attributes$type_('number'),
 								$elm$html$Html$Attributes$value(
-								$elm$core$String$fromInt(options.dH)),
+								$elm$core$String$fromInt(options.dL)),
 								$elm$html$Html$Events$onInput($author$project$Msg$UpdateMapHeight),
 								$elm$html$Html$Attributes$min('300'),
 								$elm$html$Html$Attributes$max('4096')
@@ -18939,6 +19327,17 @@ var $author$project$View$Dialog$MapViewer$viewOptionsPanel = function (options) 
 			]),
 		_List_fromArray(
 			[
+				A2(
+				$elm$html$Html$h3,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('map-viewer-dialog__section-title')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Output Format')
+					])),
+				$author$project$View$Dialog$MapViewer$viewFormatOptions(options),
 				A2(
 				$elm$html$Html$h3,
 				_List_fromArray(
@@ -18972,12 +19371,97 @@ var $author$project$View$Dialog$MapViewer$viewBody = function (form) {
 			]),
 		_List_fromArray(
 			[
-				$author$project$View$Dialog$MapViewer$viewOptionsPanel(form.bX),
+				$author$project$View$Dialog$MapViewer$viewOptionsPanel(form.bZ),
 				$author$project$View$Dialog$MapViewer$viewMapDisplay(form)
 			]));
 };
+var $author$project$Msg$GenerateAnimatedMap = {$: 282};
 var $author$project$Msg$GenerateMap = {$: 275};
+var $author$project$View$Dialog$MapViewer$viewGenerateButton = function (form) {
+	var _v0 = form.bZ.b2;
+	if (!_v0) {
+		return _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('btn btn--primary'),
+						$elm$html$Html$Events$onClick($author$project$Msg$GenerateMap),
+						$elm$html$Html$Attributes$disabled(form.bs || form.bt)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						form.bs ? 'Generating...' : 'Generate Map')
+					]))
+			]);
+	} else {
+		return _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('btn btn--primary'),
+						$elm$html$Html$Events$onClick($author$project$Msg$GenerateAnimatedMap),
+						$elm$html$Html$Attributes$disabled(form.bs || form.bt)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						form.bt ? 'Generating...' : 'Generate Animated Map')
+					]))
+			]);
+	}
+};
+var $author$project$Msg$SaveGif = {$: 284};
 var $author$project$Msg$SaveMap = {$: 277};
+var $author$project$View$Dialog$MapViewer$viewSaveButton = function (form) {
+	var _v0 = _Utils_Tuple2(form.br, form.bq);
+	if (!_v0.a.$) {
+		return _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('btn btn--secondary'),
+						$elm$html$Html$Events$onClick($author$project$Msg$SaveMap),
+						$elm$html$Html$Attributes$disabled(form.cq)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						form.cq ? 'Saving...' : 'Save SVG')
+					]))
+			]);
+	} else {
+		if (!_v0.b.$) {
+			var _v1 = _v0.a;
+			return _List_fromArray(
+				[
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('btn btn--secondary'),
+							$elm$html$Html$Events$onClick($author$project$Msg$SaveGif),
+							$elm$html$Html$Attributes$disabled(form.cq)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							form.cq ? 'Saving...' : 'Save GIF')
+						]))
+				]);
+		} else {
+			var _v2 = _v0.a;
+			var _v3 = _v0.b;
+			return _List_Nil;
+		}
+	}
+};
 var $author$project$View$Dialog$MapViewer$viewFooter = function (form) {
 	return A2(
 		$elm$html$Html$div,
@@ -18993,53 +19477,24 @@ var $author$project$View$Dialog$MapViewer$viewFooter = function (form) {
 					[
 						$elm$html$Html$Attributes$class('dialog__actions')
 					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$button,
+				_Utils_ap(
+					$author$project$View$Dialog$MapViewer$viewGenerateButton(form),
+					_Utils_ap(
+						$author$project$View$Dialog$MapViewer$viewSaveButton(form),
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('btn btn--primary'),
-								$elm$html$Html$Events$onClick($author$project$Msg$GenerateMap),
-								$elm$html$Html$Attributes$disabled(form.br)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								form.br ? 'Generating...' : 'Generate Map')
-							])),
-						function () {
-						var _v0 = form.bq;
-						if (!_v0.$) {
-							return A2(
+								A2(
 								$elm$html$Html$button,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('btn btn--secondary'),
-										$elm$html$Html$Events$onClick($author$project$Msg$SaveMap),
-										$elm$html$Html$Attributes$disabled(form.cn)
+										$elm$html$Html$Attributes$class('btn'),
+										$elm$html$Html$Events$onClick($author$project$Msg$CloseDialog)
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(
-										form.cn ? 'Saving...' : 'Save SVG')
-									]));
-						} else {
-							return $elm$html$Html$text('');
-						}
-					}(),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('btn'),
-								$elm$html$Html$Events$onClick($author$project$Msg$CloseDialog)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Close')
-							]))
-					]))
+										$elm$html$Html$text('Close')
+									]))
+							]))))
 			]));
 };
 var $author$project$View$Dialog$MapViewer$viewHeader = function (form) {
@@ -19060,7 +19515,7 @@ var $author$project$View$Dialog$MapViewer$viewHeader = function (form) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						'Map Viewer - Year ' + $elm$core$String$fromInt(form.fP))
+						'Map Viewer - Year ' + $elm$core$String$fromInt(form.fT))
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -19093,7 +19548,7 @@ var $author$project$Msg$CreateRaceFromExisting = {$: 132};
 var $author$project$Msg$SubmitRaceBuilder = {$: 133};
 var $author$project$View$Dialog$RaceBuilder$viewFooter = function (form) {
 	var isViewMode = function () {
-		var _v1 = form.bN;
+		var _v1 = form.bP;
 		if (_v1.$ === 1) {
 			return true;
 		} else {
@@ -19153,7 +19608,7 @@ var $author$project$View$Dialog$RaceBuilder$viewFooter = function (form) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$class('btn btn-primary'),
-						$elm$html$Html$Attributes$disabled((!form.cU.bF) || form.j),
+						$elm$html$Html$Attributes$disabled((!form.cX.bH) || form.j),
 						$elm$html$Html$Events$onClick($author$project$Msg$SubmitRaceBuilder)
 					]),
 				_List_fromArray(
@@ -19212,11 +19667,11 @@ var $author$project$View$Dialog$RaceBuilder$viewValidationError = function (err)
 			]),
 		_List_fromArray(
 			[
-				$elm$html$Html$text(err.bM)
+				$elm$html$Html$text(err.bO)
 			]));
 };
 var $author$project$View$Dialog$RaceBuilder$viewPointsBar = function (validation) {
-	var pointsClass = (validation.b7 < 0) ? 'race-builder__points--negative' : ((!validation.b7) ? 'race-builder__points--zero' : 'race-builder__points--positive');
+	var pointsClass = (validation.ca < 0) ? 'race-builder__points--negative' : ((!validation.ca) ? 'race-builder__points--zero' : 'race-builder__points--positive');
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -19252,16 +19707,16 @@ var $author$project$View$Dialog$RaceBuilder$viewPointsBar = function (validation
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								$elm$core$String$fromInt(validation.b7))
+								$elm$core$String$fromInt(validation.ca))
 							]))
 					])),
-				(!validation.bF) ? A2(
+				(!validation.bH) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$class('race-builder__errors')
 					]),
-				A2($elm$core$List$map, $author$project$View$Dialog$RaceBuilder$viewValidationError, validation.bk)) : ((!$elm$core$List$isEmpty(validation.cW)) ? A2(
+				A2($elm$core$List$map, $author$project$View$Dialog$RaceBuilder$viewValidationError, validation.bk)) : ((!$elm$core$List$isEmpty(validation.cZ)) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -19281,7 +19736,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPointsBar = function (validation
 									$elm$html$Html$text(w)
 								]));
 					},
-					validation.cW)) : $elm$html$Html$text(''))
+					validation.cZ)) : $elm$html$Html$text(''))
 			]));
 };
 var $author$project$Msg$UpdateRaceBuilderColonistsPerResource = function (a) {
@@ -19314,9 +19769,6 @@ var $elm$core$Basics$composeR = F3(
 		return g(
 			f(x));
 	});
-var $elm$html$Html$Attributes$step = function (n) {
-	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
-};
 var $author$project$View$Dialog$RaceBuilder$viewEconomyRow = function (opts) {
 	return A2(
 		$elm$html$Html$div,
@@ -19384,7 +19836,7 @@ var $author$project$View$Dialog$RaceBuilder$viewEconomyTab = F2(
 			_List_fromArray(
 				[
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 2500, L: 700, M: $author$project$Msg$UpdateRaceBuilderColonistsPerResource, O: 'One resource is generated each year for every ', P: 100, Q: ' colonists.', G: config.da}),
+					{n: isReadOnly, K: 2500, L: 700, M: $author$project$Msg$UpdateRaceBuilderColonistsPerResource, O: 'One resource is generated each year for every ', P: 100, Q: ' colonists.', G: config.dd}),
 					A2(
 					$elm$html$Html$h4,
 					_List_fromArray(
@@ -19396,11 +19848,11 @@ var $author$project$View$Dialog$RaceBuilder$viewEconomyTab = F2(
 							$elm$html$Html$text('Factories')
 						])),
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 15, L: 5, M: $author$project$Msg$UpdateRaceBuilderFactoryOutput, O: 'Every 10 factories produce ', P: 1, Q: ' resources each year.', G: config.dx}),
+					{n: isReadOnly, K: 15, L: 5, M: $author$project$Msg$UpdateRaceBuilderFactoryOutput, O: 'Every 10 factories produce ', P: 1, Q: ' resources each year.', G: config.dA}),
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderFactoryCost, O: 'Factories require ', P: 1, Q: ' resources to build.', G: config.dv}),
+					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderFactoryCost, O: 'Factories require ', P: 1, Q: ' resources to build.', G: config.dy}),
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderFactoryCount, O: 'Every 10,000 colonists may operate up to ', P: 1, Q: ' factories.', G: config.dw}),
+					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderFactoryCount, O: 'Every 10,000 colonists may operate up to ', P: 1, Q: ' factories.', G: config.dz}),
 					A2(
 					$elm$html$Html$label,
 					_List_fromArray(
@@ -19414,9 +19866,9 @@ var $author$project$View$Dialog$RaceBuilder$viewEconomyTab = F2(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$type_('checkbox'),
-									$elm$html$Html$Attributes$checked(config.du),
+									$elm$html$Html$Attributes$checked(config.dx),
 									$elm$html$Html$Events$onClick(
-									$author$project$Msg$UpdateRaceBuilderFactoriesUseLessGerm(!config.du)),
+									$author$project$Msg$UpdateRaceBuilderFactoriesUseLessGerm(!config.dx)),
 									$elm$html$Html$Attributes$disabled(isReadOnly)
 								]),
 							_List_Nil),
@@ -19433,11 +19885,11 @@ var $author$project$View$Dialog$RaceBuilder$viewEconomyTab = F2(
 							$elm$html$Html$text('Mines')
 						])),
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderMineOutput, O: 'Every 10 mines produce up to ', P: 1, Q: ' kT of each mineral each year.', G: config.d7}),
+					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderMineOutput, O: 'Every 10 mines produce up to ', P: 1, Q: ' kT of each mineral each year.', G: config.eb}),
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 15, L: 2, M: $author$project$Msg$UpdateRaceBuilderMineCost, O: 'Mines require ', P: 1, Q: ' resources to build.', G: config.d5}),
+					{n: isReadOnly, K: 15, L: 2, M: $author$project$Msg$UpdateRaceBuilderMineCost, O: 'Mines require ', P: 1, Q: ' resources to build.', G: config.d9}),
 					$author$project$View$Dialog$RaceBuilder$viewEconomyRow(
-					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderMineCount, O: 'Every 10,000 colonists may operate up to ', P: 1, Q: ' mines.', G: config.d6})
+					{n: isReadOnly, K: 25, L: 5, M: $author$project$Msg$UpdateRaceBuilderMineCount, O: 'Every 10,000 colonists may operate up to ', P: 1, Q: ' mines.', G: config.ea})
 				]));
 	});
 var $author$project$Model$GravityExpandBtn = 0;
@@ -19505,12 +19957,12 @@ var $elm$html$Html$Events$onMouseUp = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $author$project$View$Dialog$RaceBuilder$viewHabRange = function (opts) {
-	var minVal = A2($elm$core$Basics$max, 0, opts.ah - opts.fK);
-	var maxVal = A2($elm$core$Basics$min, 100, opts.ah + opts.fK);
-	var canShrink = (opts.fK > 1) && (!opts.n);
+	var minVal = A2($elm$core$Basics$max, 0, opts.ah - opts.fO);
+	var maxVal = A2($elm$core$Basics$min, 100, opts.ah + opts.fO);
+	var canShrink = (opts.fO > 1) && (!opts.n);
 	var canMoveRight = (maxVal < 100) && (!opts.n);
 	var canMoveLeft = (minVal > 0) && (!opts.n);
-	var canExpand = (opts.fK < 50) && (!opts.n);
+	var canExpand = (opts.fO < 50) && (!opts.n);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -19710,11 +20162,11 @@ var $author$project$View$Dialog$RaceBuilder$viewHabitabilityTab = F3(
 			_List_fromArray(
 				[
 					$author$project$View$Dialog$RaceBuilder$viewHabRange(
-					{ap: '#4a9eff', ah: config.dB, aq: 0, A: config.dC, n: isReadOnly, as: 'Gravity', at: 2, av: habDisplay.bv, aw: habDisplay.bw, aO: $author$project$Msg$UpdateRaceBuilderGravityCenter, ax: $author$project$Msg$UpdateRaceBuilderGravityImmune, aP: $author$project$Msg$UpdateRaceBuilderGravityWidth, aR: habDisplay.bx, aA: 3, aE: 1, fK: config.dD}),
+					{ap: '#4a9eff', ah: config.dF, aq: 0, A: config.dG, n: isReadOnly, as: 'Gravity', at: 2, av: habDisplay.bx, aw: habDisplay.by, aO: $author$project$Msg$UpdateRaceBuilderGravityCenter, ax: $author$project$Msg$UpdateRaceBuilderGravityImmune, aP: $author$project$Msg$UpdateRaceBuilderGravityWidth, aR: habDisplay.bz, aA: 3, aE: 1, fO: config.dH}),
 					$author$project$View$Dialog$RaceBuilder$viewHabRange(
-					{ap: '#ff6b4a', ah: config.fd, aq: 4, A: config.fe, n: isReadOnly, as: 'Temperature', at: 6, av: habDisplay.cN, aw: habDisplay.cO, aO: $author$project$Msg$UpdateRaceBuilderTemperatureCenter, ax: $author$project$Msg$UpdateRaceBuilderTemperatureImmune, aP: $author$project$Msg$UpdateRaceBuilderTemperatureWidth, aR: habDisplay.cP, aA: 7, aE: 5, fK: config.ff}),
+					{ap: '#ff6b4a', ah: config.fh, aq: 4, A: config.fi, n: isReadOnly, as: 'Temperature', at: 6, av: habDisplay.cQ, aw: habDisplay.cR, aO: $author$project$Msg$UpdateRaceBuilderTemperatureCenter, ax: $author$project$Msg$UpdateRaceBuilderTemperatureImmune, aP: $author$project$Msg$UpdateRaceBuilderTemperatureWidth, aR: habDisplay.cS, aA: 7, aE: 5, fO: config.fj}),
 					$author$project$View$Dialog$RaceBuilder$viewHabRange(
-					{ap: '#4aff6b', ah: config.eB, aq: 8, A: config.eC, n: isReadOnly, as: 'Radiation', at: 10, av: habDisplay.cf, aw: habDisplay.cg, aO: $author$project$Msg$UpdateRaceBuilderRadiationCenter, ax: $author$project$Msg$UpdateRaceBuilderRadiationImmune, aP: $author$project$Msg$UpdateRaceBuilderRadiationWidth, aR: habDisplay.ch, aA: 11, aE: 9, fK: config.eD}),
+					{ap: '#4aff6b', ah: config.eF, aq: 8, A: config.eG, n: isReadOnly, as: 'Radiation', at: 10, av: habDisplay.ci, aw: habDisplay.cj, aO: $author$project$Msg$UpdateRaceBuilderRadiationCenter, ax: $author$project$Msg$UpdateRaceBuilderRadiationImmune, aP: $author$project$Msg$UpdateRaceBuilderRadiationWidth, aR: habDisplay.ck, aA: 11, aE: 9, fO: config.eH}),
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
@@ -19750,7 +20202,7 @@ var $author$project$View$Dialog$RaceBuilder$viewHabitabilityTab = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											$elm$core$String$fromInt(config.dE) + '%')
+											$elm$core$String$fromInt(config.dI) + '%')
 										]))
 								])),
 							A2(
@@ -19780,7 +20232,7 @@ var $author$project$View$Dialog$RaceBuilder$viewHabitabilityTab = F3(
 											$elm$html$Html$Attributes$min('1'),
 											$elm$html$Html$Attributes$max('20'),
 											$elm$html$Html$Attributes$value(
-											$elm$core$String$fromInt(config.dE)),
+											$elm$core$String$fromInt(config.dI)),
 											$elm$html$Html$Events$onInput(
 											A2(
 												$elm$core$Basics$composeR,
@@ -19822,10 +20274,8 @@ var $author$project$Msg$UpdateRaceBuilderPluralName = function (a) {
 var $author$project$Msg$UpdateRaceBuilderSingularName = function (a) {
 	return {$: 91, a: a};
 };
-var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
 var $elm$html$Html$fieldset = _VirtualDom_node('fieldset');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$legend = _VirtualDom_node('legend');
 var $elm$html$Html$Attributes$maxlength = function (n) {
 	return A2(
@@ -19833,7 +20283,6 @@ var $elm$html$Html$Attributes$maxlength = function (n) {
 		'maxlength',
 		$elm$core$String$fromInt(n));
 };
-var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$core$String$cons = _String_cons;
 var $elm$core$String$fromChar = function (_char) {
 	return A2($elm$core$String$cons, _char, '');
@@ -19867,12 +20316,6 @@ var $author$project$View$Dialog$RaceBuilder$raceIconPath = function (iconNum) {
 		2,
 		'0',
 		$elm$core$String$fromInt(iconNum)) + '.png');
-};
-var $elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
 var $author$project$Msg$LoadRaceTemplate = function (a) {
 	return {$: 88, a: a};
@@ -19942,7 +20385,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 									$elm$html$Html$Attributes$type_('text'),
 									$elm$html$Html$Attributes$class('race-builder__identity-input'),
 									$elm$html$Html$Attributes$id('singularName'),
-									$elm$html$Html$Attributes$value(config.e4),
+									$elm$html$Html$Attributes$value(config.e8),
 									$elm$html$Html$Events$onInput($author$project$Msg$UpdateRaceBuilderSingularName),
 									$elm$html$Html$Attributes$maxlength(15),
 									$elm$html$Html$Attributes$disabled(isReadOnly)
@@ -19975,7 +20418,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 									$elm$html$Html$Attributes$type_('text'),
 									$elm$html$Html$Attributes$class('race-builder__identity-input'),
 									$elm$html$Html$Attributes$id('pluralName'),
-									$elm$html$Html$Attributes$value(config.ex),
+									$elm$html$Html$Attributes$value(config.eB),
 									$elm$html$Html$Events$onInput($author$project$Msg$UpdateRaceBuilderPluralName),
 									$elm$html$Html$Attributes$maxlength(15),
 									$elm$html$Html$Attributes$disabled(isReadOnly)
@@ -20008,7 +20451,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 									$elm$html$Html$Attributes$type_('password'),
 									$elm$html$Html$Attributes$class('race-builder__identity-input race-builder__identity-input--short'),
 									$elm$html$Html$Attributes$id('password'),
-									$elm$html$Html$Attributes$value(config.er),
+									$elm$html$Html$Attributes$value(config.ev),
 									$elm$html$Html$Events$onInput($author$project$Msg$UpdateRaceBuilderPassword),
 									$elm$html$Html$Attributes$maxlength(15),
 									$elm$html$Html$Attributes$disabled(isReadOnly)
@@ -20117,7 +20560,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$value('0'),
-													$elm$html$Html$Attributes$selected(!config.d$)
+													$elm$html$Html$Attributes$selected(!config.d3)
 												]),
 											_List_fromArray(
 												[
@@ -20128,7 +20571,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$value('1'),
-													$elm$html$Html$Attributes$selected(config.d$ === 1)
+													$elm$html$Html$Attributes$selected(config.d3 === 1)
 												]),
 											_List_fromArray(
 												[
@@ -20139,7 +20582,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$value('2'),
-													$elm$html$Html$Attributes$selected(config.d$ === 2)
+													$elm$html$Html$Attributes$selected(config.d3 === 2)
 												]),
 											_List_fromArray(
 												[
@@ -20150,7 +20593,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$value('3'),
-													$elm$html$Html$Attributes$selected(config.d$ === 3)
+													$elm$html$Html$Attributes$selected(config.d3 === 3)
 												]),
 											_List_fromArray(
 												[
@@ -20161,7 +20604,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$value('4'),
-													$elm$html$Html$Attributes$selected(config.d$ === 4)
+													$elm$html$Html$Attributes$selected(config.d3 === 4)
 												]),
 											_List_fromArray(
 												[
@@ -20182,9 +20625,9 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$Attributes$src(
-											$author$project$View$Dialog$RaceBuilder$raceIconPath(config.dK)),
+											$author$project$View$Dialog$RaceBuilder$raceIconPath(config.dO)),
 											$elm$html$Html$Attributes$alt(
-											'Race icon ' + $elm$core$String$fromInt(config.dK)),
+											'Race icon ' + $elm$core$String$fromInt(config.dO)),
 											$elm$html$Html$Attributes$class('race-builder__icon-image')
 										]),
 									_List_Nil),
@@ -20203,7 +20646,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 													$elm$html$Html$Attributes$class('race-builder__icon-btn'),
 													$elm$html$Html$Events$onClick(
 													$author$project$Msg$UpdateRaceBuilderIcon(
-														$author$project$View$Dialog$RaceBuilder$wrapIcon(config.dK - 1))),
+														$author$project$View$Dialog$RaceBuilder$wrapIcon(config.dO - 1))),
 													$elm$html$Html$Attributes$disabled(isReadOnly),
 													$elm$html$Html$Attributes$title('Previous icon')
 												]),
@@ -20218,7 +20661,7 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 													$elm$html$Html$Attributes$class('race-builder__icon-btn'),
 													$elm$html$Html$Events$onClick(
 													$author$project$Msg$UpdateRaceBuilderIcon(
-														$author$project$View$Dialog$RaceBuilder$wrapIcon(config.dK + 1))),
+														$author$project$View$Dialog$RaceBuilder$wrapIcon(config.dO + 1))),
 													$elm$html$Html$Attributes$disabled(isReadOnly),
 													$elm$html$Html$Attributes$title('Next icon')
 												]),
@@ -20250,7 +20693,7 @@ var $author$project$Msg$ToggleRaceBuilderLRT = function (a) {
 };
 var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F3(
 	function (lrt, selectedLrts, isReadOnly) {
-		var isSelected = A2($elm$core$List$member, lrt.bB, selectedLrts);
+		var isSelected = A2($elm$core$List$member, lrt.bD, selectedLrts);
 		return A2(
 			$elm$html$Html$label,
 			_List_fromArray(
@@ -20272,7 +20715,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F3(
 							$elm$html$Html$Attributes$class('race-builder__lrt-checkbox'),
 							$elm$html$Html$Attributes$checked(isSelected),
 							$elm$html$Html$Events$onClick(
-							$author$project$Msg$ToggleRaceBuilderLRT(lrt.bB)),
+							$author$project$Msg$ToggleRaceBuilderLRT(lrt.bD)),
 							$elm$html$Html$Attributes$disabled(isReadOnly)
 						]),
 					_List_Nil),
@@ -20284,7 +20727,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F3(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(lrt.ea)
+							$elm$html$Html$text(lrt.ee)
 						]))
 				]));
 	});
@@ -20295,7 +20738,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 				A2(
 					$elm$core$List$filter,
 					function (l) {
-						return _Utils_eq(l.bB, idx);
+						return _Utils_eq(l.bD, idx);
 					},
 					lrtInfos));
 		};
@@ -20303,7 +20746,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 			var _v1 = getLRT(idx);
 			if (!_v1.$) {
 				var lrt = _v1.a;
-				return A3($author$project$View$Dialog$RaceBuilder$viewLRTOption, lrt, config.d0, isReadOnly);
+				return A3($author$project$View$Dialog$RaceBuilder$viewLRTOption, lrt, config.d4, isReadOnly);
 			} else {
 				return $elm$html$Html$text('');
 			}
@@ -20311,7 +20754,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 		var firstSelectedLRT = A2(
 			$elm$core$Maybe$andThen,
 			getLRT,
-			$elm$core$List$head(config.d0));
+			$elm$core$List$head(config.d4));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -20362,7 +20805,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(lrt.ea)
+											$elm$html$Html$text(lrt.ee)
 										])),
 									A2(
 									$elm$html$Html$div,
@@ -20406,7 +20849,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
 						[
 							_Utils_Tuple2(
 							'is-selected',
-							_Utils_eq(prt.bB, currentPrt))
+							_Utils_eq(prt.bD, currentPrt))
 						]))
 				]),
 			_List_fromArray(
@@ -20418,9 +20861,9 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
 							$elm$html$Html$Attributes$type_('radio'),
 							$elm$html$Html$Attributes$class('race-builder__prt-radio'),
 							$elm$html$Html$Attributes$checked(
-							_Utils_eq(prt.bB, currentPrt)),
+							_Utils_eq(prt.bD, currentPrt)),
 							$elm$html$Html$Events$onClick(
-							$author$project$Msg$UpdateRaceBuilderPRT(prt.bB)),
+							$author$project$Msg$UpdateRaceBuilderPRT(prt.bD)),
 							$elm$html$Html$Attributes$disabled(isReadOnly)
 						]),
 					_List_Nil),
@@ -20432,7 +20875,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(prt.ea)
+							$elm$html$Html$text(prt.ee)
 						]))
 				]));
 	});
@@ -20443,7 +20886,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTTab = F3(
 				A2(
 					$elm$core$List$filter,
 					function (p) {
-						return _Utils_eq(p.bB, idx);
+						return _Utils_eq(p.bD, idx);
 					},
 					prtInfos));
 		};
@@ -20451,7 +20894,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTTab = F3(
 			var _v0 = getPRT(idx);
 			if (!_v0.$) {
 				var prt = _v0.a;
-				return A3($author$project$View$Dialog$RaceBuilder$viewPRTOption, prt, config.ey, isReadOnly);
+				return A3($author$project$View$Dialog$RaceBuilder$viewPRTOption, prt, config.eC, isReadOnly);
 			} else {
 				return $elm$html$Html$text('');
 			}
@@ -20464,7 +20907,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTTab = F3(
 				function ($) {
 					return $.bf;
 				},
-				getPRT(config.ey)));
+				getPRT(config.eC)));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -20650,12 +21093,12 @@ var $author$project$View$Dialog$RaceBuilder$viewResearchTab = F2(
 						]),
 					_List_fromArray(
 						[
-							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Energy', config.eL, $author$project$Msg$UpdateRaceBuilderResearchEnergy, isReadOnly),
-							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Construction', config.eJ, $author$project$Msg$UpdateRaceBuilderResearchConstruction, isReadOnly),
-							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Weapons', config.eN, $author$project$Msg$UpdateRaceBuilderResearchWeapons, isReadOnly),
-							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Electronics', config.eK, $author$project$Msg$UpdateRaceBuilderResearchElectronics, isReadOnly),
-							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Propulsion', config.eM, $author$project$Msg$UpdateRaceBuilderResearchPropulsion, isReadOnly),
-							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Biotechnology', config.eI, $author$project$Msg$UpdateRaceBuilderResearchBiotech, isReadOnly)
+							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Energy', config.eP, $author$project$Msg$UpdateRaceBuilderResearchEnergy, isReadOnly),
+							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Construction', config.eN, $author$project$Msg$UpdateRaceBuilderResearchConstruction, isReadOnly),
+							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Weapons', config.eR, $author$project$Msg$UpdateRaceBuilderResearchWeapons, isReadOnly),
+							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Electronics', config.eO, $author$project$Msg$UpdateRaceBuilderResearchElectronics, isReadOnly),
+							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Propulsion', config.eQ, $author$project$Msg$UpdateRaceBuilderResearchPropulsion, isReadOnly),
+							A4($author$project$View$Dialog$RaceBuilder$viewResearchBox, 'Biotechnology', config.eM, $author$project$Msg$UpdateRaceBuilderResearchBiotech, isReadOnly)
 						])),
 					A2(
 					$elm$html$Html$label,
@@ -20670,9 +21113,9 @@ var $author$project$View$Dialog$RaceBuilder$viewResearchTab = F2(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$type_('checkbox'),
-									$elm$html$Html$Attributes$checked(config.fc),
+									$elm$html$Html$Attributes$checked(config.fg),
 									$elm$html$Html$Events$onClick(
-									$author$project$Msg$UpdateRaceBuilderTechsStartHigh(!config.fc)),
+									$author$project$Msg$UpdateRaceBuilderTechsStartHigh(!config.fg)),
 									$elm$html$Html$Attributes$disabled(isReadOnly)
 								]),
 							_List_Nil),
@@ -20695,11 +21138,11 @@ var $author$project$View$Dialog$RaceBuilder$viewTabContent = F5(
 						case 0:
 							return A3($author$project$View$Dialog$RaceBuilder$viewIdentityTab, config, selectedTemplate, isReadOnly);
 						case 1:
-							return A3($author$project$View$Dialog$RaceBuilder$viewPRTTab, config, validation.cc, isReadOnly);
+							return A3($author$project$View$Dialog$RaceBuilder$viewPRTTab, config, validation.cf, isReadOnly);
 						case 2:
-							return A3($author$project$View$Dialog$RaceBuilder$viewLRTTab, config, validation.bL, isReadOnly);
+							return A3($author$project$View$Dialog$RaceBuilder$viewLRTTab, config, validation.bN, isReadOnly);
 						case 3:
-							return A3($author$project$View$Dialog$RaceBuilder$viewHabitabilityTab, config, validation.by, isReadOnly);
+							return A3($author$project$View$Dialog$RaceBuilder$viewHabitabilityTab, config, validation.bA, isReadOnly);
 						case 4:
 							return A2($author$project$View$Dialog$RaceBuilder$viewEconomyTab, config, isReadOnly);
 						default:
@@ -20757,7 +21200,7 @@ var $author$project$View$Dialog$RaceBuilder$viewTabs = function (activeTab) {
 };
 var $author$project$View$Dialog$RaceBuilder$viewRaceBuilderDialog = function (form) {
 	var isReadOnly = function () {
-		var _v0 = form.bN;
+		var _v0 = form.bP;
 		if (!_v0.$) {
 			return false;
 		} else {
@@ -20772,9 +21215,9 @@ var $author$project$View$Dialog$RaceBuilder$viewRaceBuilderDialog = function (fo
 			]),
 		_List_fromArray(
 			[
-				$author$project$View$Dialog$RaceBuilder$viewHeader(form.bN),
+				$author$project$View$Dialog$RaceBuilder$viewHeader(form.bP),
 				$author$project$View$Dialog$RaceBuilder$viewTabs(form.a$),
-				$author$project$View$Dialog$RaceBuilder$viewPointsBar(form.cU),
+				$author$project$View$Dialog$RaceBuilder$viewPointsBar(form.cX),
 				form.I ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -20793,7 +21236,7 @@ var $author$project$View$Dialog$RaceBuilder$viewRaceBuilderDialog = function (fo
 							[
 								$elm$html$Html$text('Loading race data...')
 							]))
-					])) : A5($author$project$View$Dialog$RaceBuilder$viewTabContent, form.a$, form.a7, form.cU, form.cs, isReadOnly),
+					])) : A5($author$project$View$Dialog$RaceBuilder$viewTabContent, form.a$, form.a7, form.cX, form.cv, isReadOnly),
 				$author$project$View$Dialog$RaceBuilder$viewFooter(form)
 			]));
 };
@@ -20836,7 +21279,7 @@ var $author$project$View$Dialog$Races$viewRaceCard = function (race) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(race.eb)
+								$elm$html$Html$text(race.ef)
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -20846,7 +21289,7 @@ var $author$project$View$Dialog$Races$viewRaceCard = function (race) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Singular: ' + race.ec)
+								$elm$html$Html$text('Singular: ' + race.eg)
 							]))
 					])),
 				A2(
@@ -20863,7 +21306,7 @@ var $author$project$View$Dialog$Races$viewRaceCard = function (race) {
 							[
 								$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								A2($author$project$Msg$ViewRaceInBuilder, race.dM, race.eb)),
+								A2($author$project$Msg$ViewRaceInBuilder, race.dQ, race.ef)),
 								$elm$html$Html$Attributes$title('View race details')
 							]),
 						_List_fromArray(
@@ -20876,7 +21319,7 @@ var $author$project$View$Dialog$Races$viewRaceCard = function (race) {
 							[
 								$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$DownloadRace(race.dM)),
+								$author$project$Msg$DownloadRace(race.dQ)),
 								$elm$html$Html$Attributes$title('Download race file')
 							]),
 						_List_fromArray(
@@ -20889,7 +21332,7 @@ var $author$project$View$Dialog$Races$viewRaceCard = function (race) {
 							[
 								$elm$html$Html$Attributes$class('btn btn--danger btn--sm'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Msg$DeleteRace(race.dM)),
+								$author$project$Msg$DeleteRace(race.dQ)),
 								$elm$html$Html$Attributes$title('Delete race')
 							]),
 						_List_fromArray(
@@ -21089,7 +21532,7 @@ var $author$project$View$Dialog$Auth$viewRegisterDialog = F2(
 						[
 							$elm$html$Html$Attributes$class('dialog__body')
 						]),
-					form.cL ? _List_fromArray(
+					form.cO ? _List_fromArray(
 						[
 							A2(
 							$elm$html$Html$div,
@@ -21190,7 +21633,7 @@ var $author$project$View$Dialog$Auth$viewRegisterDialog = F2(
 											$elm$html$Html$Attributes$class('form-input'),
 											$elm$html$Html$Attributes$type_('text'),
 											$elm$html$Html$Attributes$placeholder('Choose a nickname'),
-											$elm$html$Html$Attributes$value(form.ee),
+											$elm$html$Html$Attributes$value(form.ei),
 											$elm$html$Html$Events$onInput($author$project$Msg$UpdateRegisterNickname)
 										]),
 									_List_Nil)
@@ -21220,7 +21663,7 @@ var $author$project$View$Dialog$Auth$viewRegisterDialog = F2(
 											$elm$html$Html$Attributes$class('form-input'),
 											$elm$html$Html$Attributes$type_('email'),
 											$elm$html$Html$Attributes$placeholder('your@email.com'),
-											$elm$html$Html$Attributes$value(form.dp),
+											$elm$html$Html$Attributes$value(form.ds),
 											$elm$html$Html$Events$onInput($author$project$Msg$UpdateRegisterEmail)
 										]),
 									_List_Nil)
@@ -21249,7 +21692,7 @@ var $author$project$View$Dialog$Auth$viewRegisterDialog = F2(
 										[
 											$elm$html$Html$Attributes$class('form-input'),
 											$elm$html$Html$Attributes$placeholder('Why do you want to join?'),
-											$elm$html$Html$Attributes$value(form.bM),
+											$elm$html$Html$Attributes$value(form.bO),
 											$elm$html$Html$Events$onInput($author$project$Msg$UpdateRegisterMessage)
 										]),
 									_List_Nil)
@@ -21273,9 +21716,9 @@ var $author$project$View$Dialog$Auth$viewRegisterDialog = F2(
 							_List_fromArray(
 								[
 									$elm$html$Html$text(
-									form.cL ? 'Close' : 'Cancel')
+									form.cO ? 'Close' : 'Cancel')
 								])),
-							form.cL ? $elm$html$Html$text('') : A2(
+							form.cO ? $elm$html$Html$text('') : A2(
 							$elm$html$Html$button,
 							_List_fromArray(
 								[
@@ -21808,7 +22251,7 @@ var $author$project$View$Dialog$Rules$viewRulesVictoryConditionTech = F8(
 				]));
 	});
 var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
-	var r = form.cl;
+	var r = form.co;
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -21834,7 +22277,7 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								form.dW ? 'Configure Game Rules' : 'Game Rules')
+								form.d_ ? 'Configure Game Rules' : 'Game Rules')
 							])),
 						A2(
 						$elm$html$Html$button,
@@ -21888,9 +22331,9 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 									[
 										A5(
 										$author$project$View$Dialog$Rules$viewRulesSelect,
-										form.dW,
+										form.d_,
 										'Universe Size',
-										r.fk,
+										r.fo,
 										_List_fromArray(
 											[
 												_Utils_Tuple2(0, 'Tiny (400 ly)'),
@@ -21902,9 +22345,9 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 										$author$project$Msg$UpdateRulesUniverseSize),
 										A5(
 										$author$project$View$Dialog$Rules$viewRulesSelect,
-										form.dW,
+										form.d_,
 										'Density',
-										r.de,
+										r.dh,
 										_List_fromArray(
 											[
 												_Utils_Tuple2(0, 'Sparse'),
@@ -21915,9 +22358,9 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 										$author$project$Msg$UpdateRulesDensity),
 										A5(
 										$author$project$View$Dialog$Rules$viewRulesSelect,
-										form.dW,
+										form.d_,
 										'Starting Distance',
-										r.e7,
+										r.fb,
 										_List_fromArray(
 											[
 												_Utils_Tuple2(0, 'Close'),
@@ -21932,13 +22375,13 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 								'Game Options',
 								_List_fromArray(
 									[
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'Maximum Minerals', 'Start with maximum mineral concentrations', r.d2, $author$project$Msg$UpdateRulesMaximumMinerals),
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'Slower Tech Advances', 'Technology costs 2x more to research', r.e5, $author$project$Msg$UpdateRulesSlowerTechAdvances),
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'Accelerated BBS Play', 'Faster game progression for play-by-post', r.c_, $author$project$Msg$UpdateRulesAcceleratedBbsPlay),
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'No Random Events', 'Disable mystery traders, comets, etc.', r.ef, $author$project$Msg$UpdateRulesNoRandomEvents),
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'Computer Players Form Alliances', 'AI players can ally with each other', r.db, $author$project$Msg$UpdateRulesComputerPlayersFormAlliances),
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'Public Player Scores', 'All players can see everyone\'s scores', r.ez, $author$project$Msg$UpdateRulesPublicPlayerScores),
-										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.dW, 'Galaxy Clumping', 'Stars cluster together in the galaxy', r.dA, $author$project$Msg$UpdateRulesGalaxyClumping)
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'Maximum Minerals', 'Start with maximum mineral concentrations', r.d6, $author$project$Msg$UpdateRulesMaximumMinerals),
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'Slower Tech Advances', 'Technology costs 2x more to research', r.e9, $author$project$Msg$UpdateRulesSlowerTechAdvances),
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'Accelerated BBS Play', 'Faster game progression for play-by-post', r.c1, $author$project$Msg$UpdateRulesAcceleratedBbsPlay),
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'No Random Events', 'Disable mystery traders, comets, etc.', r.ej, $author$project$Msg$UpdateRulesNoRandomEvents),
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'Computer Players Form Alliances', 'AI players can ally with each other', r.de, $author$project$Msg$UpdateRulesComputerPlayersFormAlliances),
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'Public Player Scores', 'All players can see everyone\'s scores', r.eD, $author$project$Msg$UpdateRulesPublicPlayerScores),
+										A5($author$project$View$Dialog$Rules$viewRulesCheckbox, form.d_, 'Galaxy Clumping', 'Stars cluster together in the galaxy', r.dD, $author$project$Msg$UpdateRulesGalaxyClumping)
 									])),
 								A2(
 								$author$project$View$Dialog$Rules$viewRulesSection,
@@ -21947,65 +22390,65 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 									[
 										A7(
 										$author$project$View$Dialog$Rules$viewRulesVictoryCondition,
-										form.dW,
+										form.d_,
 										'Owns',
-										r.fG,
-										$elm$core$String$fromInt(r.fH),
+										r.fK,
+										$elm$core$String$fromInt(r.fL),
 										'% of all planets',
 										$author$project$Msg$UpdateRulesVcOwnsPercentOfPlanets,
 										$author$project$Msg$UpdateRulesVcOwnsPercentOfPlanetsValue),
 										A8(
 										$author$project$View$Dialog$Rules$viewRulesVictoryConditionTech,
-										form.dW,
+										form.d_,
 										'Attain tech level',
-										r.fs,
-										$elm$core$String$fromInt(r.fu),
-										$elm$core$String$fromInt(r.ft),
+										r.fw,
+										$elm$core$String$fromInt(r.fy),
+										$elm$core$String$fromInt(r.fx),
 										$author$project$Msg$UpdateRulesVcAttainTechInFields,
 										$author$project$Msg$UpdateRulesVcAttainTechInFieldsTechValue,
 										$author$project$Msg$UpdateRulesVcAttainTechInFieldsFieldsValue),
 										A7(
 										$author$project$View$Dialog$Rules$viewRulesVictoryCondition,
-										form.dW,
+										form.d_,
 										'Exceed score of',
-										r.fx,
-										$elm$core$String$fromInt(r.fy),
+										r.fB,
+										$elm$core$String$fromInt(r.fC),
 										'',
 										$author$project$Msg$UpdateRulesVcExceedScoreOf,
 										$author$project$Msg$UpdateRulesVcExceedScoreOfValue),
 										A7(
 										$author$project$View$Dialog$Rules$viewRulesVictoryCondition,
-										form.dW,
+										form.d_,
 										'Exceed second place score by',
-										r.fv,
-										$elm$core$String$fromInt(r.fw),
+										r.fz,
+										$elm$core$String$fromInt(r.fA),
 										'%',
 										$author$project$Msg$UpdateRulesVcExceedNextPlayerScoreBy,
 										$author$project$Msg$UpdateRulesVcExceedNextPlayerScoreByValue),
 										A7(
 										$author$project$View$Dialog$Rules$viewRulesVictoryCondition,
-										form.dW,
+										form.d_,
 										'Production capacity of',
-										r.fz,
-										$elm$core$String$fromInt(r.fA),
+										r.fD,
+										$elm$core$String$fromInt(r.fE),
 										'k resources',
 										$author$project$Msg$UpdateRulesVcHasProductionCapacityOf,
 										$author$project$Msg$UpdateRulesVcHasProductionCapacityOfValue),
 										A7(
 										$author$project$View$Dialog$Rules$viewRulesVictoryCondition,
-										form.dW,
+										form.d_,
 										'Owns',
-										r.fE,
-										$elm$core$String$fromInt(r.fF),
+										r.fI,
+										$elm$core$String$fromInt(r.fJ),
 										'capital ships',
 										$author$project$Msg$UpdateRulesVcOwnsCapitalShips,
 										$author$project$Msg$UpdateRulesVcOwnsCapitalShipsValue),
 										A7(
 										$author$project$View$Dialog$Rules$viewRulesVictoryCondition,
-										form.dW,
+										form.d_,
 										'Highest score after',
-										r.fB,
-										$elm$core$String$fromInt(r.fC),
+										r.fF,
+										$elm$core$String$fromInt(r.fG),
 										'years',
 										$author$project$Msg$UpdateRulesVcHaveHighestScoreAfterYears,
 										$author$project$Msg$UpdateRulesVcHaveHighestScoreAfterYearsValue)
@@ -22033,14 +22476,14 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 													[
 														$elm$html$Html$text('Winner must meet')
 													])),
-												form.dW ? A2(
+												form.d_ ? A2(
 												$elm$html$Html$input,
 												_List_fromArray(
 													[
 														$elm$html$Html$Attributes$type_('number'),
 														$elm$html$Html$Attributes$class('rules-dialog__input rules-dialog__input--small'),
 														$elm$html$Html$Attributes$value(
-														$elm$core$String$fromInt(r.fI)),
+														$elm$core$String$fromInt(r.fM)),
 														$elm$html$Html$Attributes$min('0'),
 														$elm$html$Html$Attributes$max('7'),
 														$elm$html$Html$Events$onInput($author$project$Msg$UpdateRulesVcWinnerMustMeet)
@@ -22054,7 +22497,7 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 												_List_fromArray(
 													[
 														$elm$html$Html$text(
-														$elm$core$String$fromInt(r.fI))
+														$elm$core$String$fromInt(r.fM))
 													])),
 												A2(
 												$elm$html$Html$span,
@@ -22082,14 +22525,14 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 													[
 														$elm$html$Html$text('Minimum years before winner declared')
 													])),
-												form.dW ? A2(
+												form.d_ ? A2(
 												$elm$html$Html$input,
 												_List_fromArray(
 													[
 														$elm$html$Html$Attributes$type_('number'),
 														$elm$html$Html$Attributes$class('rules-dialog__input rules-dialog__input--small'),
 														$elm$html$Html$Attributes$value(
-														$elm$core$String$fromInt(r.fD)),
+														$elm$core$String$fromInt(r.fH)),
 														$elm$html$Html$Attributes$min('30'),
 														$elm$html$Html$Attributes$max('500'),
 														$elm$html$Html$Events$onInput($author$project$Msg$UpdateRulesVcMinYearsBeforeWinner)
@@ -22103,7 +22546,7 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 												_List_fromArray(
 													[
 														$elm$html$Html$text(
-														$elm$core$String$fromInt(r.fD))
+														$elm$core$String$fromInt(r.fH))
 													]))
 											]))
 									]))
@@ -22127,9 +22570,9 @@ var $author$project$View$Dialog$Rules$viewRulesDialog = function (form) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								form.dW ? 'Cancel' : 'Close')
+								form.d_ ? 'Cancel' : 'Close')
 							])),
-						form.dW ? A2(
+						form.d_ ? A2(
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
@@ -22167,7 +22610,7 @@ var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty(
 var $author$project$View$Dialog$Settings$viewNtvdmStatus = function (maybeResult) {
 	if (!maybeResult.$) {
 		var result = maybeResult.a;
-		return result.c2 ? A2(
+		return result.c5 ? A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
@@ -22175,7 +22618,7 @@ var $author$project$View$Dialog$Settings$viewNtvdmStatus = function (maybeResult
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text(result.bM)
+					$elm$html$Html$text(result.bO)
 				])) : A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -22184,9 +22627,9 @@ var $author$project$View$Dialog$Settings$viewNtvdmStatus = function (maybeResult
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text(result.bM),
+					$elm$html$Html$text(result.bO),
 					function () {
-					var _v1 = result.dI;
+					var _v1 = result.dM;
 					if (!_v1.$) {
 						var url = _v1.a;
 						return A2(
@@ -22280,7 +22723,7 @@ var $author$project$View$Dialog$Settings$viewSettingsDialog = F5(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.fQ;
+					return $.fU;
 				},
 				maybeSettings));
 		var winePrefixesDir = A2(
@@ -22289,7 +22732,7 @@ var $author$project$View$Dialog$Settings$viewSettingsDialog = F5(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.fL;
+					return $.fP;
 				},
 				maybeSettings));
 		var validWineInstall = A2(
@@ -22298,7 +22741,7 @@ var $author$project$View$Dialog$Settings$viewSettingsDialog = F5(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.fr;
+					return $.fv;
 				},
 				maybeSettings));
 		var useWine = A2(
@@ -22307,7 +22750,7 @@ var $author$project$View$Dialog$Settings$viewSettingsDialog = F5(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.fn;
+					return $.fr;
 				},
 				maybeSettings));
 		var serversDir = A2(
@@ -22316,7 +22759,7 @@ var $author$project$View$Dialog$Settings$viewSettingsDialog = F5(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.eU;
+					return $.eY;
 				},
 				maybeSettings));
 		var autoDownloadStars = A2(
@@ -22325,7 +22768,7 @@ var $author$project$View$Dialog$Settings$viewSettingsDialog = F5(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.c1;
+					return $.c4;
 				},
 				maybeSettings));
 		return A2(
@@ -22877,7 +23320,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceOption = F2(
 	function (selectedRaceId, race) {
 		var isSelected = _Utils_eq(
 			selectedRaceId,
-			$elm$core$Maybe$Just(race.dM));
+			$elm$core$Maybe$Just(race.dQ));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -22889,7 +23332,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceOption = F2(
 							_Utils_Tuple2('is-selected', isSelected)
 						])),
 					$elm$html$Html$Events$onClick(
-					$author$project$Msg$SelectRaceForSession(race.dM))
+					$author$project$Msg$SelectRaceForSession(race.dQ))
 				]),
 			_List_fromArray(
 				[
@@ -22901,7 +23344,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceOption = F2(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(race.eb)
+							$elm$html$Html$text(race.ef)
 						])),
 					A2(
 					$elm$html$Html$div,
@@ -22911,7 +23354,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceOption = F2(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Singular: ' + race.ec)
+							$elm$html$Html$text('Singular: ' + race.eg)
 						]))
 				]));
 	});
@@ -22986,7 +23429,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceDialog = F2(
 											$elm$html$Html$Attributes$class('btn btn-primary'),
 											$elm$html$Html$Events$onClick(
 											$author$project$Msg$OpenRaceBuilder(
-												$author$project$Model$FromSetupRaceDialog(form.eW)))
+												$author$project$Model$FromSetupRaceDialog(form.e_)))
 										]),
 									_List_fromArray(
 										[
@@ -23021,7 +23464,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceDialog = F2(
 								]),
 							A2(
 								$elm$core$List$map,
-								$author$project$View$Dialog$Races$viewSetupRaceOption(form.cq),
+								$author$project$View$Dialog$Races$viewSetupRaceOption(form.ct),
 								races))
 						])),
 					A2(
@@ -23049,7 +23492,7 @@ var $author$project$View$Dialog$Races$viewSetupRaceDialog = F2(
 								[
 									$elm$html$Html$Attributes$class('btn btn-primary'),
 									$elm$html$Html$Attributes$disabled(
-									_Utils_eq(form.cq, $elm$core$Maybe$Nothing) || form.j),
+									_Utils_eq(form.ct, $elm$core$Maybe$Nothing) || form.j),
 									$elm$html$Html$Events$onClick($author$project$Msg$SubmitSetupRace)
 								]),
 							_List_fromArray(
@@ -23060,10 +23503,28 @@ var $author$project$View$Dialog$Races$viewSetupRaceDialog = F2(
 						]))
 				]));
 	});
+var $author$project$Msg$OpenGameDir = function (a) {
+	return {$: 192, a: a};
+};
 var $author$project$Msg$OpenMapViewer = F4(
 	function (a, b, c, d) {
 		return {$: 264, a: a, b: b, c: c, d: d};
 	});
+var $author$project$View$Dialog$TurnFiles$base64ToRealSize = function (base64Length) {
+	return ((base64Length * 3) / 4) | 0;
+};
+var $elm$core$Basics$pow = _Basics_pow;
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$View$Dialog$TurnFiles$roundTo = F2(
+	function (decimals, value) {
+		var factor = A2($elm$core$Basics$pow, 10, decimals);
+		return $elm$core$Basics$round(value * factor) / factor;
+	});
+var $author$project$View$Dialog$TurnFiles$formatFileSize = function (bytes) {
+	return (bytes < 1024) ? ($elm$core$String$fromInt(bytes) + ' B') : ((_Utils_cmp(bytes, 1024 * 1024) < 0) ? ($elm$core$String$fromFloat(
+		A2($author$project$View$Dialog$TurnFiles$roundTo, 1, bytes / 1024)) + ' KB') : ($elm$core$String$fromFloat(
+		A2($author$project$View$Dialog$TurnFiles$roundTo, 1, bytes / (1024 * 1024))) + ' MB'));
+};
 var $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus = function (player) {
 	return A2(
 		$elm$html$Html$div,
@@ -23073,8 +23534,8 @@ var $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus = function (play
 				$elm$html$Html$Attributes$classList(
 				_List_fromArray(
 					[
-						_Utils_Tuple2('turn-files-dialog__order-row--submitted', player.e8),
-						_Utils_Tuple2('turn-files-dialog__order-row--pending', !player.e8)
+						_Utils_Tuple2('turn-files-dialog__order-row--submitted', player.fc),
+						_Utils_Tuple2('turn-files-dialog__order-row--pending', !player.fc)
 					]))
 			]),
 		_List_fromArray(
@@ -23088,7 +23549,7 @@ var $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus = function (play
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						$elm$core$String$fromInt(player.eu + 1))
+						$elm$core$String$fromInt(player.ey + 1))
 					])),
 				A2(
 				$elm$html$Html$span,
@@ -23099,7 +23560,7 @@ var $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus = function (play
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						player.dU ? (player.ee + ' (Bot)') : player.ee)
+						player.dY ? (player.ei + ' (Bot)') : player.ei)
 					])),
 				A2(
 				$elm$html$Html$span,
@@ -23110,7 +23571,7 @@ var $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus = function (play
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						player.e8 ? 'Submitted' : 'Pending')
+						player.fc ? 'Submitted' : 'Pending')
 					]))
 			]));
 };
@@ -23141,7 +23602,7 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 							_List_fromArray(
 								[
 									$elm$html$Html$text(
-									'Year ' + $elm$core$String$fromInt(form.fP))
+									'Year ' + $elm$core$String$fromInt(form.fT))
 								])),
 							A2(
 							$elm$html$Html$button,
@@ -23175,7 +23636,7 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 									$elm$html$Html$text('Warning: Local order file was modified after upload. This may indicate a problem.')
 								])) : $elm$html$Html$text(''),
 							function () {
-							var _v0 = form.bZ;
+							var _v0 = form.b$;
 							if (!_v0.$) {
 								var ordersStatus = _v0.a;
 								return A2(
@@ -23202,10 +23663,10 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 												[
 													$elm$html$Html$Attributes$class('turn-files-dialog__orders')
 												]),
-											A2($elm$core$List$map, $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus, ordersStatus.ev))
+											A2($elm$core$List$map, $author$project$View$Dialog$TurnFiles$viewPlayerOrderStatus, ordersStatus.ez))
 										]));
 							} else {
-								return form.bE ? A2(
+								return form.bG ? A2(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
@@ -23245,14 +23706,36 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 							_List_fromArray(
 								[
 									A2(
-									$elm$html$Html$h3,
+									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('turn-files-dialog__section-title')
+											$elm$html$Html$Attributes$class('turn-files-dialog__section-header')
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Turn Files')
+											A2(
+											$elm$html$Html$h3,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('turn-files-dialog__section-title')
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Turn Files')
+												])),
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('btn btn--small btn--secondary'),
+													$elm$html$Html$Events$onClick(
+													$author$project$Msg$OpenGameDir(form.e_)),
+													$elm$html$Html$Attributes$title('Open game directory')
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Open Directory')
+												]))
 										])),
 									function () {
 									if (form.I) {
@@ -23267,7 +23750,7 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 													$elm$html$Html$text('Loading turn files...')
 												]));
 									} else {
-										var _v1 = form.cR;
+										var _v1 = form.cU;
 										if (!_v1.$) {
 											var turnFiles = _v1.a;
 											return A2(
@@ -23313,8 +23796,9 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 																		_List_fromArray(
 																			[
 																				$elm$html$Html$text(
-																				$elm$core$String$fromInt(
-																					$elm$core$String$length(turnFiles.fj)) + ' bytes (base64)')
+																				$author$project$View$Dialog$TurnFiles$formatFileSize(
+																					$author$project$View$Dialog$TurnFiles$base64ToRealSize(
+																						$elm$core$String$length(turnFiles.fn))))
 																			]))
 																	]))
 															])),
@@ -23353,8 +23837,9 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 																		_List_fromArray(
 																			[
 																				$elm$html$Html$text(
-																				$elm$core$String$fromInt(
-																					$elm$core$String$length(turnFiles.fh)) + ' bytes (base64)')
+																				$author$project$View$Dialog$TurnFiles$formatFileSize(
+																					$author$project$View$Dialog$TurnFiles$base64ToRealSize(
+																						$elm$core$String$length(turnFiles.fl))))
 																			]))
 																	]))
 															]))
@@ -23384,7 +23869,7 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 					_List_fromArray(
 						[
 							function () {
-							var _v2 = form.cR;
+							var _v2 = form.cU;
 							if (!_v2.$) {
 								return A2(
 									$elm$html$Html$button,
@@ -23392,7 +23877,7 @@ var $author$project$View$Dialog$TurnFiles$viewTurnFilesDialog = F2(
 										[
 											$elm$html$Html$Attributes$class('btn btn--secondary'),
 											$elm$html$Html$Events$onClick(
-											A4($author$project$Msg$OpenMapViewer, form.eW, form.fP, form.az, form.ay))
+											A4($author$project$Msg$OpenMapViewer, form.e_, form.fT, form.az, form.ay))
 										]),
 									_List_fromArray(
 										[
@@ -23439,8 +23924,8 @@ var $elm$core$String$toLower = _String_toLower;
 var $author$project$View$Dialog$Users$userMatchesFilter = F2(
 	function (query, user) {
 		var lowerQuery = $elm$core$String$toLower(query);
-		var lowerNickname = $elm$core$String$toLower(user.ee);
-		var lowerEmail = $elm$core$String$toLower(user.dp);
+		var lowerNickname = $elm$core$String$toLower(user.ei);
+		var lowerEmail = $elm$core$String$toLower(user.ds);
 		return A2($elm$core$String$contains, lowerQuery, lowerNickname) || A2($elm$core$String$contains, lowerQuery, lowerEmail);
 	});
 var $author$project$Msg$CancelApproveRegistration = {$: 236};
@@ -23786,7 +24271,7 @@ var $author$project$View$Dialog$Users$viewPendingUserItem = function (user) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(user.ee)
+								$elm$html$Html$text(user.ei)
 							])),
 						A2(
 						$elm$html$Html$span,
@@ -23796,7 +24281,7 @@ var $author$project$View$Dialog$Users$viewPendingUserItem = function (user) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(user.dp)
+								$elm$html$Html$text(user.ds)
 							]))
 					])),
 				A2(
@@ -23808,7 +24293,7 @@ var $author$project$View$Dialog$Users$viewPendingUserItem = function (user) {
 				_List_fromArray(
 					[
 						function () {
-						var _v0 = user.bM;
+						var _v0 = user.bO;
 						if (!_v0.$) {
 							var message = _v0.a;
 							return A2(
@@ -23817,7 +24302,7 @@ var $author$project$View$Dialog$Users$viewPendingUserItem = function (user) {
 									[
 										$elm$html$Html$Attributes$class('users-list-dialog__message-btn'),
 										$elm$html$Html$Events$onClick(
-										A3($author$project$Msg$ViewRegistrationMessage, user.dM, user.ee, message)),
+										A3($author$project$Msg$ViewRegistrationMessage, user.dQ, user.ei, message)),
 										$elm$html$Html$Attributes$title('View registration message')
 									]),
 								_List_fromArray(
@@ -23834,7 +24319,7 @@ var $author$project$View$Dialog$Users$viewPendingUserItem = function (user) {
 							[
 								$elm$html$Html$Attributes$class('btn btn--primary btn--sm'),
 								$elm$html$Html$Events$onClick(
-								A2($author$project$Msg$ConfirmApproveRegistration, user.dM, user.ee)),
+								A2($author$project$Msg$ConfirmApproveRegistration, user.dQ, user.ei)),
 								$elm$html$Html$Attributes$title('Approve Registration')
 							]),
 						_List_fromArray(
@@ -23847,7 +24332,7 @@ var $author$project$View$Dialog$Users$viewPendingUserItem = function (user) {
 							[
 								$elm$html$Html$Attributes$class('btn btn--danger btn--sm'),
 								$elm$html$Html$Events$onClick(
-								A2($author$project$Msg$ConfirmRejectRegistration, user.dM, user.ee)),
+								A2($author$project$Msg$ConfirmRejectRegistration, user.dQ, user.ei)),
 								$elm$html$Html$Attributes$title('Reject Registration')
 							]),
 						_List_fromArray(
@@ -24033,7 +24518,7 @@ var $author$project$View$Dialog$Users$viewRejectingUser = function (nickname) {
 			]));
 };
 var $author$project$View$Dialog$Users$viewPendingPane = function (state) {
-	var _v0 = state.b1;
+	var _v0 = state.b4;
 	switch (_v0.$) {
 		case 1:
 			var userId = _v0.a;
@@ -24067,11 +24552,11 @@ var $author$project$View$Dialog$Users$viewPendingPane = function (state) {
 			var err = _v0.b;
 			return A2($author$project$View$Dialog$Users$viewRejectError, nickname, err);
 		default:
-			var filteredPending = $elm$core$String$isEmpty(state.bo) ? state.b3 : A2(
+			var filteredPending = $elm$core$String$isEmpty(state.bo) ? state.b6 : A2(
 				$elm$core$List$filter,
 				$author$project$View$Dialog$Users$userMatchesFilter(state.bo),
-				state.b3);
-			return $elm$core$List$isEmpty(state.b3) ? A2(
+				state.b6);
+			return $elm$core$List$isEmpty(state.b6) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -24432,7 +24917,7 @@ var $author$project$Msg$ConfirmResetApikey = function (a) {
 };
 var $author$project$View$Dialog$Users$viewUserListItem = F2(
 	function (currentUserId, user) {
-		var isSelf = _Utils_eq(user.dM, currentUserId);
+		var isSelf = _Utils_eq(user.dQ, currentUserId);
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -24465,7 +24950,7 @@ var $author$project$View$Dialog$Users$viewUserListItem = F2(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(user.ee),
+											$elm$html$Html$text(user.ei),
 											isSelf ? A2(
 											$elm$html$Html$span,
 											_List_fromArray(
@@ -24485,7 +24970,7 @@ var $author$project$View$Dialog$Users$viewUserListItem = F2(
 										]),
 									_List_fromArray(
 										[
-											user.dW ? A2(
+											user.d_ ? A2(
 											$elm$html$Html$span,
 											_List_fromArray(
 												[
@@ -24495,7 +24980,7 @@ var $author$project$View$Dialog$Users$viewUserListItem = F2(
 												[
 													$elm$html$Html$text('Manager')
 												])) : $elm$html$Html$text(''),
-											user.dT ? A2(
+											user.dX ? A2(
 											$elm$html$Html$span,
 											_List_fromArray(
 												[
@@ -24524,7 +25009,7 @@ var $author$project$View$Dialog$Users$viewUserListItem = F2(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(user.dp)
+									$elm$html$Html$text(user.ds)
 								]))
 						])),
 					A2(
@@ -24541,7 +25026,7 @@ var $author$project$View$Dialog$Users$viewUserListItem = F2(
 								[
 									$elm$html$Html$Attributes$class('users-list-dialog__delete-btn'),
 									$elm$html$Html$Events$onClick(
-									A2($author$project$Msg$ConfirmDeleteUser, user.dM, user.ee)),
+									A2($author$project$Msg$ConfirmDeleteUser, user.dQ, user.ei)),
 									$elm$html$Html$Attributes$title('Delete User')
 								]),
 							_List_fromArray(
@@ -24554,7 +25039,7 @@ var $author$project$View$Dialog$Users$viewUserListItem = F2(
 								[
 									$elm$html$Html$Attributes$class('users-list-dialog__reset-btn'),
 									$elm$html$Html$Events$onClick(
-									$author$project$Msg$ConfirmResetApikey(user.dM)),
+									$author$project$Msg$ConfirmResetApikey(user.dQ)),
 									$elm$html$Html$Attributes$title('Reset API Key')
 								]),
 							_List_fromArray(
@@ -24579,7 +25064,7 @@ var $author$project$View$Dialog$Users$viewUsersPane = function (state) {
 			var err = _v0.b;
 			return A2($author$project$View$Dialog$Users$viewDeleteUserError, nickname, err);
 		default:
-			var _v1 = state.ck;
+			var _v1 = state.cn;
 			switch (_v1.$) {
 				case 1:
 					var userId = _v1.a;
@@ -24593,11 +25078,11 @@ var $author$project$View$Dialog$Users$viewUsersPane = function (state) {
 					var newApikey = _v1.b;
 					return A2($author$project$View$Dialog$Users$viewResetApikeyComplete, nickname, newApikey);
 				default:
-					var filteredUsers = $elm$core$String$isEmpty(state.bo) ? state.cT : A2(
+					var filteredUsers = $elm$core$String$isEmpty(state.bo) ? state.cW : A2(
 						$elm$core$List$filter,
 						$author$project$View$Dialog$Users$userMatchesFilter(state.bo),
-						state.cT);
-					return $elm$core$List$isEmpty(state.cT) ? A2(
+						state.cW);
+					return $elm$core$List$isEmpty(state.cW) ? A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
@@ -24691,7 +25176,7 @@ var $author$project$View$Dialog$Users$viewUsersListDialog = function (state) {
 							[
 								$elm$html$Html$text(
 								'Users (' + ($elm$core$String$fromInt(
-									$elm$core$List$length(state.cT)) + ')'))
+									$elm$core$List$length(state.cW)) + ')'))
 							])),
 						A2(
 						$elm$html$Html$button,
@@ -24709,7 +25194,7 @@ var $author$project$View$Dialog$Users$viewUsersListDialog = function (state) {
 							[
 								$elm$html$Html$text(
 								'Pending (' + ($elm$core$String$fromInt(
-									$elm$core$List$length(state.b3)) + ')'))
+									$elm$core$List$length(state.b6)) + ')'))
 							]))
 					])),
 				A2(
@@ -24862,15 +25347,15 @@ var $author$project$View$Dialog$viewDialog = function (model) {
 									return $author$project$View$Dialog$Session$viewCreateSessionDialog(form);
 								case 6:
 									var form = dialog.a;
-									return A2($author$project$View$Dialog$Users$viewInviteUserDialog, form, serverData.cS);
+									return A2($author$project$View$Dialog$Users$viewInviteUserDialog, form, serverData.cV);
 								case 7:
-									return A2($author$project$View$Dialog$Users$viewInvitationsDialog, serverData.bD, serverData.cu);
+									return A2($author$project$View$Dialog$Users$viewInvitationsDialog, serverData.bF, serverData.cx);
 								case 8:
 									var errorMsg = dialog.a;
-									return A2($author$project$View$Dialog$Races$viewRacesDialog, errorMsg, serverData.ce);
+									return A2($author$project$View$Dialog$Races$viewRacesDialog, errorMsg, serverData.ch);
 								case 9:
 									var form = dialog.a;
-									return A2($author$project$View$Dialog$Races$viewSetupRaceDialog, form, serverData.ce);
+									return A2($author$project$View$Dialog$Races$viewSetupRaceDialog, form, serverData.ch);
 								case 11:
 									var form = dialog.a;
 									return $author$project$View$Dialog$Rules$viewRulesDialog(form);
@@ -24881,11 +25366,11 @@ var $author$project$View$Dialog$viewDialog = function (model) {
 										false,
 										A2(
 											$elm$core$Maybe$map,
-											$elm$core$Set$member(form.fP),
-											A2($elm$core$Dict$get, form.eW, serverData.bY)));
+											$elm$core$Set$member(form.fT),
+											A2($elm$core$Dict$get, form.e_, serverData.b_)));
 									return A2($author$project$View$Dialog$TurnFiles$viewTurnFilesDialog, form, hasConflict);
 								case 13:
-									return A5($author$project$View$Dialog$Settings$viewSettingsDialog, model.a2, model.cY, model.cZ, model.bU, model.bV);
+									return A5($author$project$View$Dialog$Settings$viewSettingsDialog, model.a2, model.c$, model.c0, model.bW, model.bX);
 								case 14:
 									var state = dialog.a;
 									return $author$project$View$Dialog$Users$viewUsersListDialog(state);
@@ -24923,9 +25408,6 @@ var $author$project$Msg$JoinSession = function (a) {
 var $author$project$Msg$LaunchStars = function (a) {
 	return {$: 193, a: a};
 };
-var $author$project$Msg$OpenGameDir = function (a) {
-	return {$: 192, a: a};
-};
 var $author$project$Msg$OpenInviteDialog = {$: 57};
 var $author$project$Msg$OpenRulesDialog = F2(
 	function (a, b) {
@@ -24955,7 +25437,7 @@ var $author$project$View$Helpers$getCurrentUserId = function (model) {
 	var _v0 = $author$project$Model$getCurrentServerData(model).aH;
 	if (_v0.$ === 2) {
 		var info = _v0.a;
-		return $elm$core$Maybe$Just(info.fo);
+		return $elm$core$Maybe$Just(info.fs);
 	} else {
 		return $elm$core$Maybe$Nothing;
 	}
@@ -25018,7 +25500,7 @@ var $author$project$View$SessionDetail$viewInvitee = function (invitation) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text(invitation.dP)
+						$elm$html$Html$text(invitation.dT)
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -25026,7 +25508,7 @@ var $author$project$View$SessionDetail$viewInvitee = function (invitation) {
 					[
 						$elm$html$Html$Attributes$class('btn btn--danger btn--xs'),
 						$elm$html$Html$Events$onClick(
-						$author$project$Msg$CancelSentInvitation(invitation.dM)),
+						$author$project$Msg$CancelSentInvitation(invitation.dQ)),
 						$elm$html$Html$Attributes$title('Cancel invitation')
 					]),
 				_List_fromArray(
@@ -25043,13 +25525,13 @@ var $author$project$View$Helpers$getNickname = F2(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.ee;
+					return $.ei;
 				},
 				$elm$core$List$head(
 					A2(
 						$elm$core$List$filter,
 						function (u) {
-							return _Utils_eq(u.dM, userId);
+							return _Utils_eq(u.dQ, userId);
 						},
 						userProfiles))));
 	});
@@ -25141,7 +25623,7 @@ var $elm$html$Html$Events$preventDefaultOn = F2(
 var $author$project$View$SessionDetail$viewPlayerRow = F9(
 	function (userProfiles, myRace, sessionId, currentUserId, isManager, sessionStarted, dragState, index, player) {
 		var playerNumber = index + 1;
-		var nickname = A2($author$project$View$Helpers$getNickname, userProfiles, player.fp);
+		var nickname = A2($author$project$View$Helpers$getNickname, userProfiles, player.ft);
 		var mouseAttrs = isManager ? _List_fromArray(
 			[
 				A2(
@@ -25152,7 +25634,7 @@ var $author$project$View$SessionDetail$viewPlayerRow = F9(
 					F2(
 						function (x, y) {
 							return _Utils_Tuple2(
-								A4($author$project$Msg$MouseDownOnPlayer, player.fp, player.fp, x, y),
+								A4($author$project$Msg$MouseDownOnPlayer, player.ft, player.ft, x, y),
 								true);
 						}),
 					A2($elm$json$Json$Decode$field, 'clientX', $elm$json$Json$Decode$float),
@@ -25161,7 +25643,7 @@ var $author$project$View$SessionDetail$viewPlayerRow = F9(
 				$elm$html$Html$Events$on,
 				'mouseenter',
 				$elm$json$Json$Decode$succeed(
-					$author$project$Msg$MouseEnterPlayer(player.fp))),
+					$author$project$Msg$MouseEnterPlayer(player.ft))),
 				A2(
 				$elm$html$Html$Events$on,
 				'mouseleave',
@@ -25170,7 +25652,7 @@ var $author$project$View$SessionDetail$viewPlayerRow = F9(
 		var isDragging = function () {
 			if (!dragState.$) {
 				var ds = dragState.a;
-				return _Utils_eq(ds.dk, player.fp);
+				return _Utils_eq(ds.dn, player.ft);
 			} else {
 				return false;
 			}
@@ -25179,20 +25661,20 @@ var $author$project$View$SessionDetail$viewPlayerRow = F9(
 			if (!dragState.$) {
 				var ds = dragState.a;
 				return _Utils_eq(
-					ds.dh,
-					$elm$core$Maybe$Just(player.fp));
+					ds.dk,
+					$elm$core$Maybe$Just(player.ft));
 			} else {
 				return false;
 			}
 		}();
 		var isCurrentUser = _Utils_eq(
 			currentUserId,
-			$elm$core$Maybe$Just(player.fp));
+			$elm$core$Maybe$Just(player.ft));
 		var displayName = function () {
 			if (isCurrentUser) {
 				if (!myRace.$) {
 					var race = myRace.a;
-					return nickname + (' (' + (race.eb + ')'));
+					return nickname + (' (' + (race.ef + ')'));
 				} else {
 					return nickname;
 				}
@@ -25266,14 +25748,14 @@ var $author$project$View$SessionDetail$viewPlayerRow = F9(
 											$elm$html$Html$Attributes$classList(
 											_List_fromArray(
 												[
-													_Utils_Tuple2('session-detail__player-status--ready', player.eF),
-													_Utils_Tuple2('session-detail__player-status--not-ready', !player.eF)
+													_Utils_Tuple2('session-detail__player-status--ready', player.eJ),
+													_Utils_Tuple2('session-detail__player-status--not-ready', !player.eJ)
 												]))
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											player.eF ? 'Ready' : 'Not Ready')
+											player.eJ ? 'Ready' : 'Not Ready')
 										]))
 								]))
 						])),
@@ -25290,14 +25772,14 @@ var $author$project$View$SessionDetail$viewPlayerRow = F9(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class(
-									player.eF ? 'btn btn-secondary btn-sm' : 'btn btn-success btn-sm'),
+									player.eJ ? 'btn btn-secondary btn-sm' : 'btn btn-success btn-sm'),
 									$elm$html$Html$Events$onClick(
-									A2($author$project$Msg$SetPlayerReady, sessionId, !player.eF))
+									A2($author$project$Msg$SetPlayerReady, sessionId, !player.eJ))
 								]),
 							_List_fromArray(
 								[
 									$elm$html$Html$text(
-									player.eF ? 'Unready' : 'Ready')
+									player.eJ ? 'Unready' : 'Ready')
 								])) : $elm$html$Html$text('')
 						]))
 				]));
@@ -25312,7 +25794,7 @@ var $author$project$View$SessionList$viewOrdersSummary = function (players) {
 		A2(
 			$elm$core$List$filter,
 			function ($) {
-				return $.e8;
+				return $.fc;
 			},
 			players));
 	var allSubmitted = _Utils_eq(submitted, total);
@@ -25338,7 +25820,7 @@ var $author$project$View$SessionDetail$viewTurnItem = F4(
 		var ordersBadge = function () {
 			if (!maybeOrdersStatus.$) {
 				var ordersStatus = maybeOrdersStatus.a;
-				return $author$project$View$SessionList$viewOrdersSummary(ordersStatus.ev);
+				return $author$project$View$SessionList$viewOrdersSummary(ordersStatus.ez);
 			} else {
 				return isLatest ? A2(
 					$elm$html$Html$span,
@@ -25378,18 +25860,18 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 		var hasStarsExe = A2(
 			$elm$core$Maybe$withDefault,
 			false,
-			A2($elm$core$Dict$get, session.dM, serverData.cz));
+			A2($elm$core$Dict$get, session.dQ, serverData.cC));
 		var hasInvitation = A2(
 			$elm$core$List$any,
 			function (inv) {
-				return _Utils_eq(inv.eW, session.dM);
+				return _Utils_eq(inv.e_, session.dQ);
 			},
-			serverData.bD);
+			serverData.bF);
 		var currentUserId = $author$project$View$Helpers$getCurrentUserId(model);
 		var isManager = function () {
 			if (!currentUserId.$) {
 				var uid = currentUserId.a;
-				return A2($elm$core$List$member, uid, session.d1);
+				return A2($elm$core$List$member, uid, session.d5);
 			} else {
 				return false;
 			}
@@ -25397,7 +25879,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 		var isMemberOrManager = function () {
 			if (!currentUserId.$) {
 				var uid = currentUserId.a;
-				return A2($elm$core$List$member, uid, session.d3) || A2($elm$core$List$member, uid, session.d1);
+				return A2($elm$core$List$member, uid, session.d7) || A2($elm$core$List$member, uid, session.d5);
 			} else {
 				return false;
 			}
@@ -25408,9 +25890,9 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 				return A2(
 					$elm$core$List$any,
 					function (p) {
-						return _Utils_eq(p.fp, uid);
+						return _Utils_eq(p.ft, uid);
 					},
-					session.ev);
+					session.ez);
 			} else {
 				return false;
 			}
@@ -25424,20 +25906,20 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.eF;
+							return $.eJ;
 						},
 						$elm$core$List$head(
 							A2(
 								$elm$core$List$filter,
 								function (p) {
-									return _Utils_eq(p.fp, uid);
+									return _Utils_eq(p.ft, uid);
 								},
-								session.ev))));
+								session.ez))));
 			} else {
 				return false;
 			}
 		}();
-		var showSetupRaceButton = isMemberOrManager && ((!currentPlayerReady) && (!session.e6));
+		var showSetupRaceButton = isMemberOrManager && ((!currentPlayerReady) && (!session.fa));
 		var currentPlayerNumber = function () {
 			if (!currentUserId.$) {
 				var uid = currentUserId.a;
@@ -25455,23 +25937,23 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 								$elm$core$List$filter,
 								function (_v4) {
 									var p = _v4.b;
-									return _Utils_eq(p.fp, uid);
+									return _Utils_eq(p.ft, uid);
 								},
-								A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ev)))));
+								A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, session.ez)))));
 			} else {
 				return 1;
 			}
 		}();
-		var canQuit = isMemberOrManager && ((!session.e6) && ((!currentPlayerReady) && ((!isManager) || ($elm$core$List$length(session.d1) > 1))));
-		var canJoin = (!isMemberOrManager) && ((!session.e6) && (session.dX || hasInvitation));
-		var allPlayersReady = (!$elm$core$List$isEmpty(session.ev)) && A2(
+		var canQuit = isMemberOrManager && ((!session.fa) && ((!currentPlayerReady) && ((!isManager) || ($elm$core$List$length(session.d5) > 1))));
+		var canJoin = (!isMemberOrManager) && ((!session.fa) && (session.d$ || hasInvitation));
+		var allPlayersReady = (!$elm$core$List$isEmpty(session.ez)) && A2(
 			$elm$core$List$all,
 			function ($) {
-				return $.eF;
+				return $.eJ;
 			},
-			session.ev);
-		var canStartGame = session.eR && (allPlayersReady && (!session.e6));
-		var startGameBlockedReason = session.e6 ? $elm$core$Maybe$Just('Game has already started') : ((!session.eR) ? $elm$core$Maybe$Just('Rules must be configured first') : ($elm$core$List$isEmpty(session.ev) ? $elm$core$Maybe$Just('No players have joined yet') : ((!allPlayersReady) ? $elm$core$Maybe$Just('All players must be ready') : $elm$core$Maybe$Nothing)));
+			session.ez);
+		var canStartGame = session.eV && (allPlayersReady && (!session.fa));
+		var startGameBlockedReason = session.fa ? $elm$core$Maybe$Just('Game has already started') : ((!session.eV) ? $elm$core$Maybe$Just('Rules must be configured first') : ($elm$core$List$isEmpty(session.ez) ? $elm$core$Maybe$Just('No players have joined yet') : ((!allPlayersReady) ? $elm$core$Maybe$Just('All players must be ready') : $elm$core$Maybe$Nothing)));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -25507,7 +25989,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(session.ea)
+									$elm$html$Html$text(session.ee)
 								])),
 							A2(
 							$elm$html$Html$div,
@@ -25523,17 +26005,17 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										[
 											$elm$html$Html$Attributes$class('btn btn--primary'),
 											$elm$html$Html$Events$onClick(
-											$author$project$Msg$JoinSession(session.dM))
+											$author$project$Msg$JoinSession(session.dQ))
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text('Join')
 										])) : $elm$html$Html$text(''),
 									function () {
-									if (isManager && (!session.e6)) {
+									if (isManager && (!session.fa)) {
 										var isStarting = _Utils_eq(
-											model.cH,
-											$elm$core$Maybe$Just(session.dM));
+											model.cK,
+											$elm$core$Maybe$Just(session.dQ));
 										if (isStarting) {
 											return A2(
 												$elm$html$Html$button,
@@ -25577,7 +26059,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 														[
 															$elm$html$Html$Attributes$class('btn btn--success'),
 															$elm$html$Html$Events$onClick(
-															$author$project$Msg$StartGame(session.dM))
+															$author$project$Msg$StartGame(session.dQ))
 														]),
 													_List_fromArray(
 														[
@@ -25589,7 +26071,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										return $elm$html$Html$text('');
 									}
 								}(),
-									(isManager && (!session.e6)) ? A2(
+									(isManager && (!session.fa)) ? A2(
 									$elm$html$Html$button,
 									_List_fromArray(
 										[
@@ -25600,26 +26082,26 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										[
 											$elm$html$Html$text('Invite User')
 										])) : $elm$html$Html$text(''),
-									(isManager && session.e6) ? A2(
+									(isManager && session.fa) ? A2(
 									$elm$html$Html$button,
 									_List_fromArray(
 										[
 											$elm$html$Html$Attributes$class('btn btn--secondary'),
 											$elm$html$Html$Events$onClick(
-											$author$project$Msg$DownloadSessionBackup(session.dM)),
+											$author$project$Msg$DownloadSessionBackup(session.dQ)),
 											A2($elm$html$Html$Attributes$attribute, 'title', 'Download session backup')
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text($author$project$View$Icons$download + ' Backup')
 										])) : $elm$html$Html$text(''),
-									(isPlayer && session.e6) ? A2(
+									(isPlayer && session.fa) ? A2(
 									$elm$html$Html$button,
 									_List_fromArray(
 										[
 											$elm$html$Html$Attributes$class('btn btn--secondary'),
 											$elm$html$Html$Events$onClick(
-											$author$project$Msg$DownloadHistoricBackup(session.dM)),
+											$author$project$Msg$DownloadHistoricBackup(session.dQ)),
 											A2($elm$html$Html$Attributes$attribute, 'title', 'Download all historic game files')
 										]),
 									_List_fromArray(
@@ -25632,7 +26114,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										[
 											$elm$html$Html$Attributes$class('btn btn--danger'),
 											$elm$html$Html$Events$onClick(
-											$author$project$Msg$DeleteSession(session.dM))
+											$author$project$Msg$DeleteSession(session.dQ))
 										]),
 									_List_fromArray(
 										[
@@ -25644,7 +26126,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 										[
 											$elm$html$Html$Attributes$class('btn btn--secondary'),
 											$elm$html$Html$Events$onClick(
-											$author$project$Msg$QuitSession(session.dM))
+											$author$project$Msg$QuitSession(session.dQ))
 										]),
 									_List_fromArray(
 										[
@@ -25656,9 +26138,9 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 					var sessionInvitees = A2(
 						$elm$core$List$filter,
 						function (inv) {
-							return _Utils_eq(inv.eW, session.dM);
+							return _Utils_eq(inv.e_, session.dQ);
 						},
-						serverData.cu);
+						serverData.cx);
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -25727,14 +26209,14 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																		$elm$html$Html$Attributes$classList(
 																		_List_fromArray(
 																			[
-																				_Utils_Tuple2('session-detail__value--started', session.e6),
-																				_Utils_Tuple2('session-detail__value--not-started', !session.e6)
+																				_Utils_Tuple2('session-detail__value--started', session.fa),
+																				_Utils_Tuple2('session-detail__value--not-started', !session.fa)
 																			]))
 																	]),
 																_List_fromArray(
 																	[
 																		$elm$html$Html$text(
-																		session.e6 ? 'Started' : 'Not Started')
+																		session.fa ? 'Started' : 'Not Started')
 																	]))
 															])),
 														A2(
@@ -25764,7 +26246,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																_List_fromArray(
 																	[
 																		$elm$html$Html$text(
-																		session.dX ? 'Public' : 'Private')
+																		session.d$ ? 'Public' : 'Private')
 																	]))
 															])),
 														A2(
@@ -25793,7 +26275,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																	]),
 																_List_fromArray(
 																	[
-																		$elm$html$Html$text(session.dM)
+																		$elm$html$Html$text(session.dQ)
 																	]))
 															])),
 														A2(
@@ -25814,13 +26296,13 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																	[
 																		$elm$html$Html$text('Rules')
 																	])),
-																session.eR ? A2(
+																session.eV ? A2(
 																$elm$html$Html$button,
 																_List_fromArray(
 																	[
 																		$elm$html$Html$Attributes$class('btn btn-sm btn-secondary'),
 																		$elm$html$Html$Events$onClick(
-																		A2($author$project$Msg$OpenRulesDialog, session.dM, session.eR))
+																		A2($author$project$Msg$OpenRulesDialog, session.dQ, session.eV))
 																	]),
 																_List_fromArray(
 																	[
@@ -25831,7 +26313,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																	[
 																		$elm$html$Html$Attributes$class('btn btn-sm btn-primary'),
 																		$elm$html$Html$Events$onClick(
-																		A2($author$project$Msg$OpenRulesDialog, session.dM, session.eR))
+																		A2($author$project$Msg$OpenRulesDialog, session.dQ, session.eV))
 																	]),
 																_List_fromArray(
 																	[
@@ -25867,7 +26349,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 													[
 														$elm$html$Html$text(
 														'Managers (' + ($elm$core$String$fromInt(
-															$elm$core$List$length(session.d1)) + ')'))
+															$elm$core$List$length(session.d5)) + ')'))
 													])),
 												A2(
 												$elm$html$Html$div,
@@ -25875,7 +26357,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 													[
 														$elm$html$Html$Attributes$class('session-detail__members')
 													]),
-												$elm$core$List$isEmpty(session.d1) ? _List_fromArray(
+												$elm$core$List$isEmpty(session.d5) ? _List_fromArray(
 													[
 														A2(
 														$elm$html$Html$div,
@@ -25889,8 +26371,8 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 															]))
 													]) : A2(
 													$elm$core$List$map,
-													$author$project$View$SessionDetail$viewMemberId(serverData.cS),
-													session.d1))
+													$author$project$View$SessionDetail$viewMemberId(serverData.cV),
+													session.d5))
 											]))
 									])),
 								A2(
@@ -25919,7 +26401,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 													[
 														$elm$html$Html$text(
 														'Members (' + ($elm$core$String$fromInt(
-															$elm$core$List$length(session.d3)) + ')'))
+															$elm$core$List$length(session.d7)) + ')'))
 													])),
 												A2(
 												$elm$html$Html$div,
@@ -25927,7 +26409,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 													[
 														$elm$html$Html$Attributes$class('session-detail__members')
 													]),
-												$elm$core$List$isEmpty(session.d3) ? _List_fromArray(
+												$elm$core$List$isEmpty(session.d7) ? _List_fromArray(
 													[
 														A2(
 														$elm$html$Html$div,
@@ -25941,8 +26423,8 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 															]))
 													]) : A2(
 													$elm$core$List$map,
-													A3($author$project$View$SessionDetail$viewMemberWithPromote, serverData.cS, isManager, session.dM),
-													session.d3))
+													A3($author$project$View$SessionDetail$viewMemberWithPromote, serverData.cV, isManager, session.dQ),
+													session.d7))
 											])),
 										A2(
 										$elm$html$Html$div,
@@ -26020,11 +26502,11 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 														_List_fromArray(
 															[
 																$elm$html$Html$text(
-																detail.ew ? $author$project$View$Icons$expand : $author$project$View$Icons$collapse)
+																detail.eA ? $author$project$View$Icons$expand : $author$project$View$Icons$collapse)
 															])),
 														$elm$html$Html$text(
 														'Players (' + ($elm$core$String$fromInt(
-															$elm$core$List$length(session.ev)) + ')')),
+															$elm$core$List$length(session.ez)) + ')')),
 														A2(
 														$elm$html$Html$span,
 														_List_fromArray(
@@ -26042,7 +26524,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 													[
 														$elm$html$Html$Attributes$class('btn btn-success btn-sm'),
 														$elm$html$Html$Events$onClick(
-														$author$project$Msg$OpenSetupRaceDialog(session.dM))
+														$author$project$Msg$OpenSetupRaceDialog(session.dQ))
 													]),
 												_List_fromArray(
 													[
@@ -26050,14 +26532,14 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 														isPlayer ? 'Change Race' : 'Setup My Race')
 													])) : $elm$html$Html$text('')
 											])),
-										detail.ew ? A2(
+										detail.eA ? A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
 												$elm$html$Html$Attributes$class('session-detail__players')
 											]),
 										function () {
-											if ($elm$core$List$isEmpty(session.ev)) {
+											if ($elm$core$List$isEmpty(session.ez)) {
 												return _List_fromArray(
 													[
 														A2(
@@ -26072,19 +26554,19 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 															]))
 													]);
 											} else {
-												var myRace = A2($elm$core$Dict$get, session.dM, serverData.cB);
+												var myRace = A2($elm$core$Dict$get, session.dQ, serverData.cE);
 												return A2(
 													$elm$core$List$indexedMap,
 													F2(
 														function (idx, player) {
-															return A9($author$project$View$SessionDetail$viewPlayerRow, serverData.cS, myRace, session.dM, currentUserId, isManager, session.e6, detail.dj, idx, player);
+															return A9($author$project$View$SessionDetail$viewPlayerRow, serverData.cV, myRace, session.dQ, currentUserId, isManager, session.fa, detail.dm, idx, player);
 														}),
-													session.ev);
+													session.ez);
 											}
 										}()) : $elm$html$Html$text('')
 									])),
 								function () {
-								if (session.e6 && (!$elm$core$Dict$isEmpty(availableTurns))) {
+								if (session.fa && (!$elm$core$Dict$isEmpty(availableTurns))) {
 									var sortedYears = $elm$core$List$sort(
 										$elm$core$Dict$keys(availableTurns));
 									var latestYear = $elm$core$List$maximum(sortedYears);
@@ -26130,7 +26612,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																	[
 																		$elm$html$Html$Attributes$class('btn btn--primary btn--sm'),
 																		$elm$html$Html$Events$onClick(
-																		$author$project$Msg$LaunchStars(session.dM))
+																		$author$project$Msg$LaunchStars(session.dQ))
 																	]),
 																_List_fromArray(
 																	[
@@ -26153,7 +26635,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																	[
 																		$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 																		$elm$html$Html$Events$onClick(
-																		$author$project$Msg$OpenGameDir(session.dM))
+																		$author$project$Msg$OpenGameDir(session.dQ))
 																	]),
 																_List_fromArray(
 																	[
@@ -26162,14 +26644,14 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																function () {
 																var _v1 = _Utils_Tuple2(
 																	latestYear,
-																	A2($elm$core$Dict$get, session.dM, serverData.cB));
+																	A2($elm$core$Dict$get, session.dQ, serverData.cE));
 																if ((!_v1.a.$) && (!_v1.b.$)) {
 																	var year = _v1.a.a;
 																	var race = _v1.b.a;
 																	var _v2 = A2(
 																		$elm$core$Maybe$andThen,
 																		$elm$core$Dict$get(year),
-																		A2($elm$core$Dict$get, session.dM, serverData.cD));
+																		A2($elm$core$Dict$get, session.dQ, serverData.cG));
 																	if (!_v2.$) {
 																		return A2(
 																			$elm$html$Html$button,
@@ -26177,7 +26659,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 																				[
 																					$elm$html$Html$Attributes$class('btn btn--secondary btn--sm'),
 																					$elm$html$Html$Events$onClick(
-																					A4($author$project$Msg$OpenMapViewer, session.dM, year, race.ec, currentPlayerNumber))
+																					A4($author$project$Msg$OpenMapViewer, session.dQ, year, race.eg, currentPlayerNumber))
 																				]),
 																			_List_fromArray(
 																				[
@@ -26203,7 +26685,7 @@ var $author$project$View$SessionDetail$viewSessionDetail = F5(
 													function (year) {
 														return A4(
 															$author$project$View$SessionDetail$viewTurnItem,
-															session.dM,
+															session.dQ,
 															year,
 															_Utils_eq(
 																latestYear,
@@ -26306,21 +26788,21 @@ var $author$project$Model$PublicSessions = 2;
 var $author$project$Msg$RefreshSessions = {$: 37};
 var $author$project$View$SessionList$hasUnsubmittedTurn = F3(
 	function (userId, ordersStatusDict, session) {
-		if (!session.e6) {
+		if (!session.fa) {
 			return false;
 		} else {
 			var _v0 = $elm$core$List$head(
 				A2(
 					$elm$core$List$filter,
 					function (p) {
-						return _Utils_eq(p.fp, userId);
+						return _Utils_eq(p.ft, userId);
 					},
-					session.ev));
+					session.ez));
 			if (_v0.$ === 1) {
 				return false;
 			} else {
 				var player = _v0.a;
-				var _v1 = A2($elm$core$Dict$get, session.dM, ordersStatusDict);
+				var _v1 = A2($elm$core$Dict$get, session.dQ, ordersStatusDict);
 				if (_v1.$ === 1) {
 					return false;
 				} else {
@@ -26340,14 +26822,14 @@ var $author$project$View$SessionList$hasUnsubmittedTurn = F3(
 							A2(
 								$elm$core$List$filter,
 								function (pos) {
-									return _Utils_eq(pos.eu, player.eu);
+									return _Utils_eq(pos.ey, player.ey);
 								},
-								ordersStatus.ev));
+								ordersStatus.ez));
 						if (_v3.$ === 1) {
 							return false;
 						} else {
 							var playerOrderStatus = _v3.a;
-							return !playerOrderStatus.e8;
+							return !playerOrderStatus.fc;
 						}
 					}
 				}
@@ -26356,7 +26838,7 @@ var $author$project$View$SessionList$hasUnsubmittedTurn = F3(
 	});
 var $author$project$View$SessionList$isUserInSession = F2(
 	function (userId, session) {
-		return A2($elm$core$List$member, userId, session.d3) || A2($elm$core$List$member, userId, session.d1);
+		return A2($elm$core$List$member, userId, session.d7) || A2($elm$core$List$member, userId, session.d5);
 	});
 var $author$project$View$SessionList$filterSessions = F4(
 	function (maybeUserId, filter, sessions, ordersStatusDict) {
@@ -26377,14 +26859,14 @@ var $author$project$View$SessionList$filterSessions = F4(
 				return A2(
 					$elm$core$List$filter,
 					function ($) {
-						return $.dX;
+						return $.d$;
 					},
 					sessions);
 			case 3:
 				return A2(
 					$elm$core$List$filter,
 					function ($) {
-						return $.es;
+						return $.ew;
 					},
 					sessions);
 			default:
@@ -26461,23 +26943,23 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 			}
 		}();
 		var maybeTurnInfo = function () {
-			if (session.e6 && isAlreadyMemberOrManager) {
+			if (session.fa && isAlreadyMemberOrManager) {
 				var sessionTurns = A2(
 					$elm$core$Maybe$withDefault,
 					$elm$core$Dict$empty,
-					A2($elm$core$Dict$get, session.dM, allSessionTurns));
+					A2($elm$core$Dict$get, session.dQ, allSessionTurns));
 				var ordersStatus = A2(
 					$elm$core$Maybe$withDefault,
 					$elm$core$Dict$empty,
-					A2($elm$core$Dict$get, session.dM, allSessionOrdersStatus));
+					A2($elm$core$Dict$get, session.dQ, allSessionOrdersStatus));
 				var latestYear = $elm$core$List$maximum(
 					$elm$core$Dict$keys(sessionTurns));
 				return A2(
 					$elm$core$Maybe$map,
 					function (year) {
 						return {
-							bZ: A2($elm$core$Dict$get, year, ordersStatus),
-							fP: year
+							b$: A2($elm$core$Dict$get, year, ordersStatus),
+							fT: year
 						};
 					},
 					latestYear);
@@ -26491,7 +26973,7 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 				[
 					$elm$html$Html$Attributes$class('session-card'),
 					$elm$html$Html$Events$onClick(
-					$author$project$Msg$ViewSessionDetail(session.dM))
+					$author$project$Msg$ViewSessionDetail(session.dQ))
 				]),
 			_List_fromArray(
 				[
@@ -26511,7 +26993,7 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(session.ea)
+									$elm$html$Html$text(session.ee)
 								])),
 							A2(
 							$elm$html$Html$div,
@@ -26529,14 +27011,14 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 											$elm$html$Html$Attributes$classList(
 											_List_fromArray(
 												[
-													_Utils_Tuple2('is-public', session.dX),
-													_Utils_Tuple2('is-private', !session.dX)
+													_Utils_Tuple2('is-public', session.d$),
+													_Utils_Tuple2('is-private', !session.d$)
 												]))
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											session.dX ? 'Public' : 'Private')
+											session.d$ ? 'Public' : 'Private')
 										])),
 									A2(
 									$elm$html$Html$span,
@@ -26546,14 +27028,14 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 											$elm$html$Html$Attributes$classList(
 											_List_fromArray(
 												[
-													_Utils_Tuple2('is-started', session.e6),
-													_Utils_Tuple2('is-not-started', !session.e6)
+													_Utils_Tuple2('is-started', session.fa),
+													_Utils_Tuple2('is-not-started', !session.fa)
 												]))
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											session.e6 ? 'Started' : 'Not Started')
+											session.fa ? 'Started' : 'Not Started')
 										]))
 								]))
 						])),
@@ -26577,13 +27059,13 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											'Year ' + $elm$core$String$fromInt(turnInfo.fP))
+											'Year ' + $elm$core$String$fromInt(turnInfo.fT))
 										])),
 									function () {
-									var _v1 = turnInfo.bZ;
+									var _v1 = turnInfo.b$;
 									if (!_v1.$) {
 										var ordersStatus = _v1.a;
-										return $author$project$View$SessionList$viewOrdersSummary(ordersStatus.ev);
+										return $author$project$View$SessionList$viewOrdersSummary(ordersStatus.ez);
 									} else {
 										return A2(
 											$elm$html$Html$span,
@@ -26638,7 +27120,7 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 										[
 											$elm$html$Html$text(
 											$elm$core$String$fromInt(
-												$elm$core$List$length(session.d1) + $elm$core$List$length(session.d3)))
+												$elm$core$List$length(session.d5) + $elm$core$List$length(session.d7)))
 										]))
 								])),
 							A2(
@@ -26669,7 +27151,7 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 										[
 											$elm$html$Html$text(
 											$elm$core$String$fromInt(
-												$elm$core$List$length(session.ev)))
+												$elm$core$List$length(session.ez)))
 										]))
 								]))
 						])),
@@ -26691,21 +27173,21 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 								[
 									$elm$html$Html$text(
 									$elm$core$String$fromInt(
-										$elm$core$List$length(session.d1) + $elm$core$List$length(session.d3)) + ' users')
+										$elm$core$List$length(session.d5) + $elm$core$List$length(session.d7)) + ' users')
 								])),
-							((!isAlreadyMemberOrManager) && (!session.e6)) ? A2(
+							((!isAlreadyMemberOrManager) && (!session.fa)) ? A2(
 							$elm$html$Html$button,
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class('btn btn-sm btn-primary session-card__action'),
 									$elm$html$Html$Events$onClick(
-									$author$project$Msg$JoinSession(session.dM)),
+									$author$project$Msg$JoinSession(session.dQ)),
 									A2(
 									$elm$html$Html$Events$stopPropagationOn,
 									'click',
 									$elm$json$Json$Decode$succeed(
 										_Utils_Tuple2(
-											$author$project$Msg$JoinSession(session.dM),
+											$author$project$Msg$JoinSession(session.dQ),
 											true)))
 								]),
 							_List_fromArray(
@@ -26718,7 +27200,7 @@ var $author$project$View$SessionList$viewSessionCard = F4(
 var $author$project$View$SessionList$viewSessionList = function (model) {
 	var serverData = $author$project$Model$getCurrentServerData(model);
 	var currentUserId = $author$project$View$Helpers$getCurrentUserId(model);
-	var filteredSessions = A4($author$project$View$SessionList$filterSessions, currentUserId, model.cy, serverData.cE, serverData.cA);
+	var filteredSessions = A4($author$project$View$SessionList$filterSessions, currentUserId, model.cB, serverData.cH, serverData.cD);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -26784,11 +27266,11 @@ var $author$project$View$SessionList$viewSessionList = function (model) {
 							]),
 						_List_fromArray(
 							[
-								A3($author$project$View$SessionList$viewFilterButton, 0, 'All', model.cy),
-								A3($author$project$View$SessionList$viewFilterButton, 1, 'My Sessions', model.cy),
-								A3($author$project$View$SessionList$viewFilterButton, 2, 'Public', model.cy),
-								A3($author$project$View$SessionList$viewFilterButton, 3, 'Invited', model.cy),
-								A4($author$project$View$SessionList$viewFilterButtonWithTooltip, 4, 'My Turn', model.cy, 'Sessions where you have a turn to submit')
+								A3($author$project$View$SessionList$viewFilterButton, 0, 'All', model.cB),
+								A3($author$project$View$SessionList$viewFilterButton, 1, 'My Sessions', model.cB),
+								A3($author$project$View$SessionList$viewFilterButton, 2, 'Public', model.cB),
+								A3($author$project$View$SessionList$viewFilterButton, 3, 'Invited', model.cB),
+								A4($author$project$View$SessionList$viewFilterButtonWithTooltip, 4, 'My Turn', model.cB, 'Sessions where you have a turn to submit')
 							]))
 					])),
 				$elm$core$List$isEmpty(filteredSessions) ? A2(
@@ -26808,7 +27290,7 @@ var $author$project$View$SessionList$viewSessionList = function (model) {
 					]),
 				A2(
 					$elm$core$List$map,
-					A3($author$project$View$SessionList$viewSessionCard, currentUserId, serverData.cD, serverData.cA),
+					A3($author$project$View$SessionList$viewSessionCard, currentUserId, serverData.cG, serverData.cD),
 					filteredSessions))
 			]));
 };
@@ -26824,10 +27306,10 @@ var $author$project$View$Layout$viewSessionListOrEmpty = function (model) {
 var $author$project$View$Layout$viewContent = function (model) {
 	var serverData = $author$project$Model$getCurrentServerData(model);
 	var dragPreview = function () {
-		var _v2 = model.cx;
+		var _v2 = model.cA;
 		if (!_v2.$) {
 			var detail = _v2.a;
-			var _v3 = detail.dj;
+			var _v3 = detail.dm;
 			if (!_v3.$) {
 				var dragState = _v3.a;
 				return A2(
@@ -26839,11 +27321,11 @@ var $author$project$View$Layout$viewContent = function (model) {
 							A2(
 							$elm$html$Html$Attributes$style,
 							'left',
-							$elm$core$String$fromFloat(dragState.d9 - 100) + 'px'),
+							$elm$core$String$fromFloat(dragState.ed - 100) + 'px'),
 							A2(
 							$elm$html$Html$Attributes$style,
 							'top',
-							$elm$core$String$fromFloat(dragState.bP - 20) + 'px'),
+							$elm$core$String$fromFloat(dragState.bR - 20) + 'px'),
 							A2($elm$html$Html$Attributes$style, 'pointer-events', 'none'),
 							A2($elm$html$Html$Attributes$style, 'z-index', '10000')
 						]),
@@ -26865,7 +27347,7 @@ var $author$project$View$Layout$viewContent = function (model) {
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(dragState.dl)
+											$elm$html$Html$text(dragState.$7)
 										]))
 								]))
 						]));
@@ -26885,20 +27367,20 @@ var $author$project$View$Layout$viewContent = function (model) {
 		_List_fromArray(
 			[
 				function () {
-				var _v0 = model.cx;
+				var _v0 = model.cA;
 				if (!_v0.$) {
 					var detail = _v0.a;
-					var _v1 = A2($author$project$Model$getSessionById, detail.eW, serverData.cE);
+					var _v1 = A2($author$project$Model$getSessionById, detail.e_, serverData.cH);
 					if (!_v1.$) {
 						var session = _v1.a;
 						var ordersStatusByYear = A2(
 							$elm$core$Maybe$withDefault,
 							$elm$core$Dict$empty,
-							A2($elm$core$Dict$get, session.dM, serverData.cA));
+							A2($elm$core$Dict$get, session.dQ, serverData.cD));
 						var availableTurns = A2(
 							$elm$core$Maybe$withDefault,
 							$elm$core$Dict$empty,
-							A2($elm$core$Dict$get, session.dM, serverData.cD));
+							A2($elm$core$Dict$get, session.dQ, serverData.cG));
 						return A5($author$project$View$SessionDetail$viewSessionDetail, session, detail, availableTurns, ordersStatusByYear, model);
 					} else {
 						return $author$project$View$Layout$viewSessionListOrEmpty(model);
@@ -26920,12 +27402,12 @@ var $author$project$View$Layout$viewHeader = function (model) {
 		A2(
 			$elm$core$Maybe$map,
 			function ($) {
-				return $.ea;
+				return $.ee;
 			},
 			A2(
 				$elm$core$Maybe$andThen,
 				function (url) {
-					return A2($author$project$Model$getServerByUrl, url, model.cw);
+					return A2($author$project$Model$getServerByUrl, url, model.cz);
 				},
 				model.aS)));
 	var serverData = $author$project$Model$getCurrentServerData(model);
@@ -26933,12 +27415,12 @@ var $author$project$View$Layout$viewHeader = function (model) {
 		var _v3 = serverData.aH;
 		if (_v3.$ === 2) {
 			var info = _v3.a;
-			return info.dW;
+			return info.d_;
 		} else {
 			return false;
 		}
 	}();
-	var hasInvitations = !$elm$core$List$isEmpty(serverData.bD);
+	var hasInvitations = !$elm$core$List$isEmpty(serverData.bF);
 	var connectionStatus = function () {
 		var _v1 = model.aS;
 		if (!_v1.$) {
@@ -27100,7 +27582,7 @@ var $author$project$View$Layout$viewHeader = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text('\uD83D\uDC64'),
-								(serverData.b2 > 0) ? A2(
+								(serverData.b5 > 0) ? A2(
 								$elm$html$Html$span,
 								_List_fromArray(
 									[
@@ -27122,7 +27604,7 @@ var $author$project$View$Layout$viewHeader = function (model) {
 				connectionStatus
 			]));
 };
-var $author$project$Msg$ClearError = {$: 280};
+var $author$project$Msg$ClearError = {$: 286};
 var $author$project$View$Layout$viewStatusBar = function (model) {
 	var serverData = $author$project$Model$getCurrentServerData(model);
 	var statusText = function () {
@@ -27177,13 +27659,13 @@ var $author$project$View$Layout$viewStatusBar = function (model) {
 		return formatted + 's';
 	};
 	var sessionCountText = function () {
-		var _v1 = serverData.bJ;
+		var _v1 = serverData.bL;
 		if (!_v1.$) {
 			var result = _v1.a;
-			return $elm$core$String$fromInt(result.eV) + (' sessions in ' + formatDuration(result.dn));
+			return $elm$core$String$fromInt(result.eZ) + (' sessions in ' + formatDuration(result.dq));
 		} else {
 			return $elm$core$String$fromInt(
-				$elm$core$List$length(serverData.cE)) + ' sessions';
+				$elm$core$List$length(serverData.cH)) + ' sessions';
 		}
 	}();
 	return A2(
@@ -27350,11 +27832,11 @@ var $author$project$View$ServerBar$viewServerButton = F4(
 	function (selectedUrl, serverData, dragState, server) {
 		var isSelected = _Utils_eq(
 			selectedUrl,
-			$elm$core$Maybe$Just(server.fm));
+			$elm$core$Maybe$Just(server.fq));
 		var isDragging = function () {
 			if (!dragState.$) {
 				var ds = dragState.a;
-				return _Utils_eq(ds.dm, server.fm);
+				return _Utils_eq(ds.dp, server.fq);
 			} else {
 				return false;
 			}
@@ -27363,20 +27845,20 @@ var $author$project$View$ServerBar$viewServerButton = F4(
 			if (!dragState.$) {
 				var ds = dragState.a;
 				return _Utils_eq(
-					ds.di,
-					$elm$core$Maybe$Just(server.fm));
+					ds.dl,
+					$elm$core$Maybe$Just(server.fq));
 			} else {
 				return false;
 			}
 		}();
 		var dragEvents = _List_fromArray(
 			[
-				$author$project$View$ServerBar$onMouseDownServer(server.fm),
+				$author$project$View$ServerBar$onMouseDownServer(server.fq),
 				$elm$html$Html$Events$onMouseEnter(
-				$author$project$Msg$ServerDragEnter(server.fm)),
+				$author$project$Msg$ServerDragEnter(server.fq)),
 				$elm$html$Html$Events$onMouseLeave($author$project$Msg$ServerDragLeave)
 			]);
-		var connectionState = A2($author$project$Model$getConnectionState, server.fm, serverData);
+		var connectionState = A2($author$project$Model$getConnectionState, server.fq, serverData);
 		var statusClass = function () {
 			switch (connectionState.$) {
 				case 2:
@@ -27419,9 +27901,9 @@ var $author$project$View$ServerBar$viewServerButton = F4(
 						[
 							$elm$html$Html$Attributes$class('server-button__btn'),
 							$elm$html$Html$Events$onClick(
-							$author$project$Msg$SelectServer(server.fm)),
-							$author$project$View$ServerBar$onContextMenu(server.fm),
-							$elm$html$Html$Attributes$title(server.ea)
+							$author$project$Msg$SelectServer(server.fq)),
+							$author$project$View$ServerBar$onContextMenu(server.fq),
+							$elm$html$Html$Attributes$title(server.ee)
 						]),
 					_List_fromArray(
 						[
@@ -27434,7 +27916,7 @@ var $author$project$View$ServerBar$viewServerButton = F4(
 							_List_fromArray(
 								[
 									$elm$html$Html$text(
-									$author$project$View$ServerBar$serverInitials(server.ea))
+									$author$project$View$ServerBar$serverInitials(server.ee))
 								]))
 						])),
 					A2(
@@ -27452,7 +27934,7 @@ var $author$project$View$ServerBar$viewServerButton = F4(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(server.ea)
+							$elm$html$Html$text(server.ee)
 						]))
 				]));
 	});
@@ -27473,8 +27955,8 @@ var $author$project$View$ServerBar$viewServerBar = function (model) {
 					]),
 				A2(
 					$elm$core$List$map,
-					A3($author$project$View$ServerBar$viewServerButton, model.aS, model.aT, model.cv),
-					model.cw)),
+					A3($author$project$View$ServerBar$viewServerButton, model.aS, model.aT, model.cy),
+					model.cz)),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -27510,7 +27992,7 @@ var $author$project$Msg$ShowApiKey = function (a) {
 	return {$: 256, a: a};
 };
 var $author$project$View$Menus$viewUserMenu = function (model) {
-	if (!model.cF) {
+	if (!model.cI) {
 		return $elm$html$Html$text('');
 	} else {
 		var _v0 = model.aS;
@@ -27523,7 +28005,7 @@ var $author$project$View$Menus$viewUserMenu = function (model) {
 				var _v3 = serverData.aH;
 				if (_v3.$ === 2) {
 					var info = _v3.a;
-					return $elm$core$String$isEmpty(info.eS) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(info.eS);
+					return $elm$core$String$isEmpty(info.eW) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(info.eW);
 				} else {
 					return $elm$core$Maybe$Nothing;
 				}
@@ -27760,12 +28242,12 @@ var $author$project$View$Menus$viewUserMenu = function (model) {
 	}
 };
 var $author$project$View$Layout$view = function (model) {
-	var isServerDragging = !_Utils_eq(model.cv, $elm$core$Maybe$Nothing);
+	var isServerDragging = !_Utils_eq(model.cy, $elm$core$Maybe$Nothing);
 	var isPlayerDragging = function () {
-		var _v0 = model.cx;
+		var _v0 = model.cA;
 		if (!_v0.$) {
 			var detail = _v0.a;
-			return !_Utils_eq(detail.dj, $elm$core$Maybe$Nothing);
+			return !_Utils_eq(detail.dm, $elm$core$Maybe$Nothing);
 		} else {
 			return false;
 		}
@@ -27793,7 +28275,7 @@ var $author$project$View$Layout$view = function (model) {
 };
 var $author$project$View$view = $author$project$View$Layout$view;
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{dO: $author$project$Main$init, e9: $author$project$Subscriptions$subscriptions, fl: $author$project$Update$update, fJ: $author$project$View$view});
+	{dS: $author$project$Main$init, fd: $author$project$Subscriptions$subscriptions, fp: $author$project$Update$update, fN: $author$project$View$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(
 		{}))(0)}});}(this));

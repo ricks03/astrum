@@ -175,6 +175,8 @@ subscriptions model =
         -- Map Viewer
         , Ports.mapGenerated (decodeResult D.string MapGenerated)
         , Ports.mapSaved (decodeResult (D.succeed ()) MapSaved)
+        , Ports.animatedMapGenerated (decodeResult D.string AnimatedMapGenerated)
+        , Ports.gifSaved (decodeResult (D.succeed ()) GifSaved)
 
         -- Zoom keyboard events
         , Ports.zoomKeyPressed decodeZoomKey

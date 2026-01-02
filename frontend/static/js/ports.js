@@ -732,6 +732,20 @@ function initPorts(app) {
         });
     }
 
+    if (app.ports.generateAnimatedMap) {
+        app.ports.generateAnimatedMap.subscribe(async (data) => {
+            callGo(app.ports.animatedMapGenerated,
+                window.go.main.App.GenerateAnimatedMap(data));
+        });
+    }
+
+    if (app.ports.saveGif) {
+        app.ports.saveGif.subscribe(async (data) => {
+            callGo(app.ports.gifSaved,
+                window.go.main.App.SaveGif(data));
+        });
+    }
+
     if (app.ports.requestFullscreen) {
         app.ports.requestFullscreen.subscribe((elementId) => {
             const element = document.getElementById(elementId);

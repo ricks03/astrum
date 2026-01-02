@@ -40,6 +40,8 @@ export function DownloadRace(arg1:string,arg2:string):Promise<string>;
 
 export function DownloadSessionBackup(arg1:string,arg2:string):Promise<void>;
 
+export function GenerateAnimatedMap(arg1:main.AnimatedMapRequest):Promise<string>;
+
 export function GenerateMap(arg1:main.MapGenerateRequest):Promise<string>;
 
 export function GetAppSettings():Promise<main.AppSettingsInfo>;
@@ -105,6 +107,8 @@ export function ReorderPlayers(arg1:string,arg2:string,arg3:Array<Record<string,
 export function ReorderServers(arg1:Array<main.ServerOrder>):Promise<void>;
 
 export function ResetUserApikey(arg1:string,arg2:string):Promise<string>;
+
+export function SaveGif(arg1:main.GifSaveRequest):Promise<void>;
 
 export function SaveMap(arg1:main.MapSaveRequest):Promise<void>;
 

@@ -62,6 +62,8 @@ port module Ports exposing
     , checkWineInstall
     , generateMap
     , saveMap
+    , generateAnimatedMap
+    , saveGif
     , requestFullscreen
     , resetUserApikey
     , changeMyApikey
@@ -133,6 +135,8 @@ port module Ports exposing
     , historicBackupDownloaded
     , mapGenerated
     , mapSaved
+    , animatedMapGenerated
+    , gifSaved
       -- Events from Go
     , sessionsUpdated
     , connectionChanged
@@ -434,6 +438,12 @@ port generateMap : E.Value -> Cmd msg
 port saveMap : E.Value -> Cmd msg
 
 
+port generateAnimatedMap : E.Value -> Cmd msg
+
+
+port saveGif : E.Value -> Cmd msg
+
+
 port requestFullscreen : String -> Cmd msg
 
 
@@ -679,6 +689,12 @@ port mapGenerated : (D.Value -> msg) -> Sub msg
 
 
 port mapSaved : (D.Value -> msg) -> Sub msg
+
+
+port animatedMapGenerated : (D.Value -> msg) -> Sub msg
+
+
+port gifSaved : (D.Value -> msg) -> Sub msg
 
 
 

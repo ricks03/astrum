@@ -407,6 +407,12 @@ type Msg
     | SaveMap
     | MapSaved (Result String ())
     | ToggleMapFullscreen
+    | SelectMapFormat String -- "svg" or "gif"
+    | UpdateGifDelay String -- delay in ms
+    | GenerateAnimatedMap
+    | AnimatedMapGenerated (Result String String) -- base64 GIF result
+    | SaveGif
+    | GifSaved (Result String ())
       -- =========================================================================
       -- Global UI Messages
       -- =========================================================================

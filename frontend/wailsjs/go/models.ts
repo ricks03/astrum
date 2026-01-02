@@ -1,5 +1,69 @@
 export namespace main {
 	
+	export class MapOptions {
+	    width: number;
+	    height: number;
+	    showNames: boolean;
+	    showFleets: boolean;
+	    showFleetPaths: number;
+	    showMines: boolean;
+	    showWormholes: boolean;
+	    showLegend: boolean;
+	    showScannerCoverage: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new MapOptions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.width = source["width"];
+	        this.height = source["height"];
+	        this.showNames = source["showNames"];
+	        this.showFleets = source["showFleets"];
+	        this.showFleetPaths = source["showFleetPaths"];
+	        this.showMines = source["showMines"];
+	        this.showWormholes = source["showWormholes"];
+	        this.showLegend = source["showLegend"];
+	        this.showScannerCoverage = source["showScannerCoverage"];
+	    }
+	}
+	export class AnimatedMapRequest {
+	    serverUrl: string;
+	    sessionId: string;
+	    options: MapOptions;
+	    delay: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new AnimatedMapRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.serverUrl = source["serverUrl"];
+	        this.sessionId = source["sessionId"];
+	        this.options = this.convertValues(source["options"], MapOptions);
+	        this.delay = source["delay"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class AppSettingsInfo {
 	    serversDir: string;
 	    autoDownloadStars: boolean;
@@ -79,6 +143,26 @@ export namespace main {
 		    return a;
 		}
 	}
+	export class GifSaveRequest {
+	    serverUrl: string;
+	    sessionId: string;
+	    raceName: string;
+	    playerNumber: number;
+	    gifContent: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GifSaveRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.serverUrl = source["serverUrl"];
+	        this.sessionId = source["sessionId"];
+	        this.raceName = source["raceName"];
+	        this.playerNumber = source["playerNumber"];
+	        this.gifContent = source["gifContent"];
+	    }
+	}
 	export class HabitabilityDisplayInfo {
 	    gravityMin: string;
 	    gravityMax: string;
@@ -155,34 +239,6 @@ export namespace main {
 	        this.name = source["name"];
 	        this.desc = source["desc"];
 	        this.pointCost = source["pointCost"];
-	    }
-	}
-	export class MapOptions {
-	    width: number;
-	    height: number;
-	    showNames: boolean;
-	    showFleets: boolean;
-	    showFleetPaths: number;
-	    showMines: boolean;
-	    showWormholes: boolean;
-	    showLegend: boolean;
-	    showScannerCoverage: boolean;
-	
-	    static createFrom(source: any = {}) {
-	        return new MapOptions(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.width = source["width"];
-	        this.height = source["height"];
-	        this.showNames = source["showNames"];
-	        this.showFleets = source["showFleets"];
-	        this.showFleetPaths = source["showFleetPaths"];
-	        this.showMines = source["showMines"];
-	        this.showWormholes = source["showWormholes"];
-	        this.showLegend = source["showLegend"];
-	        this.showScannerCoverage = source["showScannerCoverage"];
 	    }
 	}
 	export class MapGenerateRequest {

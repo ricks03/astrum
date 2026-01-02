@@ -55,6 +55,7 @@ module Model exposing
     , defaultRaceConfig
     , MapViewerForm
     , MapOptions
+    , MapOutputFormat(..)
     , emptyMapViewerForm
     , defaultMapOptions
     , NtvdmCheckResult
@@ -645,6 +646,13 @@ emptyTurnFilesForm sessionId year raceName playerNumber isLatest =
 -- =============================================================================
 
 
+{-| Output format for map generation.
+-}
+type MapOutputFormat
+    = SVGFormat
+    | GIFFormat
+
+
 {-| Options for map rendering.
 -}
 type alias MapOptions =
@@ -657,6 +665,8 @@ type alias MapOptions =
     , showWormholes : Bool
     , showLegend : Bool
     , showScannerCoverage : Bool
+    , outputFormat : MapOutputFormat
+    , gifDelay : Int -- milliseconds between frames
     }
 
 
@@ -673,6 +683,8 @@ defaultMapOptions =
     , showWormholes = True
     , showLegend = True
     , showScannerCoverage = True
+    , outputFormat = SVGFormat
+    , gifDelay = 500
     }
 
 
@@ -685,7 +697,9 @@ type alias MapViewerForm =
     , playerNumber : Int
     , options : MapOptions
     , generatedSvg : Maybe String
+    , generatedGif : Maybe String -- base64-encoded GIF
     , generating : Bool
+    , generatingGif : Bool
     , saving : Bool
     , error : Maybe String
     }
@@ -701,7 +715,9 @@ emptyMapViewerForm sessionId year raceName playerNumber =
     , playerNumber = playerNumber
     , options = defaultMapOptions
     , generatedSvg = Nothing
+    , generatedGif = Nothing
     , generating = False
+    , generatingGif = False
     , saving = False
     , error = Nothing
     }
