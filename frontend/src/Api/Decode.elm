@@ -271,18 +271,19 @@ turnFiles =
 
 
 {-| Decoder for app settings response.
-Returns a record with serversDir, autoDownloadStars, zoomLevel, useWine, winePrefixesDir, and validWineInstall.
+Returns a record with serversDir, autoDownloadStars, zoomLevel, useWine, winePrefixesDir, validWineInstall, and enableBrowserStars.
 -}
-appSettings : Decoder { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool }
+appSettings : Decoder { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool }
 appSettings =
-    D.map6
-        (\sd ads zl uw wpd vwi ->
+    D.map7
+        (\sd ads zl uw wpd vwi ebs ->
             { serversDir = sd
             , autoDownloadStars = ads
             , zoomLevel = zl
             , useWine = uw
             , winePrefixesDir = wpd
             , validWineInstall = vwi
+            , enableBrowserStars = ebs
             }
         )
         (D.field "serversDir" D.string)
@@ -291,6 +292,7 @@ appSettings =
         (D.oneOf [ D.field "useWine" D.bool, D.succeed False ])
         (D.oneOf [ D.field "winePrefixesDir" D.string, D.succeed "~/.config/astrum/wine_prefixes" ])
         (D.oneOf [ D.field "validWineInstall" D.bool, D.succeed False ])
+        (D.oneOf [ D.field "enableBrowserStars" D.bool, D.succeed False ])
 
 
 {-| Decoder for Wine check result.

@@ -11,6 +11,10 @@ user authentication, and game session coordination.
 
 This project makes use of the [Houston](https://github.com/neper-stars/houston) library.
 And it is a client for the [Neper](https://github.com/neper-stars/neper) server.
+This project embeds the excellent [stars in a browser](https://github.com/stars-4x/stars-browser)
+we modified the minimum we could to create a synched filesystem
+allowing astrum to push files to the browser based stars! and get
+the turn files back from it.
 
 ## Screenshots
 

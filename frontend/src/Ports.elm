@@ -58,6 +58,7 @@ port module Ports exposing
     , setAutoDownloadStars
     , setZoomLevel
     , setUseWine
+    , setEnableBrowserStars
     , selectWinePrefixesDir
     , checkWineInstall
     , generateMap
@@ -65,6 +66,7 @@ port module Ports exposing
     , generateAnimatedMap
     , saveGif
     , requestFullscreen
+    , openStarsBrowserWindow
     , resetUserApikey
     , changeMyApikey
     , getApiKey
@@ -126,6 +128,7 @@ port module Ports exposing
     , wineInstallChecked
     , checkNtvdmSupport
     , ntvdmChecked
+    , enableBrowserStarsSet
     , resetApikeyResult
     , changeApikeyResult
     , apiKeyReceived
@@ -428,6 +431,9 @@ port checkWineInstall : () -> Cmd msg
 port checkNtvdmSupport : () -> Cmd msg
 
 
+port setEnableBrowserStars : Bool -> Cmd msg
+
+
 
 -- Map Viewer
 
@@ -445,6 +451,9 @@ port saveGif : E.Value -> Cmd msg
 
 
 port requestFullscreen : String -> Cmd msg
+
+
+port openStarsBrowserWindow : E.Value -> Cmd msg
 
 
 
@@ -658,6 +667,9 @@ port wineInstallChecked : (D.Value -> msg) -> Sub msg
 
 
 port ntvdmChecked : (D.Value -> msg) -> Sub msg
+
+
+port enableBrowserStarsSet : (D.Value -> msg) -> Sub msg
 
 
 port resetApikeyResult : (D.Value -> msg) -> Sub msg

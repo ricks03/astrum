@@ -12,8 +12,8 @@ import Msg exposing (Msg(..))
 
 {-| Dialog for configuring application settings.
 -}
-viewSettingsDialog : Maybe AppSettings -> Bool -> Maybe String -> Bool -> Maybe NtvdmCheckResult -> Html Msg
-viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheckInProgress ntvdmCheckResult =
+viewSettingsDialog : Maybe AppSettings -> Bool -> Maybe String -> Bool -> Maybe NtvdmCheckResult -> Bool -> Html Msg
+viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheckInProgress ntvdmCheckResult confirmingBrowserStars =
     let
         serversDir =
             maybeSettings
@@ -43,6 +43,11 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
         validWineInstall =
             maybeSettings
                 |> Maybe.map .validWineInstall
+                |> Maybe.withDefault False
+
+        enableBrowserStars =
+            maybeSettings
+                |> Maybe.map .enableBrowserStars
                 |> Maybe.withDefault False
     in
     div [ class "settings-dialog" ]
@@ -196,6 +201,22 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                         [ text "Checks for OTVDM (64-bit) or NTVDM (32-bit) to run Stars!." ]
                     ]
                 ]
+            , div [ class "settings-dialog__section" ]
+                [ h3 [ class "settings-dialog__section-title" ] [ text "Experimental" ]
+                , div [ class "settings-dialog__field" ]
+                    [ label [ class "settings-dialog__checkbox-label" ]
+                        [ input
+                            [ type_ "checkbox"
+                            , checked enableBrowserStars
+                            , onCheck RequestEnableBrowserStars
+                            ]
+                            []
+                        , text "Enable Stars! in Browser"
+                        ]
+                    , p [ class "settings-dialog__hint settings-dialog__hint--warning" ]
+                        [ text "Run Stars! directly in your browser using DOSBox emulation. This is experimental and should not be mixed with the native Stars! executable." ]
+                    ]
+                ]
             ]
         , div [ class "dialog__footer" ]
             [ button
@@ -204,7 +225,46 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                 ]
                 [ text "Close" ]
             ]
+        , viewBrowserStarsConfirmation confirmingBrowserStars
         ]
+
+
+{-| Confirmation dialog for enabling browser Stars!.
+-}
+viewBrowserStarsConfirmation : Bool -> Html Msg
+viewBrowserStarsConfirmation show =
+    if show then
+        div [ class "confirmation-overlay" ]
+            [ div [ class "confirmation-dialog" ]
+                [ div [ class "confirmation-dialog__header" ]
+                    [ h3 [] [ text "Enable Browser Stars!?" ] ]
+                , div [ class "confirmation-dialog__body" ]
+                    [ p [ class "confirmation-dialog__warning" ]
+                        [ text "Do NOT mix Stars! in the browser with another Stars! executable to manipulate your files or you risk file corruptions." ]
+                    , p []
+                        [ text "When this feature is enabled:" ]
+                    , ul []
+                        [ li [] [ text "The \"Run Stars!\" button will be disabled" ]
+                        , li [] [ text "A \"Launch in Browser\" button will appear instead" ]
+                        ]
+                    ]
+                , div [ class "confirmation-dialog__footer" ]
+                    [ button
+                        [ class "btn btn--secondary"
+                        , onClick CancelEnableBrowserStars
+                        ]
+                        [ text "Cancel" ]
+                    , button
+                        [ class "btn btn--primary"
+                        , onClick ConfirmEnableBrowserStars
+                        ]
+                        [ text "Enable" ]
+                    ]
+                ]
+            ]
+
+    else
+        text ""
 
 
 {-| Display the wine installation status.

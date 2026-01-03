@@ -58,6 +58,8 @@ module Model exposing
     , MapOutputFormat(..)
     , emptyMapViewerForm
     , defaultMapOptions
+    , StarsBrowserForm
+    , emptyStarsBrowserForm
     , NtvdmCheckResult
     , getServerByUrl
     , getSessionById
@@ -114,6 +116,7 @@ type alias AppSettings =
     , useWine : Bool
     , winePrefixesDir : String
     , validWineInstall : Bool
+    , enableBrowserStars : Bool
     }
 
 
@@ -168,6 +171,7 @@ type alias Model =
     , toast : Maybe String -- Temporary success message
     , loading : Bool
     , error : Maybe String
+    , confirmingBrowserStars : Bool -- Showing confirmation dialog for browser Stars! feature
 
     -- Long-running operations
     , startingSessionId : Maybe String -- Session ID currently being started (loading state)
@@ -257,6 +261,7 @@ init _ =
       , startingSessionId = Nothing
       , pendingViewSessionId = Nothing
       , serverDragState = Nothing
+      , confirmingBrowserStars = False
       }
     , Cmd.none
     )
@@ -330,6 +335,7 @@ type Dialog
     | CreateUserDialog CreateUserForm -- admin create user
     | ChangeApikeyDialog ChangeApikeyState -- change own API key
     | MapViewerDialog MapViewerForm -- map viewer
+    | StarsBrowserDialog StarsBrowserForm -- embedded Stars! browser
 
 
 {-| Which pane is active in the users list dialog.
@@ -719,6 +725,38 @@ emptyMapViewerForm sessionId year raceName playerNumber =
     , generating = False
     , generatingGif = False
     , saving = False
+    , error = Nothing
+    }
+
+
+-- =============================================================================
+-- STARS BROWSER
+-- =============================================================================
+
+
+{-| Form state for embedded Stars! browser dialog.
+-}
+type alias StarsBrowserForm =
+    { sessionId : String
+    , serverUrl : String
+    , sessionName : String
+    , width : Int
+    , height : Int
+    , loading : Bool
+    , error : Maybe String
+    }
+
+
+{-| Empty Stars browser form.
+-}
+emptyStarsBrowserForm : String -> String -> String -> StarsBrowserForm
+emptyStarsBrowserForm serverUrl sessionId sessionName =
+    { sessionId = sessionId
+    , serverUrl = serverUrl
+    , sessionName = sessionName
+    , width = 1024
+    , height = 768
+    , loading = True
     , error = Nothing
     }
 

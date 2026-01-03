@@ -34,6 +34,14 @@ export function CheckWine32Support() {
   return window['go']['main']['App']['CheckWine32Support']();
 }
 
+export function ClipboardGetText() {
+  return window['go']['main']['App']['ClipboardGetText']();
+}
+
+export function ClipboardSetText(arg1) {
+  return window['go']['main']['App']['ClipboardSetText'](arg1);
+}
+
 export function Connect(arg1, arg2, arg3) {
   return window['go']['main']['App']['Connect'](arg1, arg2, arg3);
 }
@@ -76,6 +84,46 @@ export function DownloadRace(arg1, arg2) {
 
 export function DownloadSessionBackup(arg1, arg2) {
   return window['go']['main']['App']['DownloadSessionBackup'](arg1, arg2);
+}
+
+export function FSExists(arg1, arg2) {
+  return window['go']['main']['App']['FSExists'](arg1, arg2);
+}
+
+export function FSListAll(arg1) {
+  return window['go']['main']['App']['FSListAll'](arg1);
+}
+
+export function FSMkdir(arg1, arg2, arg3) {
+  return window['go']['main']['App']['FSMkdir'](arg1, arg2, arg3);
+}
+
+export function FSReadFile(arg1, arg2) {
+  return window['go']['main']['App']['FSReadFile'](arg1, arg2);
+}
+
+export function FSReaddir(arg1, arg2) {
+  return window['go']['main']['App']['FSReaddir'](arg1, arg2);
+}
+
+export function FSRename(arg1, arg2, arg3) {
+  return window['go']['main']['App']['FSRename'](arg1, arg2, arg3);
+}
+
+export function FSRmdir(arg1, arg2) {
+  return window['go']['main']['App']['FSRmdir'](arg1, arg2);
+}
+
+export function FSStat(arg1, arg2) {
+  return window['go']['main']['App']['FSStat'](arg1, arg2);
+}
+
+export function FSUnlink(arg1, arg2) {
+  return window['go']['main']['App']['FSUnlink'](arg1, arg2);
+}
+
+export function FSWriteFile(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['FSWriteFile'](arg1, arg2, arg3, arg4);
 }
 
 export function GenerateAnimatedMap(arg1) {
@@ -232,6 +280,10 @@ export function SelectWinePrefixesDir() {
 
 export function SetAutoDownloadStars(arg1) {
   return window['go']['main']['App']['SetAutoDownloadStars'](arg1);
+}
+
+export function SetEnableBrowserStars(arg1) {
+  return window['go']['main']['App']['SetEnableBrowserStars'](arg1);
 }
 
 export function SetNotificationIcon(arg1) {

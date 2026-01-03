@@ -171,6 +171,7 @@ subscriptions model =
         , Ports.winePrefixesDirSelected (decodeResult Decode.appSettings WinePrefixesDirSelected)
         , Ports.wineInstallChecked (decodeResult Decode.wineCheckResult WineInstallChecked)
         , Ports.ntvdmChecked (decodeResult Decode.ntvdmCheckResult NtvdmChecked)
+        , Ports.enableBrowserStarsSet (decodeResult Decode.appSettings EnableBrowserStarsSet)
 
         -- Map Viewer
         , Ports.mapGenerated (decodeResult D.string MapGenerated)

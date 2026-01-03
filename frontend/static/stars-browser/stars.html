@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stars!</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+        #canvas {
+            display: block;
+            margin: 0 auto;
+        }
+        /* Standalone mode styles - hidden when embedded */
+        .standalone-controls {
+            text-align: center;
+            padding: 10px;
+            background: #1a1a1a;
+            color: #ccc;
+            font-family: sans-serif;
+        }
+        .standalone-controls button {
+            margin: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        .standalone-controls.hidden {
+            display: none;
+        }
+        /* Controls for embedded mode */
+        .embedded-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        .embedded-controls.hidden {
+            display: none;
+        }
+        .embedded-controls button {
+            padding: 8px 16px;
+            background: rgba(40, 40, 40, 0.9);
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .embedded-controls button:hover {
+            background: rgba(60, 60, 60, 0.95);
+            border-color: #777;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" tabindex="0"></canvas>
+
+<div id="standalone-controls" class="standalone-controls">
+    <button type="button" onclick="action_fullscreen();">Go Fullscreen</button>
+    <button type="button" onclick="action_paste_clipboard();">Paste Clipboard</button>
+    <button type="button" onclick="action_wipe_and_reload();">Wipe and Reload (DANGER)</button>
+</div>
+
+<div id="embedded-controls" class="embedded-controls">
+    <button type="button" onclick="action_back_to_astrum();" title="Return to Astrum">← Back</button>
+    <button type="button" onclick="action_release_mouse();" title="Release mouse (click canvas to recapture)">🖱️ Release Mouse</button>
+    <button type="button" onclick="action_paste_clipboard();" title="Paste text from clipboard">📋 Paste</button>
+</div>
+
+<!-- Wails runtime (for clipboard and Go bindings in embedded mode) -->
+<script src="/wails/ipc.js"></script>
+<script src="/wails/runtime.js"></script>
+
+<script type="text/javascript" src="es6-promise.js"></script>
+<script type="text/javascript" src="browserfs.min.js"></script>
+<script type="text/javascript" src="wailsfs.js"></script>
+<script type="text/javascript" src="loader.js"></script>
+<script type="text/javascript">
+(function() {
+    // Debug: Check Wails availability
+    console.log('Stars! browser initializing...');
+    console.log('window.go available:', typeof window.go !== 'undefined');
+    console.log('window.runtime available:', typeof window.runtime !== 'undefined');
+    if (window.go && window.go.main && window.go.main.App) {
+        console.log('Go App methods:', Object.keys(window.go.main.App));
+    }
+    console.log('WailsFS available:', typeof WailsFS !== 'undefined' && WailsFS.isAvailable ? WailsFS.isAvailable() : 'WailsFS not defined');
+
+    // Parse URL parameters
+    var params = new URLSearchParams(window.location.search);
+
+    // Session key for WailsFS (format: "serverURL|sessionID")
+    var sessionKey = params.get('session') || null;
+    if (sessionKey) {
+        window.ASTRUM_SESSION_KEY = sessionKey;
+    }
+
+    // Resolution: from URL params, window size, or defaults
+    var width = parseInt(params.get('width')) || window.innerWidth || 1024;
+    var height = parseInt(params.get('height')) || window.innerHeight || 768;
+
+    // Ensure minimum resolution for Stars!
+    width = Math.max(width, 640);
+    height = Math.max(height, 480);
+
+    // Embedded mode: hide controls when running in Astrum
+    var embedded = params.get('embedded') === 'true' || sessionKey !== null;
+    if (embedded) {
+        document.getElementById('standalone-controls').classList.add('hidden');
+        // In embedded mode, use full window
+        var canvas = document.getElementById('canvas');
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+    } else {
+        // In standalone mode, hide the embedded controls
+        document.getElementById('embedded-controls').classList.add('hidden');
+    }
+
+    // File system key for IndexedDB fallback (when not using WailsFS)
+    var fsKey = sessionKey
+        ? sessionKey.replace(/[^a-zA-Z0-9]/g, '_')
+        : (params.get('fskey') || 'emularity');
+
+    // Store for later use in wipe function
+    window.STARS_FS_KEY = fsKey;
+
+    // Set up canvas size
+    var canvas = document.getElementById('canvas');
+    if (!embedded) {
+        canvas.style.width = (width * 0.5) + 'px';
+        canvas.style.height = (height * 0.5) + 'px';
+    }
+
+    // DOSBox configuration
+    var confFile = DosBoxLoader.mountFile("dosbox.conf",
+        DosBoxLoader.fetchFile("DOSBox Config", "dosbox.conf"));
+    var exe = DosBoxLoader.startExe("runstars.bat");
+
+    var dbloader = new DosBoxLoader(
+        DosBoxLoader.emulatorJS("dosbox.js"),
+        DosBoxLoader.locateAdditionalEmulatorJS("dosbox.html.mem"),
+        DosBoxLoader.nativeResolution(width, height),
+        DosBoxLoader.fileSystemKey(fsKey),
+        confFile,
+        DosBoxLoader.mountZip("c", DosBoxLoader.fetchFile("Win 3.1 + Stars!", "stars.zip")),
+        exe
+    );
+
+    var emulator = new Emulator(
+        document.getElementById("canvas"),
+        null,
+        dbloader
+    );
+
+    emulator.start({ waitAfterDownloading: false });
+
+    // Store emulator reference for actions
+    window.starsEmulator = emulator;
+
+    // Ensure canvas has focus for keyboard input (important for Wails webview)
+    var canvas = document.getElementById('canvas');
+    canvas.focus();
+
+    // AZERTY keyboard fix for Wails WebKitGTK
+    // WebKitGTK sends different keyCodes than Chromium for non-QWERTY layouts.
+    // This interceptor uses the physical key position (code) to fix number keys.
+    //
+    // Root cause: SDL2 Emscripten uses deprecated keyCode instead of modern code API
+    // References:
+    // - https://github.com/emscripten-ports/SDL2/issues/150 (unresolved, repo archived)
+    // - https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
+    // - https://github.com/wailsapp/wails/discussions/4535
+    (function() {
+        // Map physical key codes to ASCII keyCodes for number row
+        var codeToKeyCode = {
+            'Digit1': 49, 'Digit2': 50, 'Digit3': 51, 'Digit4': 52, 'Digit5': 53,
+            'Digit6': 54, 'Digit7': 55, 'Digit8': 56, 'Digit9': 57, 'Digit0': 48
+        };
+
+        function fixKeyboardEvent(e) {
+            // Only fix if we have a code property and it's a digit key
+            if (e.code && codeToKeyCode[e.code]) {
+                var correctKeyCode = codeToKeyCode[e.code];
+                // Check if keyCode is wrong (not matching the digit)
+                if (e.keyCode !== correctKeyCode) {
+                    // Create a new event with corrected keyCode
+                    var newEvent = new KeyboardEvent(e.type, {
+                        key: e.key,
+                        code: e.code,
+                        keyCode: correctKeyCode,
+                        charCode: correctKeyCode,
+                        which: correctKeyCode,
+                        shiftKey: e.shiftKey,
+                        ctrlKey: e.ctrlKey,
+                        altKey: e.altKey,
+                        metaKey: e.metaKey,
+                        repeat: e.repeat,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    e.target.dispatchEvent(newEvent);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Intercept at capture phase to fix before SDL sees it
+        canvas.addEventListener('keydown', fixKeyboardEvent, true);
+        canvas.addEventListener('keyup', fixKeyboardEvent, true);
+        console.log('AZERTY keyboard fix installed for Wails WebKitGTK');
+    })();
+
+    // Re-focus canvas when clicked
+    canvas.addEventListener('click', function() {
+        canvas.focus();
+    });
+
+    // Also focus after a delay to catch cases where emulator setup steals focus
+    setTimeout(function() {
+        document.getElementById('canvas').focus();
+    }, 1000);
+
+    // Action handlers
+    window.action_fullscreen = function() {
+        emulator.requestFullScreen();
+    };
+
+    window.action_wipe_and_reload = function() {
+        if (confirm("Wipe the filesystem and reload?\n\nThis will forget the Stars! key and any saved games.")) {
+            window.indexedDB.deleteDatabase(window.STARS_FS_KEY);
+            window.indexedDB.deleteDatabase("emularity");
+            window.indexedDB.deleteDatabase("starsdat");
+            window.location.reload();
+        }
+    };
+
+    // Release mouse from canvas capture
+    window.action_release_mouse = function() {
+        // Exit pointer lock if active
+        if (document.pointerLockElement || document.mozPointerLockElement) {
+            document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+            if (document.exitPointerLock) {
+                document.exitPointerLock();
+            }
+        }
+        // Also try to blur the canvas to release any implicit capture
+        var canvas = document.getElementById('canvas');
+        if (canvas) {
+            canvas.blur();
+        }
+        console.log('Mouse released. Click the game to recapture.');
+    };
+
+    // Clipboard paste functionality
+    window.action_paste_clipboard = async function() {
+        var text = null;
+
+        // Try multiple methods to get clipboard text
+        try {
+            // Method 1: Wails runtime (should work in embedded mode)
+            if (window.runtime && typeof window.runtime.ClipboardGetText === 'function') {
+                console.log('Trying Wails runtime clipboard...');
+                text = await window.runtime.ClipboardGetText();
+            }
+        } catch (e) {
+            console.log('Wails runtime clipboard failed:', e.message);
+        }
+
+        if (!text) {
+            try {
+                // Method 2: Browser clipboard API
+                console.log('Trying browser clipboard API...');
+                text = await navigator.clipboard.readText();
+            } catch (e) {
+                console.log('Browser clipboard failed:', e.message);
+            }
+        }
+
+        // Method 3: Fallback to prompt dialog
+        if (!text) {
+            text = prompt('Paste your text here (Ctrl+V in the dialog):');
+        }
+
+        if (!text) {
+            console.log('No text to paste');
+            return;
+        }
+
+        console.log('Pasting text:', text.length, 'characters');
+
+        // Type the text character by character using keyboard events
+        var canvas = document.getElementById('canvas');
+        if (canvas) {
+            canvas.focus();
+            for (var i = 0; i < text.length; i++) {
+                var char = text[i];
+                var keyCode = text.charCodeAt(i);
+
+                // Create and dispatch keyboard events
+                var keydownEvent = new KeyboardEvent('keydown', {
+                    key: char,
+                    code: 'Key' + char.toUpperCase(),
+                    keyCode: keyCode,
+                    charCode: keyCode,
+                    which: keyCode,
+                    bubbles: true,
+                    cancelable: true
+                });
+                var keypressEvent = new KeyboardEvent('keypress', {
+                    key: char,
+                    code: 'Key' + char.toUpperCase(),
+                    keyCode: keyCode,
+                    charCode: keyCode,
+                    which: keyCode,
+                    bubbles: true,
+                    cancelable: true
+                });
+                var keyupEvent = new KeyboardEvent('keyup', {
+                    key: char,
+                    code: 'Key' + char.toUpperCase(),
+                    keyCode: keyCode,
+                    charCode: keyCode,
+                    which: keyCode,
+                    bubbles: true,
+                    cancelable: true
+                });
+
+                canvas.dispatchEvent(keydownEvent);
+                canvas.dispatchEvent(keypressEvent);
+                canvas.dispatchEvent(keyupEvent);
+
+                // Small delay between characters
+                await new Promise(r => setTimeout(r, 50));
+            }
+        }
+    };
+
+    // Back to Astrum functionality (for embedded mode)
+    window.action_back_to_astrum = async function() {
+        // Sync session files before leaving
+        if (window.syncSessionFiles) {
+            console.log('Syncing files before leaving...');
+            try {
+                await window.syncSessionFiles();
+                console.log('Files synced successfully');
+            } catch (e) {
+                console.warn('Sync before leaving failed:', e);
+            }
+        }
+
+        // Clear sync interval
+        if (window.sessionSyncInterval) {
+            clearInterval(window.sessionSyncInterval);
+        }
+
+        var returnUrl = sessionStorage.getItem('astrum_return_url');
+        if (returnUrl) {
+            sessionStorage.removeItem('astrum_return_url');
+            window.location.href = returnUrl;
+        } else {
+            // Fallback: navigate to root
+            window.location.href = '/';
+        }
+    };
+
+    // Handle window resize in embedded mode
+    if (embedded) {
+        window.addEventListener('resize', function() {
+            var canvas = document.getElementById('canvas');
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+        });
+    }
+
+    console.log('Stars! initialized:', {
+        sessionKey: sessionKey ? '(present)' : '(none)',
+        resolution: width + 'x' + height,
+        fsKey: fsKey,
+        embedded: embedded,
+        wailsAvailable: typeof WailsFS !== 'undefined' && WailsFS.isAvailable()
+    });
+})();
+</script>
+</body>
+</html>

@@ -530,6 +530,10 @@
     margin: $spacing-sm 0 0 0;
     font-size: $font-size-xs;
     color: $text-muted;
+
+    &--warning {
+      color: $color-warning;
+    }
   }
 
   &__checkbox-label {
@@ -608,6 +612,97 @@
         color: $accent-hover;
       }
     }
+  }
+}
+
+// =============================================================================
+// CONFIRMATION DIALOG (Inline overlay)
+// =============================================================================
+
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  @include flex-center;
+  z-index: $z-modal + 10; // Above the settings dialog
+  animation: fadeIn $transition-fast;
+}
+
+.confirmation-dialog {
+  background-color: $bg-secondary;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
+  min-width: 350px;
+  max-width: 450px;
+  animation: slideIn $transition-normal;
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  &__header {
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid $bg-tertiary;
+
+    h3 {
+      margin: 0;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+    }
+  }
+
+  &__body {
+    padding: $spacing-xl;
+
+    p {
+      margin: 0 0 $spacing-md 0;
+      color: $text-primary;
+      font-size: $font-size-sm;
+      line-height: 1.5;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul {
+      margin: $spacing-sm 0;
+      padding-left: $spacing-xl;
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+
+    li {
+      margin-bottom: $spacing-xs;
+    }
+  }
+
+  &__warning {
+    color: $color-warning !important;
+    font-weight: $font-weight-semibold;
+    padding: $spacing-sm $spacing-md;
+    background-color: rgba($color-warning, 0.1);
+    border-radius: $radius-sm;
+    border-left: 3px solid $color-warning;
+  }
+
+  &__footer {
+    padding: $spacing-lg $spacing-xl;
+    border-top: 1px solid $bg-tertiary;
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-md;
   }
 }
 
@@ -1338,4 +1433,107 @@
     max-height: 100%;
     object-fit: contain;
   }
+}
+
+// =============================================================================
+// STARS BROWSER DIALOG
+// =============================================================================
+
+.stars-browser-dialog {
+  // Fullscreen-like dialog for the embedded browser
+  width: 95vw;
+  height: 90vh;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+
+  // Header with title and close button
+  &__header {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__header-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  // Fullscreen mode
+  &:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  &:fullscreen &__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: rgba($bg-secondary, 0.9);
+    opacity: 0;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &:fullscreen &__body {
+    padding-top: 0;
+  }
+
+  &:fullscreen &__iframe {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  // Body containing the iframe
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0; // Remove default padding
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  // The iframe containing Stars! browser
+  &__iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background-color: #000;
+  }
+
+  // Loading state
+  &__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include flex-column-center;
+    gap: $spacing-md;
+    color: $text-secondary;
+    z-index: 10;
+  }
+
+  // Error message
+  &__error {
+    padding: $spacing-md;
+    margin: $spacing-md;
+    background-color: rgba($color-danger, 0.15);
+    border: 1px solid rgba($color-danger, 0.3);
+    border-radius: $radius-sm;
+    color: $color-danger;
+    font-size: $font-size-sm;
+    text-align: center;
+  }
+
 }

@@ -71,6 +71,7 @@ export namespace main {
 	    useWine: boolean;
 	    winePrefixesDir: string;
 	    validWineInstall: boolean;
+	    enableBrowserStars: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppSettingsInfo(source);
@@ -84,6 +85,7 @@ export namespace main {
 	        this.useWine = source["useWine"];
 	        this.winePrefixesDir = source["winePrefixesDir"];
 	        this.validWineInstall = source["validWineInstall"];
+	        this.enableBrowserStars = source["enableBrowserStars"];
 	    }
 	}
 	export class ConnectResult {
@@ -142,6 +144,48 @@ export namespace main {
 		    }
 		    return a;
 		}
+	}
+	export class FSFileEntry {
+	    path: string;
+	    isDir: boolean;
+	    size: number;
+	    mode: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new FSFileEntry(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.isDir = source["isDir"];
+	        this.size = source["size"];
+	        this.mode = source["mode"];
+	    }
+	}
+	export class FSStatResult {
+	    size: number;
+	    mode: number;
+	    isDir: boolean;
+	    modTime: number;
+	    atime: number;
+	    mtime: number;
+	    ctime: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new FSStatResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.size = source["size"];
+	        this.mode = source["mode"];
+	        this.isDir = source["isDir"];
+	        this.modTime = source["modTime"];
+	        this.atime = source["atime"];
+	        this.mtime = source["mtime"];
+	        this.ctime = source["ctime"];
+	    }
 	}
 	export class GifSaveRequest {
 	    serverUrl: string;

@@ -717,6 +717,13 @@ function initPorts(app) {
         });
     }
 
+    if (app.ports.setEnableBrowserStars) {
+        app.ports.setEnableBrowserStars.subscribe(async (enabled) => {
+            callGo(app.ports.enableBrowserStarsSet,
+                window.go.main.App.SetEnableBrowserStars(enabled));
+        });
+    }
+
     // Map Viewer
     if (app.ports.generateMap) {
         app.ports.generateMap.subscribe(async (data) => {
@@ -758,6 +765,27 @@ function initPorts(app) {
                     element.mozRequestFullScreen();
                 }
             }
+        });
+    }
+
+    // Open Stars! browser by navigating the main window
+    // (popups are blocked in Wails webview, so we navigate instead)
+    if (app.ports.openStarsBrowserWindow) {
+        app.ports.openStarsBrowserWindow.subscribe((data) => {
+            const sessionKey = data.serverUrl + '|' + data.sessionId;
+            const encodedKey = encodeURIComponent(sessionKey);
+
+            // Get window dimensions
+            const width = window.innerWidth || 1280;
+            const height = window.innerHeight || 800;
+
+            // Build URL with parameters
+            const url = `stars-browser/stars.html?session=${encodedKey}&width=${width}&height=${height}&embedded=true`;
+
+            // Navigate the main window to Stars browser
+            // Store the current URL so we can navigate back
+            sessionStorage.setItem('astrum_return_url', window.location.href);
+            window.location.href = url;
         });
     }
 }
@@ -874,8 +902,29 @@ function initWailsEvents(app) {
  * @param {Object} app - The Elm application instance
  */
 function initGlobalEvents(app) {
+    // Check if Stars browser iframe is active (has focus or is visible)
+    function isStarsBrowserActive() {
+        const iframe = document.getElementById('stars-browser-iframe');
+        if (!iframe) return false;
+        // Check if iframe or its parent dialog is visible
+        const dialog = iframe.closest('.stars-browser-dialog');
+        return dialog !== null;
+    }
+
     // Escape key handler
     document.addEventListener('keydown', (event) => {
+        // When Stars browser is active, use Ctrl+Q to close (not Escape)
+        if (isStarsBrowserActive()) {
+            if (event.ctrlKey && event.key === 'q') {
+                event.preventDefault();
+                if (app.ports.escapePressed) {
+                    app.ports.escapePressed.send(null);
+                }
+            }
+            // Let all other keys pass through to the iframe
+            return;
+        }
+
         if (event.key === 'Escape') {
             if (app.ports.escapePressed) {
                 app.ports.escapePressed.send(null);

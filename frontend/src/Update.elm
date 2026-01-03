@@ -3358,6 +3358,7 @@ update msg model =
                                 , useWine = settings.useWine
                                 , winePrefixesDir = settings.winePrefixesDir
                                 , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
                                 }
                       }
                     , Cmd.none
@@ -3378,6 +3379,7 @@ update msg model =
                                 , useWine = settings.useWine
                                 , winePrefixesDir = settings.winePrefixesDir
                                 , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
                                 }
                       }
                     , Cmd.none
@@ -3401,6 +3403,7 @@ update msg model =
                                 , useWine = settings.useWine
                                 , winePrefixesDir = settings.winePrefixesDir
                                 , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
                                 }
                       }
                     , Cmd.none
@@ -3424,6 +3427,7 @@ update msg model =
                                 , useWine = settings.useWine
                                 , winePrefixesDir = settings.winePrefixesDir
                                 , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
                                 }
                         -- Clear wine check message when settings change
                         , wineCheckMessage = Nothing
@@ -3449,6 +3453,7 @@ update msg model =
                                 , useWine = settings.useWine
                                 , winePrefixesDir = settings.winePrefixesDir
                                 , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
                                 }
                       }
                     , Cmd.none
@@ -3767,6 +3772,30 @@ update msg model =
 
                 _ ->
                     ( model, Cmd.none )
+
+        -- =====================================================================
+        -- Stars Browser Messages
+        -- =====================================================================
+        OpenStarsBrowser serverUrl sessionId _ ->
+            -- Open Stars! browser in a new window (not a dialog)
+            -- This avoids iframe keyboard input issues in Wails
+            ( model
+            , Ports.openStarsBrowserWindow
+                (E.object
+                    [ ( "serverUrl", E.string serverUrl )
+                    , ( "sessionId", E.string sessionId )
+                    ]
+                )
+            )
+
+        CloseStarsBrowser ->
+            ( model, Cmd.none )
+
+        StarsBrowserLoaded ->
+            ( model, Cmd.none )
+
+        StarsBrowserError _ ->
+            ( model, Cmd.none )
 
         -- =====================================================================
         -- Admin/Manager Messages
@@ -4447,6 +4476,50 @@ update msg model =
                                 , useWine = settings.useWine
                                 , winePrefixesDir = settings.winePrefixesDir
                                 , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
+                                }
+                      }
+                    , Cmd.none
+                    )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
+        -- =====================================================================
+        -- Browser Stars! Messages
+        -- =====================================================================
+        RequestEnableBrowserStars enabled ->
+            if enabled then
+                -- Show confirmation dialog when enabling
+                ( { model | confirmingBrowserStars = True }, Cmd.none )
+
+            else
+                -- Disable directly without confirmation
+                ( model, Ports.setEnableBrowserStars False )
+
+        ConfirmEnableBrowserStars ->
+            -- User confirmed the warning, enable the feature
+            ( { model | confirmingBrowserStars = False }
+            , Ports.setEnableBrowserStars True
+            )
+
+        CancelEnableBrowserStars ->
+            -- User cancelled, just close the dialog
+            ( { model | confirmingBrowserStars = False }, Cmd.none )
+
+        EnableBrowserStarsSet result ->
+            case result of
+                Ok settings ->
+                    ( { model
+                        | appSettings =
+                            Just
+                                { serversDir = settings.serversDir
+                                , autoDownloadStars = settings.autoDownloadStars
+                                , zoomLevel = settings.zoomLevel
+                                , useWine = settings.useWine
+                                , winePrefixesDir = settings.winePrefixesDir
+                                , validWineInstall = settings.validWineInstall
+                                , enableBrowserStars = settings.enableBrowserStars
                                 }
                       }
                     , Cmd.none

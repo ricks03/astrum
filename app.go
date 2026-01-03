@@ -276,3 +276,17 @@ func (a *App) isGeometryOnScreen(ctx context.Context, geom *astrum.WindowGeometr
 func (a *App) LogDebug(message string) {
 	logger.App.Debug().Str("source", "elm").Msg(message)
 }
+
+// =============================================================================
+// CLIPBOARD ACCESS (for Stars browser)
+// =============================================================================
+
+// ClipboardGetText returns the current clipboard text content
+func (a *App) ClipboardGetText() (string, error) {
+	return runtime.ClipboardGetText(a.ctx)
+}
+
+// ClipboardSetText sets the clipboard text content
+func (a *App) ClipboardSetText(text string) error {
+	return runtime.ClipboardSetText(a.ctx, text)
+}

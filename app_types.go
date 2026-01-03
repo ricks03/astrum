@@ -185,12 +185,13 @@ type PlayerOrderStatusInfo struct {
 
 // AppSettingsInfo is the JSON-friendly representation of app settings
 type AppSettingsInfo struct {
-	ServersDir        string `json:"serversDir"`
-	AutoDownloadStars bool   `json:"autoDownloadStars"`
-	ZoomLevel         int    `json:"zoomLevel"`
-	UseWine           bool   `json:"useWine"`
-	WinePrefixesDir   string `json:"winePrefixesDir"`
-	ValidWineInstall  bool   `json:"validWineInstall"`
+	ServersDir         string `json:"serversDir"`
+	AutoDownloadStars  bool   `json:"autoDownloadStars"`
+	ZoomLevel          int    `json:"zoomLevel"`
+	UseWine            bool   `json:"useWine"`
+	WinePrefixesDir    string `json:"winePrefixesDir"`
+	ValidWineInstall   bool   `json:"validWineInstall"`
+	EnableBrowserStars bool   `json:"enableBrowserStars"`
 }
 
 // WineCheckResult represents the result of a Wine 32-bit support check

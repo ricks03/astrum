@@ -18,6 +18,10 @@ export function CheckNtvdmSupport():Promise<main.NtvdmCheckResult>;
 
 export function CheckWine32Support():Promise<main.WineCheckResult>;
 
+export function ClipboardGetText():Promise<string>;
+
+export function ClipboardSetText(arg1:string):Promise<void>;
+
 export function Connect(arg1:string,arg2:string,arg3:string):Promise<main.ConnectResult>;
 
 export function CreateSession(arg1:string,arg2:string,arg3:boolean):Promise<main.SessionInfo>;
@@ -39,6 +43,26 @@ export function DownloadHistoricBackup(arg1:string,arg2:string):Promise<void>;
 export function DownloadRace(arg1:string,arg2:string):Promise<string>;
 
 export function DownloadSessionBackup(arg1:string,arg2:string):Promise<void>;
+
+export function FSExists(arg1:string,arg2:string):Promise<boolean>;
+
+export function FSListAll(arg1:string):Promise<Array<main.FSFileEntry>>;
+
+export function FSMkdir(arg1:string,arg2:string,arg3:number):Promise<void>;
+
+export function FSReadFile(arg1:string,arg2:string):Promise<Array<number>>;
+
+export function FSReaddir(arg1:string,arg2:string):Promise<Array<string>>;
+
+export function FSRename(arg1:string,arg2:string,arg3:string):Promise<void>;
+
+export function FSRmdir(arg1:string,arg2:string):Promise<void>;
+
+export function FSStat(arg1:string,arg2:string):Promise<main.FSStatResult>;
+
+export function FSUnlink(arg1:string,arg2:string):Promise<void>;
+
+export function FSWriteFile(arg1:string,arg2:string,arg3:Array<number>,arg4:number):Promise<void>;
 
 export function GenerateAnimatedMap(arg1:main.AnimatedMapRequest):Promise<string>;
 
@@ -117,6 +141,8 @@ export function SelectServersDir():Promise<main.AppSettingsInfo>;
 export function SelectWinePrefixesDir():Promise<main.AppSettingsInfo>;
 
 export function SetAutoDownloadStars(arg1:boolean):Promise<main.AppSettingsInfo>;
+
+export function SetEnableBrowserStars(arg1:boolean):Promise<main.AppSettingsInfo>;
 
 export function SetNotificationIcon(arg1:Array<number>):Promise<void>;
 

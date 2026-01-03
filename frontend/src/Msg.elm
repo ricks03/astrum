@@ -312,18 +312,23 @@ type Msg
       -- =========================================================================
     | OpenSettingsDialog
     | SelectServersDir
-    | GotAppSettings (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool })
-    | ServersDirSelected (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool })
+    | GotAppSettings (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
+    | ServersDirSelected (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
     | SetAutoDownloadStars Bool
-    | AutoDownloadStarsSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool })
+    | AutoDownloadStarsSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
     | SetUseWine Bool
-    | UseWineSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool })
+    | UseWineSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
     | SelectWinePrefixesDir
-    | WinePrefixesDirSelected (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool })
+    | WinePrefixesDirSelected (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
     | CheckWineInstall
     | WineInstallChecked (Result String { valid : Bool, message : String })
     | CheckNtvdmSupport
     | NtvdmChecked (Result String { available : Bool, is64Bit : Bool, message : String, helpUrl : Maybe String })
+      -- Browser Stars! experimental feature
+    | RequestEnableBrowserStars Bool -- Request to enable/disable (shows confirmation when enabling)
+    | ConfirmEnableBrowserStars -- User confirmed the warning dialog
+    | CancelEnableBrowserStars -- User cancelled the warning dialog
+    | EnableBrowserStarsSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
       -- =========================================================================
       -- Admin/Manager Messages
       -- =========================================================================
@@ -388,7 +393,7 @@ type Msg
     | ZoomIn
     | ZoomOut
     | ZoomReset
-    | ZoomLevelSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool })
+    | ZoomLevelSet (Result String { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool })
       -- =========================================================================
       -- Map Viewer Messages
       -- =========================================================================
@@ -414,6 +419,13 @@ type Msg
     | AnimatedMapGenerated (Result String String) -- base64 GIF result
     | SaveGif
     | GifSaved (Result String ())
+      -- =========================================================================
+      -- Stars Browser Messages
+      -- =========================================================================
+    | OpenStarsBrowser String String String -- serverUrl, sessionId, sessionName
+    | CloseStarsBrowser
+    | StarsBrowserLoaded -- iframe finished loading
+    | StarsBrowserError String -- error message
       -- =========================================================================
       -- Global UI Messages
       -- =========================================================================

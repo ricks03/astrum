@@ -20,6 +20,7 @@ import View.Dialog.Settings exposing (viewSettingsDialog)
 import View.Dialog.TurnFiles exposing (viewTurnFilesDialog)
 import View.Dialog.Users exposing (viewCreateUserDialog, viewInvitationsDialog, viewInviteUserDialog, viewUsersListDialog)
 import View.Dialog.MapViewer exposing (viewMapViewerDialog)
+import View.Dialog.StarsBrowser exposing (viewStarsBrowserDialog)
 import View.Helpers exposing (onMouseDownTarget)
 
 
@@ -87,7 +88,7 @@ viewDialog model =
                             viewTurnFilesDialog form hasConflict
 
                         SettingsDialog ->
-                            viewSettingsDialog model.appSettings model.wineCheckInProgress model.wineCheckMessage model.ntvdmCheckInProgress model.ntvdmCheckResult
+                            viewSettingsDialog model.appSettings model.wineCheckInProgress model.wineCheckMessage model.ntvdmCheckInProgress model.ntvdmCheckResult model.confirmingBrowserStars
 
                         UsersListDialog state ->
                             viewUsersListDialog state
@@ -103,5 +104,8 @@ viewDialog model =
 
                         MapViewerDialog form ->
                             viewMapViewerDialog form
+
+                        StarsBrowserDialog form ->
+                            viewStarsBrowserDialog form
                     ]
                 ]

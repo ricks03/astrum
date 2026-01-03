@@ -27,12 +27,13 @@ func (a *App) GetAppSettings() (*AppSettingsInfo, error) {
 	}
 
 	return &AppSettingsInfo{
-		ServersDir:        settings.ServersDir,
-		AutoDownloadStars: settings.GetAutoDownloadStars(),
-		ZoomLevel:         settings.GetZoomLevel(),
-		UseWine:           settings.GetUseWine(),
-		WinePrefixesDir:   settings.GetWinePrefixesDir(),
-		ValidWineInstall:  settings.GetValidWineInstall(),
+		ServersDir:         settings.ServersDir,
+		AutoDownloadStars:  settings.GetAutoDownloadStars(),
+		ZoomLevel:          settings.GetZoomLevel(),
+		UseWine:            settings.GetUseWine(),
+		WinePrefixesDir:    settings.GetWinePrefixesDir(),
+		ValidWineInstall:   settings.GetValidWineInstall(),
+		EnableBrowserStars: settings.GetEnableBrowserStars(),
 	}, nil
 }
 
@@ -174,6 +175,17 @@ func (a *App) SelectWinePrefixesDir() (*AppSettingsInfo, error) {
 
 	// Save the selected directory
 	return a.SetWinePrefixesDir(selectedDir)
+}
+
+// SetEnableBrowserStars updates the experimental browser Stars! setting
+func (a *App) SetEnableBrowserStars(enabled bool) (*AppSettingsInfo, error) {
+	if err := a.config.SetEnableBrowserStars(enabled); err != nil {
+		return nil, fmt.Errorf("failed to set enable browser stars: %w", err)
+	}
+
+	logger.App.Info().Bool("enabled", enabled).Msg("Set enable browser stars")
+
+	return a.GetAppSettings()
 }
 
 // ensureWinePrefixesDir ensures the wine prefixes directory exists

@@ -428,8 +428,23 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                     [ div [ class "session-detail__section-header" ]
                         [ h3 [ class "session-detail__section-title" ]
                             [ text ("Turns (" ++ String.fromInt (Dict.size availableTurns) ++ ")") ]
-                        , div [ class "session-detail__section-actions" ]
-                            [ if hasStarsExe then
+                        , let
+                            enableBrowserStars =
+                                model.appSettings
+                                    |> Maybe.map .enableBrowserStars
+                                    |> Maybe.withDefault False
+                          in
+                          div [ class "session-detail__section-actions" ]
+                            [ -- Launch Stars! button: disabled when browser mode is enabled
+                              if enableBrowserStars then
+                                button
+                                    [ class "btn btn--primary btn--sm"
+                                    , disabled True
+                                    , title "You enabled Stars! in browser. Do not mix Stars! executables to manipulate files."
+                                    ]
+                                    [ text "Launch Stars!" ]
+
+                              else if hasStarsExe then
                                 button
                                     [ class "btn btn--primary btn--sm"
                                     , onClick (LaunchStars session.id)
@@ -448,6 +463,22 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                                 , onClick (OpenGameDir session.id)
                                 ]
                                 [ text "Open Game Dir" ]
+                            , -- Play in Browser button: only show when browser mode is enabled
+                              if enableBrowserStars then
+                                case model.selectedServerUrl of
+                                    Just serverUrl ->
+                                        button
+                                            [ class "btn btn--primary btn--sm"
+                                            , onClick (OpenStarsBrowser serverUrl session.id session.name)
+                                            , title "Play Stars! in the browser using DOSBox emulation"
+                                            ]
+                                            [ text "Play in Browser" ]
+
+                                    Nothing ->
+                                        text ""
+
+                              else
+                                text ""
                             , case ( latestYear, Dict.get session.id serverData.sessionPlayerRaces ) of
                                 ( Just year, Just race ) ->
                                     case Dict.get session.id serverData.sessionTurns |> Maybe.andThen (Dict.get year) of

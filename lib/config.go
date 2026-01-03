@@ -242,13 +242,14 @@ type WindowGeometry struct {
 
 // AppSettings stores global application settings
 type AppSettings struct {
-	ServersDir        string          `json:"serversDir"`
-	AutoDownloadStars *bool           `json:"autoDownloadStars"` // nil means default (true)
-	ZoomLevel         *int            `json:"zoomLevel"`         // nil means default (100)
-	UseWine           *bool           `json:"useWine"`           // nil means default (false)
-	WinePrefixesDir   *string         `json:"winePrefixesDir"`   // nil means default (~/.config/astrum/wine_prefixes)
-	ValidWineInstall  *bool           `json:"validWineInstall"`  // nil means not checked yet (default: false)
-	WindowGeometry    *WindowGeometry `json:"windowGeometry"`    // nil means use defaults
+	ServersDir         string          `json:"serversDir"`
+	AutoDownloadStars  *bool           `json:"autoDownloadStars"`  // nil means default (true)
+	ZoomLevel          *int            `json:"zoomLevel"`          // nil means default (100)
+	UseWine            *bool           `json:"useWine"`            // nil means default (false)
+	WinePrefixesDir    *string         `json:"winePrefixesDir"`    // nil means default (~/.config/astrum/wine_prefixes)
+	ValidWineInstall   *bool           `json:"validWineInstall"`   // nil means not checked yet (default: false)
+	WindowGeometry     *WindowGeometry `json:"windowGeometry"`     // nil means use defaults
+	EnableBrowserStars *bool           `json:"enableBrowserStars"` // nil means default (false) - experimental browser Stars! support
 }
 
 // GetAutoDownloadStars returns the auto download setting (default: true)
@@ -290,6 +291,14 @@ func (s *AppSettings) GetValidWineInstall() bool {
 		return false // default: not validated
 	}
 	return *s.ValidWineInstall
+}
+
+// GetEnableBrowserStars returns the experimental browser Stars! setting (default: false)
+func (s *AppSettings) GetEnableBrowserStars() bool {
+	if s.EnableBrowserStars == nil {
+		return false // default: disabled
+	}
+	return *s.EnableBrowserStars
 }
 
 // DefaultWinePrefixesDir returns the default wine prefixes directory path
@@ -462,6 +471,25 @@ func (c *Config) GetValidWineInstall() (bool, error) {
 		return false, err
 	}
 	return settings.GetValidWineInstall(), nil
+}
+
+// SetEnableBrowserStars updates the experimental browser Stars! setting
+func (c *Config) SetEnableBrowserStars(enabled bool) error {
+	settings, err := c.GetAppSettings()
+	if err != nil {
+		return err
+	}
+	settings.EnableBrowserStars = &enabled
+	return c.SetAppSettings(settings)
+}
+
+// GetEnableBrowserStars returns the experimental browser Stars! setting
+func (c *Config) GetEnableBrowserStars() (bool, error) {
+	settings, err := c.GetAppSettings()
+	if err != nil {
+		return false, err
+	}
+	return settings.GetEnableBrowserStars(), nil
 }
 
 // GetWindowGeometry returns the saved window geometry, or nil if not set
