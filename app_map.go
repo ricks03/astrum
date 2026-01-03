@@ -198,7 +198,7 @@ func (a *App) GenerateAnimatedMap(request AnimatedMapRequest) (string, error) {
 		}
 
 		data, err := io.ReadAll(rc)
-		rc.Close()
+		_ = rc.Close()
 		if err != nil {
 			logger.App.Warn().
 				Str("file", file.Name).

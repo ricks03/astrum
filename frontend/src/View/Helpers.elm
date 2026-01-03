@@ -1,9 +1,8 @@
 module View.Helpers exposing
-    ( viewFormError
-    , onClickTarget
-    , onMouseDownTarget
-    , getCurrentUserId
+    ( getCurrentUserId
     , getNickname
+    , onMouseDownTarget
+    , viewFormError
     )
 
 {-| Shared view helper functions used across multiple view modules.
@@ -15,7 +14,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Decode
 import Model exposing (..)
-import Msg exposing (Msg(..))
+import Msg exposing (Msg)
 
 
 {-| Display a form error message, or nothing if no error.
@@ -29,24 +28,6 @@ viewFormError maybeError =
         Just error ->
             div [ class "connect-dialog__error" ]
                 [ text error ]
-
-
-{-| Handle click only if the target element has the specified class.
-This allows clicking on child elements without triggering the parent handler.
--}
-onClickTarget : String -> Msg -> Attribute Msg
-onClickTarget targetClass msg =
-    on "click"
-        (Decode.field "target" (Decode.field "className" Decode.string)
-            |> Decode.andThen
-                (\className ->
-                    if String.contains targetClass className then
-                        Decode.succeed msg
-
-                    else
-                        Decode.fail "not target"
-                )
-        )
 
 
 {-| Handle mousedown only if the target element has the specified class.

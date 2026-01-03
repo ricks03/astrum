@@ -8,17 +8,15 @@ This module handles all state transitions in response to messages.
 
 import Api.Encode as Encode
 import Api.Rules exposing (Rules)
-import Api.Server exposing (Server)
-import Api.Session exposing (Session)
 import Api.TurnFiles exposing (TurnFiles)
-import Api.UserProfile exposing (UserProfile)
+import Api.UserProfile
 import Dict
 import Json.Encode as E
-import Set
 import Model exposing (..)
 import Msg exposing (Msg(..))
 import Ports
 import Process
+import Set
 import Task
 import Time
 
@@ -308,37 +306,6 @@ update msg model =
             , Cmd.none
             )
 
-        -- =====================================================================
-        -- Connection Messages
-        -- =====================================================================
-        OpenConnectDialog serverUrl ->
-            let
-                -- Pre-fill username if server has saved credentials
-                form =
-                    case getServerByUrl serverUrl model.servers of
-                        Just server ->
-                            { emptyConnectForm
-                                | username = Maybe.withDefault "" server.defaultUsername
-                            }
-
-                        Nothing ->
-                            emptyConnectForm
-            in
-            ( { model
-                | dialog = Just (ConnectDialog serverUrl form)
-                , contextMenu = Nothing
-              }
-            , Cmd.none
-            )
-
-        OpenRegisterDialog serverUrl ->
-            ( { model
-                | dialog = Just (RegisterDialog serverUrl emptyRegisterForm)
-                , contextMenu = Nothing
-              }
-            , Cmd.none
-            )
-
         SwitchToRegister ->
             case model.dialog of
                 Just (ConnectDialog serverUrl _) ->
@@ -481,7 +448,7 @@ update msg model =
                             -- Some other dialog is open, just update connection state
                             ( modelWithError, Cmd.none )
 
-        RegisterResult serverUrl result ->
+        RegisterResult _ result ->
             case result of
                 Ok _ ->
                     -- Registration submitted, user is pending approval
@@ -711,16 +678,6 @@ update msg model =
                       }
                     , Cmd.none
                     )
-
-        SelectSession sessionId ->
-            ( { model | selectedSessionId = Just sessionId }
-            , case model.selectedServerUrl of
-                Just serverUrl ->
-                    Ports.getSession (Encode.getSession serverUrl sessionId)
-
-                Nothing ->
-                    Cmd.none
-            )
 
         SetSessionFilter filter ->
             ( { model | sessionFilter = filter }
@@ -1129,16 +1086,6 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
-        LoadUserProfiles ->
-            ( model
-            , case model.selectedServerUrl of
-                Just serverUrl ->
-                    Ports.getUserProfiles serverUrl
-
-                Nothing ->
-                    Cmd.none
-            )
-
         GotUserProfiles serverUrl result ->
             case result of
                 Ok profiles ->
@@ -1181,11 +1128,6 @@ update msg model =
 
                 Nothing ->
                     ( model, Cmd.none )
-
-        CloseInviteDialog ->
-            ( { model | dialog = Nothing }
-            , Cmd.none
-            )
 
         SelectUserToInvite userId ->
             ( updateInviteForm model (\f -> { f | selectedUserId = Just userId })
@@ -1715,16 +1657,6 @@ update msg model =
         UpdateRaceBuilderGravityImmune val ->
             updateRaceConfigAndValidate model (\c -> { c | gravityImmune = val })
 
-        UpdateRaceBuilderGravityMinMax minVal maxVal ->
-            let
-                newCenter =
-                    (minVal + maxVal) // 2
-
-                newWidth =
-                    (maxVal - minVal) // 2
-            in
-            updateRaceConfigAndValidate model (\c -> { c | gravityCenter = newCenter, gravityWidth = newWidth })
-
         UpdateRaceBuilderTemperatureCenter val ->
             updateRaceConfigAndValidate model (\c -> { c | temperatureCenter = val })
 
@@ -1734,16 +1666,6 @@ update msg model =
         UpdateRaceBuilderTemperatureImmune val ->
             updateRaceConfigAndValidate model (\c -> { c | temperatureImmune = val })
 
-        UpdateRaceBuilderTemperatureMinMax minVal maxVal ->
-            let
-                newCenter =
-                    (minVal + maxVal) // 2
-
-                newWidth =
-                    (maxVal - minVal) // 2
-            in
-            updateRaceConfigAndValidate model (\c -> { c | temperatureCenter = newCenter, temperatureWidth = newWidth })
-
         UpdateRaceBuilderRadiationCenter val ->
             updateRaceConfigAndValidate model (\c -> { c | radiationCenter = val })
 
@@ -1752,16 +1674,6 @@ update msg model =
 
         UpdateRaceBuilderRadiationImmune val ->
             updateRaceConfigAndValidate model (\c -> { c | radiationImmune = val })
-
-        UpdateRaceBuilderRadiationMinMax minVal maxVal ->
-            let
-                newCenter =
-                    (minVal + maxVal) // 2
-
-                newWidth =
-                    (maxVal - minVal) // 2
-            in
-            updateRaceConfigAndValidate model (\c -> { c | radiationCenter = newCenter, radiationWidth = newWidth })
 
         UpdateRaceBuilderGrowthRate val ->
             updateRaceConfigAndValidate model (\c -> { c | growthRate = val })
@@ -2509,11 +2421,6 @@ update msg model =
             , Cmd.none
             )
 
-        UpdateRulesRandomSeed val ->
-            ( updateRules model (\r -> { r | randomSeed = String.toInt val })
-            , Cmd.none
-            )
-
         UpdateRulesMaximumMinerals val ->
             ( updateRules model (\r -> { r | maximumMinerals = val })
             , Cmd.none
@@ -2678,55 +2585,6 @@ update msg model =
                     ( updateRulesForm model (\f -> { f | submitting = False, error = Just err })
                     , Cmd.none
                     )
-
-        FetchSessionRules sessionId ->
-            case model.selectedServerUrl of
-                Just serverUrl ->
-                    ( model
-                    , Ports.getRules (Encode.getRules serverUrl sessionId)
-                    )
-
-                Nothing ->
-                    ( model, Cmd.none )
-
-        GotSessionRules serverUrl sessionId result ->
-            case result of
-                Ok rules ->
-                    let
-                        -- Cache the rules
-                        modelWithCachedRules =
-                            { model
-                                | serverData =
-                                    updateServerData serverUrl
-                                        (\sd ->
-                                            { sd
-                                                | sessionRules =
-                                                    Dict.insert sessionId rules sd.sessionRules
-                                            }
-                                        )
-                                        model.serverData
-                            }
-                    in
-                    -- Also update the dialog if it's open for this session
-                    case model.dialog of
-                        Just (RulesDialog form) ->
-                            if form.sessionId == sessionId then
-                                ( { modelWithCachedRules
-                                    | dialog =
-                                        Just (RulesDialog { form | rules = rules, loading = False })
-                                  }
-                                , Cmd.none
-                                )
-
-                            else
-                                ( modelWithCachedRules, Cmd.none )
-
-                        _ ->
-                            ( modelWithCachedRules, Cmd.none )
-
-                Err _ ->
-                    -- Silently ignore errors - rules may not be set
-                    ( model, Cmd.none )
 
         -- =====================================================================
         -- External Events
@@ -3248,16 +3106,6 @@ update msg model =
                     -- Show error to user
                     ( { model | error = Just errMsg }, Cmd.none )
 
-        CheckHasStarsExe sessionId ->
-            case model.selectedServerUrl of
-                Just serverUrl ->
-                    ( model
-                    , Ports.checkHasStarsExe (Encode.checkHasStarsExe serverUrl sessionId)
-                    )
-
-                Nothing ->
-                    ( model, Cmd.none )
-
         GotHasStarsExe result ->
             case result of
                 Ok { serverUrl, sessionId, hasStarsExe } ->
@@ -3429,6 +3277,7 @@ update msg model =
                                 , validWineInstall = settings.validWineInstall
                                 , enableBrowserStars = settings.enableBrowserStars
                                 }
+
                         -- Clear wine check message when settings change
                         , wineCheckMessage = Nothing
                       }
@@ -3787,15 +3636,6 @@ update msg model =
                     ]
                 )
             )
-
-        CloseStarsBrowser ->
-            ( model, Cmd.none )
-
-        StarsBrowserLoaded ->
-            ( model, Cmd.none )
-
-        StarsBrowserError _ ->
-            ( model, Cmd.none )
 
         -- =====================================================================
         -- Admin/Manager Messages
@@ -4400,12 +4240,6 @@ update msg model =
             , Ports.copyToClipboard text
             )
 
-        ShowToast message ->
-            ( { model | toast = Just message }
-            , Process.sleep 3000
-                |> Task.perform (\_ -> HideToast)
-            )
-
         HideToast ->
             ( { model | toast = Nothing }
             , Cmd.none
@@ -4792,7 +4626,7 @@ updateRaceBuilderForm model updater =
 
 
 {-| Update race config and trigger validation.
-    Also resets selectedTemplate to "custom" since user is customizing values.
+Also resets selectedTemplate to "custom" since user is customizing values.
 -}
 updateRaceConfigAndValidate : Model -> (RaceConfig -> RaceConfig) -> ( Model, Cmd Msg )
 updateRaceConfigAndValidate model configUpdater =
@@ -4814,7 +4648,7 @@ updateRaceConfigAndValidate model configUpdater =
 
 
 {-| Perform the action for a habitability button.
-    Used both for initial press and repeated ticks while held.
+Used both for initial press and repeated ticks while held.
 
     Center is constrained based on width so that range edges don't exceed scale limits:
     - center - width >= 0 (left edge can't go below 0)

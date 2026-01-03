@@ -11,7 +11,6 @@ This module renders the complete application UI with Discord-style layout:
 
 -}
 
-import Api.Session exposing (Session)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -19,7 +18,6 @@ import Html.Events exposing (..)
 import Model exposing (..)
 import Msg exposing (Msg(..))
 import View.Dialog exposing (viewDialog)
-import View.Helpers exposing (getCurrentUserId)
 import View.Menus exposing (viewContextMenu, viewUserMenu)
 import View.ServerBar exposing (viewServerBar)
 import View.SessionDetail exposing (viewSessionDetail)
@@ -106,7 +104,7 @@ viewHeader model =
 
                                   else
                                     text ""
-                                , span [ class "header__user-arrow" ] [ text "\u{25BC}" ]
+                                , span [ class "header__user-arrow" ] [ text "▼" ]
                                 ]
 
                         Connecting ->
@@ -135,7 +133,7 @@ viewHeader model =
                 , onClick OpenSettingsDialog
                 , title "Settings"
                 ]
-                [ text "\u{2699}" ]
+                [ text "⚙" ]
             , case model.selectedServerUrl of
                 Just _ ->
                     let
@@ -160,7 +158,7 @@ viewHeader model =
                                     [ onClick RefreshSessions ]
                                )
                         )
-                        [ text "\u{27F3}" ]
+                        [ text "⟳" ]
 
                 Nothing ->
                     text ""
@@ -170,7 +168,7 @@ viewHeader model =
                     , onClick OpenUsersListDialog
                     , title "Manage Users"
                     ]
-                    [ text "\u{1F464}"
+                    [ text "👤"
                     , if serverData.pendingRegistrationsCount > 0 then
                         span [ class "header__pending-badge" ] []
 

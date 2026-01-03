@@ -8,9 +8,8 @@ Model, Update, View, and Subscriptions.
 -}
 
 import Browser
-import Html exposing (Html)
 import Model exposing (Flags, Model)
-import Msg exposing (Msg(..))
+import Msg exposing (Msg)
 import Ports
 import Subscriptions exposing (subscriptions)
 import Update exposing (update)
@@ -33,10 +32,10 @@ On startup, we immediately request the list of servers from the Go backend.
 
 -}
 init : Flags -> ( Model, Cmd Msg )
-init flags =
+init _ =
     let
         ( model, cmd ) =
-            Model.init flags
+            Model.init
     in
     ( model
     , Cmd.batch

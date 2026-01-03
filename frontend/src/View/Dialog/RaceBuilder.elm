@@ -290,7 +290,7 @@ viewTabContent tab config validation selectedTemplate isReadOnly =
 
 
 {-| Identity tab: names, password, icon, template, leftover points.
-    Matches Stars! Custom Race Wizard Step 1 layout exactly.
+Matches Stars! Custom Race Wizard Step 1 layout exactly.
 -}
 viewIdentityTab : RaceConfig -> String -> Bool -> Html Msg
 viewIdentityTab config selectedTemplate isReadOnly =
@@ -414,7 +414,7 @@ viewIdentityTab config selectedTemplate isReadOnly =
 
 
 {-| Get the path to a race icon image.
-    Icons are stored as 1-32, matching file names 01.png to 32.png.
+Icons are stored as 1-32, matching file names 01.png to 32.png.
 -}
 raceIconPath : Int -> String
 raceIconPath iconNum =
@@ -723,8 +723,9 @@ viewHabitabilityTab config habDisplay isReadOnly =
 {-| View a habitability range control matching Stars! GUI layout.
 
 Layout:
-- Row 1: Label | Bar | Range values (min/to/max stacked)
-- Row 2: "<< >>" expand | Immune checkbox | ">> <<" shrink
+
+  - Row 1: Label | Bar | Range values (min/to/max stacked)
+  - Row 2: "<< >>" expand | Immune checkbox | ">> <<" shrink
 
 Hold-to-repeat: Buttons use onMouseDown/onMouseUp to support repeated action while held.
 
@@ -1052,23 +1053,6 @@ viewResearchBox fieldName currentLevel onChange isReadOnly =
                 []
             , text "Costs 50% less"
             ]
-        ]
-
-
-{-| Generic radio option for other fields (leftover points, etc.)
--}
-viewRadioOption : String -> Int -> Int -> String -> Msg -> Bool -> Html Msg
-viewRadioOption groupName optionValue currentValue label_ msg isReadOnly =
-    label [ class "race-builder__radio-option" ]
-        [ input
-            [ type_ "radio"
-            , name groupName
-            , checked (optionValue == currentValue)
-            , onClick msg
-            , disabled isReadOnly
-            ]
-            []
-        , text label_
         ]
 
 

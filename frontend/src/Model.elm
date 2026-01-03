@@ -1,73 +1,68 @@
 module Model exposing
-    ( Model
-    , Flags
-    , init
-    , AppSettings
-    , ServerData
-    , emptyServerData
-    , ConnectionState(..)
-    , ConnectedInfo
-    , Dialog(..)
-    , SessionFilter(..)
-    , ServerForm
+    ( AppSettings
+    , ChangeApikeyState(..)
     , ConnectForm
-    , RegisterForm
+    , ConnectedInfo
+    , ConnectionState(..)
+    , ContextMenu
     , CreateSessionForm
     , CreateUserForm
-    , InviteForm
-    , SetupRaceForm
-    , RulesForm
-    , TurnFilesForm
-    , UsersListState
-    , UsersListPane(..)
-    , ResetApikeyState(..)
     , DeleteUserState(..)
-    , PendingActionState(..)
-    , ChangeApikeyState(..)
-    , FetchResult
-    , ContextMenu
-    , SessionDetailView
+    , Dialog(..)
     , DragState
-    , ServerDragState
-    , RaceBuilderForm
-    , RaceBuilderTab(..)
-    , RaceBuilderOrigin(..)
-    , RaceBuilderMode(..)
+    , FetchResult
+    , Flags
     , HabButton(..)
+    , HabitabilityDisplay
+    , InviteForm
+    , LRTInfo
+    , MapOptions
+    , MapOutputFormat(..)
+    , MapViewerForm
+    , Model
+    , NtvdmCheckResult
+    , PRTInfo
+    , PendingActionState(..)
+    , RaceBuilderForm
+    , RaceBuilderMode(..)
+    , RaceBuilderOrigin(..)
+    , RaceBuilderTab(..)
     , RaceConfig
     , RaceValidation
     , RaceValidationError
-    , HabitabilityDisplay
-    , PRTInfo
-    , LRTInfo
-    , emptyHabitabilityDisplay
-    , emptyServerForm
+    , RegisterForm
+    , ResetApikeyState(..)
+    , RulesForm
+    , ServerData
+    , ServerDragState
+    , ServerForm
+    , SessionDetailView
+    , SessionFilter(..)
+    , SetupRaceForm
+    , TurnFilesForm
+    , UsersListPane(..)
+    , UsersListState
+    , defaultRaceConfig
     , emptyConnectForm
-    , emptyRegisterForm
-    , emptyCreateSessionForm
     , emptyCreateUserForm
+    , emptyHabitabilityDisplay
     , emptyInviteForm
+    , emptyMapViewerForm
+    , emptyRaceBuilderForm
+    , emptyRegisterForm
+    , emptyServerData
+    , emptyServerForm
     , emptySetupRaceForm
-    , emptyRulesForm
     , emptyTurnFilesForm
     , emptyUsersListState
-    , emptyRaceBuilderForm
-    , defaultRaceConfig
-    , MapViewerForm
-    , MapOptions
-    , MapOutputFormat(..)
-    , emptyMapViewerForm
-    , defaultMapOptions
-    , StarsBrowserForm
-    , emptyStarsBrowserForm
-    , NtvdmCheckResult
-    , getServerByUrl
-    , getSessionById
-    , getServerData
-    , getCurrentServerData
-    , updateServerData
-    , isConnected
     , getConnectionState
+    , getCurrentServerData
+    , getServerByUrl
+    , getServerData
+    , getSessionById
+    , init
+    , isConnected
+    , updateServerData
     )
 
 {-| Application state model.
@@ -87,6 +82,7 @@ import Api.TurnFiles exposing (TurnFiles)
 import Api.UserProfile exposing (UserProfile)
 import Dict exposing (Dict)
 import Set exposing (Set)
+
 
 
 -- =============================================================================
@@ -117,14 +113,6 @@ type alias AppSettings =
     , winePrefixesDir : String
     , validWineInstall : Bool
     , enableBrowserStars : Bool
-    }
-
-
-{-| Result of a Wine 32-bit support check.
--}
-type alias WineCheckResult =
-    { valid : Bool
-    , message : String
     }
 
 
@@ -239,8 +227,8 @@ emptyServerData =
 
 {-| Initialize the model with default values.
 -}
-init : Flags -> ( Model, Cmd msg )
-init _ =
+init : ( Model, Cmd msg )
+init =
     ( { servers = []
       , selectedServerUrl = Nothing
       , serverData = Dict.empty
@@ -334,8 +322,7 @@ type Dialog
     | UsersListDialog UsersListState -- admin users management
     | CreateUserDialog CreateUserForm -- admin create user
     | ChangeApikeyDialog ChangeApikeyState -- change own API key
-    | MapViewerDialog MapViewerForm -- map viewer
-    | StarsBrowserDialog StarsBrowserForm -- embedded Stars! browser
+    | MapViewerDialog MapViewerForm -- embedded Stars! browser
 
 
 {-| Which pane is active in the users list dialog.
@@ -538,17 +525,6 @@ type alias CreateSessionForm =
     }
 
 
-{-| Empty create session form.
--}
-emptyCreateSessionForm : CreateSessionForm
-emptyCreateSessionForm =
-    { name = ""
-    , isPublic = True
-    , error = Nothing
-    , submitting = False
-    }
-
-
 {-| Form state for inviting a user to a session.
 -}
 type alias InviteForm =
@@ -603,19 +579,6 @@ type alias RulesForm =
     }
 
 
-{-| Empty rules form.
--}
-emptyRulesForm : String -> Bool -> RulesForm
-emptyRulesForm sessionId isManager =
-    { sessionId = sessionId
-    , rules = Api.Rules.defaultRules
-    , isManager = isManager
-    , error = Nothing
-    , submitting = False
-    , loading = True
-    }
-
-
 {-| Form state for turn files dialog (unified year view with files and orders status).
 -}
 type alias TurnFilesForm =
@@ -645,6 +608,7 @@ emptyTurnFilesForm sessionId year raceName playerNumber isLatest =
     , error = Nothing
     , loading = True
     }
+
 
 
 -- =============================================================================
@@ -728,37 +692,6 @@ emptyMapViewerForm sessionId year raceName playerNumber =
     , error = Nothing
     }
 
-
--- =============================================================================
--- STARS BROWSER
--- =============================================================================
-
-
-{-| Form state for embedded Stars! browser dialog.
--}
-type alias StarsBrowserForm =
-    { sessionId : String
-    , serverUrl : String
-    , sessionName : String
-    , width : Int
-    , height : Int
-    , loading : Bool
-    , error : Maybe String
-    }
-
-
-{-| Empty Stars browser form.
--}
-emptyStarsBrowserForm : String -> String -> String -> StarsBrowserForm
-emptyStarsBrowserForm serverUrl sessionId sessionName =
-    { sessionId = sessionId
-    , serverUrl = serverUrl
-    , sessionName = sessionName
-    , width = 1024
-    , height = 768
-    , loading = True
-    , error = Nothing
-    }
 
 
 -- =============================================================================

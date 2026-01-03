@@ -45,12 +45,7 @@ type Msg
       -- Context Menu Messages
       -- =========================================================================
     | ShowContextMenu String Float Float -- serverUrl, x, y
-    | HideContextMenu
-      -- =========================================================================
-      -- Connection Messages
-      -- =========================================================================
-    | OpenConnectDialog String -- serverUrl
-    | OpenRegisterDialog String -- serverUrl
+    | HideContextMenu -- serverUrl
     | SwitchToRegister -- Switch from connect to register dialog
     | SwitchToConnect -- Switch from register to connect dialog
     | UpdateConnectUsername String
@@ -69,8 +64,7 @@ type Msg
       -- =========================================================================
     | GotSessions String (Result String (List Session)) -- serverUrl, sessions result
     | GotFetchStartTime String Time.Posix -- serverUrl, startTime
-    | GotFetchEndTime String (Result String (List Session)) Time.Posix -- serverUrl, sessions result, endTime
-    | SelectSession String -- sessionId
+    | GotFetchEndTime String (Result String (List Session)) Time.Posix -- sessionId
     | SetSessionFilter SessionFilter
     | RefreshSessions
     | GotSession String (Result String Session) -- serverUrl, result
@@ -107,11 +101,9 @@ type Msg
       -- =========================================================================
     | ViewSessionDetail String -- sessionId
     | CloseSessionDetail
-    | TogglePlayersExpanded
-    | LoadUserProfiles -- Load user profiles for invite dialog
+    | TogglePlayersExpanded -- Load user profiles for invite dialog
     | GotUserProfiles String (Result String (List UserProfile)) -- serverUrl, result
     | OpenInviteDialog
-    | CloseInviteDialog
     | SelectUserToInvite String -- userId
     | SubmitInvite
     | InviteResult String (Result String ()) -- serverUrl, result
@@ -169,16 +161,13 @@ type Msg
       -- Habitability tab
     | UpdateRaceBuilderGravityCenter Int
     | UpdateRaceBuilderGravityWidth Int
-    | UpdateRaceBuilderGravityImmune Bool
-    | UpdateRaceBuilderGravityMinMax Int Int -- min, max (converts to center/width)
+    | UpdateRaceBuilderGravityImmune Bool -- min, max (converts to center/width)
     | UpdateRaceBuilderTemperatureCenter Int
     | UpdateRaceBuilderTemperatureWidth Int
-    | UpdateRaceBuilderTemperatureImmune Bool
-    | UpdateRaceBuilderTemperatureMinMax Int Int -- min, max (converts to center/width)
+    | UpdateRaceBuilderTemperatureImmune Bool -- min, max (converts to center/width)
     | UpdateRaceBuilderRadiationCenter Int
     | UpdateRaceBuilderRadiationWidth Int
-    | UpdateRaceBuilderRadiationImmune Bool
-    | UpdateRaceBuilderRadiationMinMax Int Int -- min, max (converts to center/width)
+    | UpdateRaceBuilderRadiationImmune Bool -- min, max (converts to center/width)
     | UpdateRaceBuilderGrowthRate Int
       -- Habitability button hold-to-repeat
     | HabButtonPressed HabButton -- Start holding a button
@@ -237,18 +226,12 @@ type Msg
     | ServerDragEnter String -- target serverUrl
     | ServerDragLeave
     | ServerDragEnd
-    | ServersReordered (Result String ())
-      -- =========================================================================
-      -- Rules Messages
-      -- =========================================================================
-    | FetchSessionRules String -- sessionId - fetch rules for a session
-    | GotSessionRules String String (Result String Rules) -- serverUrl, sessionId, result
+    | ServersReordered (Result String ()) -- serverUrl, sessionId, result
     | OpenRulesDialog String Bool -- sessionId, rulesIsSet
     | GotRules String String (Result String Rules) -- serverUrl, sessionId, result (for currently open dialog)
     | UpdateRulesUniverseSize Int
     | UpdateRulesDensity Int
     | UpdateRulesStartingDistance Int
-    | UpdateRulesRandomSeed String
     | UpdateRulesMaximumMinerals Bool
     | UpdateRulesSlowerTechAdvances Bool
     | UpdateRulesAcceleratedBbsPlay Bool
@@ -290,8 +273,7 @@ type Msg
     | NotificationSessionTurn String String String (Maybe Int) -- serverUrl, sessionId, action, year
     | OpenGameDir String -- sessionId
     | LaunchStars String -- sessionId
-    | LaunchStarsResult (Result String ())
-    | CheckHasStarsExe String -- sessionId
+    | LaunchStarsResult (Result String ()) -- sessionId
     | GotHasStarsExe (Result String { serverUrl : String, sessionId : String, hasStarsExe : Bool })
       -- =========================================================================
       -- Session Backup Messages (manager only)
@@ -384,8 +366,7 @@ type Msg
     | HideUserMenu
     | CopyApiKey String -- serverUrl - fetches and copies API key to clipboard
     | GotApiKey String (Result String String) -- serverUrl, apiKey
-    | CopyToClipboard String -- text to copy
-    | ShowToast String -- message to show
+    | CopyToClipboard String -- message to show
     | HideToast -- auto-hide after timeout
       -- =========================================================================
       -- Zoom Messages
@@ -422,10 +403,7 @@ type Msg
       -- =========================================================================
       -- Stars Browser Messages
       -- =========================================================================
-    | OpenStarsBrowser String String String -- serverUrl, sessionId, sessionName
-    | CloseStarsBrowser
-    | StarsBrowserLoaded -- iframe finished loading
-    | StarsBrowserError String -- error message
+    | OpenStarsBrowser String String String -- error message
       -- =========================================================================
       -- Global UI Messages
       -- =========================================================================

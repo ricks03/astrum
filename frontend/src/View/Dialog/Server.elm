@@ -144,8 +144,8 @@ viewEditServerDialog serverUrl form =
 
 {-| Confirmation dialog for removing a server.
 -}
-viewRemoveServerDialog : String -> String -> Html Msg
-viewRemoveServerDialog serverUrl serverName =
+viewRemoveServerDialog : String -> Html Msg
+viewRemoveServerDialog serverUrl =
     div [ class "confirm-dialog" ]
         [ div [ class "confirm-dialog__icon is-danger" ] [ text "!" ]
         , h2 [ class "confirm-dialog__title" ] [ text "Remove Server?" ]

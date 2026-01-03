@@ -1,168 +1,168 @@
 port module Ports exposing
-    ( -- Outgoing (Elm -> JS -> Go)
-      logDebug
-    , clearSelection
-    , getServers
+    ( acceptInvitation
     , addServer
-    , updateServer
-    , removeServer
-    , connect
-    , autoConnect
-    , disconnect
-    , register
-    , createUser
-    , deleteUser
-    , getPendingRegistrations
+    , animatedMapGenerated
+    , apiKeyReceived
+    , appSettingsReceived
     , approveRegistration
-    , rejectRegistration
-    , getSessions
-    , getSession
-    , createSession
-    , joinSession
-    , deleteSession
-    , quitSession
-    , promoteMember
-    , getUserProfiles
-    , inviteUser
-    , getInvitations
-    , getSentInvitations
-    , acceptInvitation
-    , declineInvitation
-    , getRaces
-    , uploadRace
-    , downloadRace
-    , deleteRace
-    , setSessionRace
-    , uploadAndSetSessionRace
-    , setPlayerReady
-    , getSessionPlayerRace
-    , validateRaceConfig
-    , getRaceTemplate
+    , approveRegistrationResult
+    , autoConnect
+    , autoDownloadStarsSet
     , buildAndSaveRace
-    , loadRaceFileConfig
-    , getRules
-    , setRules
-    , startGame
-    , reorderPlayers
-    , reorderServers
-    , getTurn
-    , getLatestTurn
-    , getOrdersStatus
-    , openGameDir
-    , launchStars
-    , checkHasStarsExe
-    , downloadSessionBackup
-    , downloadHistoricBackup
-    , getAppSettings
-    , selectServersDir
-    , setAutoDownloadStars
-    , setZoomLevel
-    , setUseWine
-    , setEnableBrowserStars
-    , selectWinePrefixesDir
-    , checkWineInstall
-    , generateMap
-    , saveMap
-    , generateAnimatedMap
-    , saveGif
-    , requestFullscreen
-    , openStarsBrowserWindow
-    , resetUserApikey
+    , cancelSentInvitation
+    , changeApikeyResult
     , changeMyApikey
-    , getApiKey
+    , checkHasStarsExe
+    , checkNtvdmSupport
+    , checkWineInstall
+    , -- Outgoing (Elm -> JS -> Go)
+      clearSelection
+    , connect
+    , connectResult
+    , connectionChanged
     , copyToClipboard
       -- Incoming (Go -> JS -> Elm)
-    , serversReceived
-    , serverAdded
-    , serverUpdated
-    , serverRemoved
-    , connectResult
-    , disconnectResult
-    , registerResult
+    , createSession
+    , createUser
     , createUserResult
+    , declineInvitation
+    , deleteRace
+    , deleteSession
+    , deleteUser
     , deleteUserResult
-    , pendingRegistrationsReceived
-    , approveRegistrationResult
-    , rejectRegistrationResult
-    , sessionsReceived
-    , sessionReceived
-    , sessionCreated
-    , sessionJoined
-    , sessionDeleted
-    , sessionQuit
-    , memberPromoted
-    , userProfilesReceived
-    , inviteResult
-    , invitationsReceived
-    , sentInvitationsReceived
-    , invitationAccepted
-    , invitationDeclined
-    , cancelSentInvitation
-    , sentInvitationCanceled
-    , racesReceived
-    , raceUploaded
-    , raceDownloaded
-    , raceDeleted
-    , sessionRaceSet
-    , uploadAndSetSessionRaceResult
-    , playerReadyResult
-    , sessionPlayerRaceReceived
-    , raceBuilderValidation
-    , raceTemplateReceived
-    , raceBuilderSaved
-    , raceFileConfigLoaded
-    , rulesReceived
-    , rulesSet
-    , gameStarted
-    , playersReordered
-    , serversReordered
-    , turnReceived
-    , latestTurnReceived
-    , ordersStatusReceived
-    , appSettingsReceived
-    , serversDirSelected
-    , autoDownloadStarsSet
-    , zoomLevelSet
-    , useWineSet
-    , winePrefixesDirSelected
-    , wineInstallChecked
-    , checkNtvdmSupport
-    , ntvdmChecked
+    , disconnect
+    , disconnectResult
+    , downloadHistoricBackup
+    , downloadRace
+    , downloadSessionBackup
     , enableBrowserStarsSet
-    , resetApikeyResult
-    , changeApikeyResult
-    , apiKeyReceived
-    , launchStarsResult
-    , hasStarsExeResult
-    , sessionBackupDownloaded
-    , historicBackupDownloaded
-    , mapGenerated
-    , mapSaved
-    , animatedMapGenerated
+    , escapePressed
+    , gameStarted
+    , generateAnimatedMap
+    , generateMap
+    , getApiKey
+    , getAppSettings
+    , getInvitations
+    , getLatestTurn
+    , getOrdersStatus
+    , getPendingRegistrations
+    , getRaceTemplate
+    , getRaces
+    , getRules
+    , getSentInvitations
+    , getServers
+    , getSession
+    , getSessionPlayerRace
+    , getSessions
+    , getTurn
+    , getUserProfiles
     , gifSaved
       -- Events from Go
-    , sessionsUpdated
-    , connectionChanged
-    , orderConflictReceived
-      -- WebSocket notifications
-    , notificationSession
+    , hasStarsExeResult
+    , historicBackupDownloaded
+    , invitationAccepted
+    , invitationDeclined
+    , invitationsReceived
+    , inviteResult
+    , inviteUser
+    , joinSession
+    , latestTurnReceived
+    , launchStars
+    , launchStarsResult
+    , loadRaceFileConfig
+    , mapGenerated
+    , mapSaved
+    , memberPromoted
     , notificationInvitation
-    , notificationRace
-    , notificationRuleset
-    , notificationPlayerRace
-    , notificationSessionTurn
     , notificationOrderStatus
     , notificationPendingRegistration
       -- UI events from JS
-    , escapePressed
+    , notificationPlayerRace
+    , notificationRace
+    , notificationRuleset
+    , notificationSession
+    , notificationSessionTurn
+    , ntvdmChecked
+    , openGameDir
+    , openStarsBrowserWindow
+    , orderConflictReceived
+      -- WebSocket notifications
+    , ordersStatusReceived
+    , pendingRegistrationsReceived
+    , playerReadyResult
+    , playersReordered
+    , promoteMember
+    , quitSession
+    , raceBuilderSaved
+    , raceBuilderValidation
+    , raceDeleted
+    , raceDownloaded
+    , raceFileConfigLoaded
+    , raceTemplateReceived
+    , raceUploaded
+    , racesReceived
+    , register
+    , registerResult
+    , rejectRegistration
+    , rejectRegistrationResult
+    , removeServer
+    , reorderPlayers
+    , reorderServers
+    , requestFullscreen
+    , resetApikeyResult
+    , resetUserApikey
+    , rulesReceived
+    , rulesSet
+    , saveGif
+    , saveMap
+    , selectServersDir
+    , selectWinePrefixesDir
+    , sentInvitationCanceled
+    , sentInvitationsReceived
+    , serverAdded
+    , serverRemoved
+    , serverUpdated
+    , serversDirSelected
+    , serversReceived
+    , serversReordered
+    , sessionBackupDownloaded
+    , sessionCreated
+    , sessionDeleted
+    , sessionJoined
+    , sessionPlayerRaceReceived
+    , sessionQuit
+    , sessionRaceSet
+    , sessionReceived
+    , sessionsReceived
+    , sessionsUpdated
+    , setAutoDownloadStars
+    , setEnableBrowserStars
+    , setPlayerReady
+    , setRules
+    , setSessionRace
+    , setUseWine
+    , setZoomLevel
+    , startGame
+    , turnReceived
+    , updateServer
+    , uploadAndSetSessionRace
+    , uploadAndSetSessionRaceResult
+    , uploadRace
+    , useWineSet
+    , userProfilesReceived
+    , validateRaceConfig
+    , wineInstallChecked
+    , winePrefixesDirSelected
     , zoomKeyPressed
+    , zoomLevelSet
     )
 
 {-| Ports for communication between Elm and the Go backend via JavaScript.
 
+
 ## Architecture
 
-    Elm <-> JavaScript <-> Go (Wails)
+    Elm <-> JavaScript <-> Go Wails
 
 Outgoing ports send commands to Go.
 Incoming ports receive results and events from Go.

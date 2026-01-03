@@ -8,29 +8,28 @@ module Api.Encode exposing
     , connect
     , createSession
     , createUser
-    , deleteUser
     , declineInvitation
-    , encodeRaceConfig
-    , getRaceTemplate
-    , loadRaceFileConfig
-    , rejectRegistration
+    , deleteUser
+    , generateAnimatedMap
+    , generateMap
     , getLatestTurn
     , getOrdersStatus
+    , getRaceTemplate
     , getRules
     , getSession
     , getSessionPlayerRace
     , getTurn
     , joinSession
-    , openGameDir
     , launchStars
+    , loadRaceFileConfig
+    , openGameDir
     , register
+    , rejectRegistration
+    , saveGif
+    , saveMap
     , setRules
     , updateServer
     , validateRaceConfig
-    , generateMap
-    , saveMap
-    , generateAnimatedMap
-    , saveGif
     )
 
 {-| JSON encoders for API requests.
@@ -539,4 +538,3 @@ saveGif serverUrl sessionId raceName playerNumber gifContent =
         , ( "playerNumber", E.int playerNumber )
         , ( "gifContent", E.string gifContent )
         ]
-

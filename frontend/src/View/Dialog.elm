@@ -11,6 +11,7 @@ import Msg exposing (Msg(..))
 import Set
 import View.Dialog.ApiKey exposing (viewChangeApikeyDialog)
 import View.Dialog.Auth exposing (viewConnectDialog, viewRegisterDialog)
+import View.Dialog.MapViewer exposing (viewMapViewerDialog)
 import View.Dialog.RaceBuilder exposing (viewRaceBuilderDialog)
 import View.Dialog.Races exposing (viewRacesDialog, viewSetupRaceDialog)
 import View.Dialog.Rules exposing (viewRulesDialog)
@@ -19,8 +20,6 @@ import View.Dialog.Session exposing (viewCreateSessionDialog)
 import View.Dialog.Settings exposing (viewSettingsDialog)
 import View.Dialog.TurnFiles exposing (viewTurnFilesDialog)
 import View.Dialog.Users exposing (viewCreateUserDialog, viewInvitationsDialog, viewInviteUserDialog, viewUsersListDialog)
-import View.Dialog.MapViewer exposing (viewMapViewerDialog)
-import View.Dialog.StarsBrowser exposing (viewStarsBrowserDialog)
 import View.Helpers exposing (onMouseDownTarget)
 
 
@@ -51,8 +50,8 @@ viewDialog model =
                         EditServerDialog serverUrl form ->
                             viewEditServerDialog serverUrl form
 
-                        RemoveServerDialog serverUrl serverName ->
-                            viewRemoveServerDialog serverUrl serverName
+                        RemoveServerDialog serverUrl _ ->
+                            viewRemoveServerDialog serverUrl
 
                         ConnectDialog serverUrl form ->
                             viewConnectDialog serverUrl form
@@ -104,8 +103,5 @@ viewDialog model =
 
                         MapViewerDialog form ->
                             viewMapViewerDialog form
-
-                        StarsBrowserDialog form ->
-                            viewStarsBrowserDialog form
                     ]
                 ]

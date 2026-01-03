@@ -7,8 +7,8 @@ and don't affect other servers' data.
 
 -}
 
-import Api.OrdersStatus exposing (OrdersStatus, PlayerOrderStatus)
-import Api.Session exposing (Session, SessionPlayer)
+import Api.OrdersStatus exposing (OrdersStatus)
+import Api.Session exposing (Session)
 import Api.TurnFiles exposing (TurnFiles)
 import Dict
 import Expect
@@ -183,7 +183,7 @@ sessionUpdateTests =
                             modelWithTwoServers
 
                         -- GotSessions should create a command (Task) but not update model directly
-                        ( updatedModel, cmd ) =
+                        ( updatedModel, _ ) =
                             update
                                 (GotSessions "http://serverA" (Ok [ makeSession "new" "New" ]))
                                 initialModel
@@ -231,7 +231,6 @@ sessionUpdateTests =
 
                         -- conn3 receives NO update (user not member of private session)
                         -- So we don't call update for conn3
-
                         conn1Data =
                             getServerData "http://server:8080/userA" afterConn2Update.serverData
 
@@ -285,7 +284,6 @@ sessionUpdateTests =
                                 afterConn1Update
 
                         -- conn3 receives NO notification (wasn't member, can't see deletion)
-
                         conn1Data =
                             getServerData "http://server:8080/userA" afterConn2Update.serverData
 
@@ -579,7 +577,7 @@ viewInvitedSessionTests =
                         initialModel =
                             let
                                 ( base, _ ) =
-                                    init {}
+                                    init
                             in
                             { base
                                 | selectedServerUrl = Just "http://serverA"
@@ -598,7 +596,7 @@ viewInvitedSessionTests =
                 \_ ->
                     let
                         ( initialModel, _ ) =
-                            init {}
+                            init
 
                         modelWithDialog =
                             { initialModel | dialog = Just InvitationsDialog }
@@ -818,7 +816,7 @@ modelWithTwoServers : Model
 modelWithTwoServers =
     let
         ( baseModel, _ ) =
-            init {}
+            init
 
         serverAData =
             { emptyServerData
@@ -860,7 +858,7 @@ modelWithThreeConnections : Model
 modelWithThreeConnections =
     let
         ( baseModel, _ ) =
-            init {}
+            init
 
         -- userA and userB can see the private session
         conn1Data =
@@ -913,22 +911,6 @@ makeSession id name =
     , rulesIsSet = False
     , players = []
     , pendingInvitation = False
-    }
-
-
-{-| Create a session with pending invitation for testing.
--}
-makeInvitedSession : String -> String -> Session
-makeInvitedSession id name =
-    { id = id
-    , name = name
-    , isPublic = False
-    , members = []
-    , managers = []
-    , started = False
-    , rulesIsSet = False
-    , players = []
-    , pendingInvitation = True
     }
 
 

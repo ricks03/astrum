@@ -5,8 +5,7 @@ module View.Dialog.MapViewer exposing (viewMapViewerDialog)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onCheck, onClick, onInput)
-import Json.Encode as E
+import Html.Events exposing (onClick, onInput)
 import Model exposing (MapOptions, MapOutputFormat(..), MapViewerForm)
 import Msg exposing (Msg(..))
 
@@ -33,7 +32,7 @@ viewHeader form =
             [ class "dialog__close"
             , onClick CloseDialog
             ]
-            [ text "\u{00D7}" ]
+            [ text "×" ]
         ]
 
 

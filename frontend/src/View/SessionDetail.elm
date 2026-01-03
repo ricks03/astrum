@@ -8,6 +8,7 @@ import Api.OrdersStatus exposing (OrdersStatus)
 import Api.Race exposing (Race)
 import Api.Session exposing (Session, SessionPlayer)
 import Api.TurnFiles exposing (TurnFiles)
+import Api.UserProfile exposing (UserProfile)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -15,7 +16,6 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Model exposing (..)
 import Msg exposing (Msg(..))
-import Api.UserProfile exposing (UserProfile)
 import View.Helpers exposing (getCurrentUserId, getNickname)
 import View.Icons as Icons
 import View.SessionList exposing (viewOrdersSummary)
@@ -106,9 +106,6 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                 && List.all .ready session.players
 
         -- Determine if game can be started (rules set + all players ready + not already started)
-        canStartGame =
-            session.rulesIsSet && allPlayersReady && not session.started
-
         -- Check if stars.exe exists in the game directory
         hasStarsExe =
             Dict.get session.id serverData.sessionHasStarsExe
@@ -677,7 +674,7 @@ viewInvitee invitation =
             , onClick (CancelSentInvitation invitation.id)
             , title "Cancel invitation"
             ]
-            [ text "\u{00D7}" ]
+            [ text "×" ]
         ]
 
 
