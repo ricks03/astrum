@@ -96,12 +96,27 @@ viewRegisterDialog serverUrl form =
             (if form.success then
                 [ div [ class "register-success" ]
                     [ div [ class "register-success__icon" ] [ text "\u{2713}" ]
-                    , h3 [ class "register-success__title" ] [ text "Registration Submitted" ]
-                    , p [ class "register-success__message" ]
-                        [ text "Your registration request has been submitted."
-                        , br [] []
-                        , text "A manager will review your request and you will receive your API key once approved."
+                    , h3 [ class "register-success__title" ]
+                        [ text
+                            (if form.pending then
+                                "Registration Pending Approval"
+
+                             else
+                                "Registration Complete"
+                            )
                         ]
+                    , p [ class "register-success__message" ]
+                        (if form.pending then
+                            [ text "You are now connected to the server."
+                            , br [] []
+                            , text "While waiting for approval, you can create and manage your races."
+                            , br [] []
+                            , text "Once approved, you'll be able to join and create sessions."
+                            ]
+
+                         else
+                            [ text "You are now connected to the server with full access." ]
+                        )
                     ]
                 ]
 

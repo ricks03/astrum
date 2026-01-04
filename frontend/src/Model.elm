@@ -502,6 +502,7 @@ type alias RegisterForm =
     , error : Maybe String
     , submitting : Bool
     , success : Bool
+    , pending : Bool -- True if registration succeeded but needs admin approval
     }
 
 
@@ -515,6 +516,7 @@ emptyRegisterForm =
     , error = Nothing
     , submitting = False
     , success = False
+    , pending = False
     }
 
 

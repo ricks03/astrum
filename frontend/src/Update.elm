@@ -452,17 +452,18 @@ update msg model =
         RegisterResult serverUrl result ->
             case result of
                 Ok regResult ->
-                    if regResult.pending then
-                        -- User is pending approval, show success message
-                        ( updateRegisterForm model (\f -> { f | submitting = False, success = True })
-                        , Cmd.none
+                    -- API key is saved, auto-connect to the server
+                    -- If pending, user can create races but not join/create sessions
+                    ( updateRegisterForm model
+                        (\f ->
+                            { f
+                                | submitting = False
+                                , success = True
+                                , pending = regResult.pending
+                            }
                         )
-
-                    else
-                        -- User is auto-approved, trigger connection
-                        ( updateRegisterForm model (\f -> { f | submitting = False, success = True })
-                        , Ports.autoConnect serverUrl
-                        )
+                    , Ports.autoConnect serverUrl
+                    )
 
                 Err err ->
                     ( updateRegisterForm model (\f -> { f | submitting = False, error = Just err })
