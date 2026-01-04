@@ -8,7 +8,7 @@ and don't affect other servers' data.
 -}
 
 import Api.OrdersStatus exposing (OrdersStatus)
-import Api.Session exposing (Session)
+import Api.Session exposing (Session, SessionState(..))
 import Api.TurnFiles exposing (TurnFiles)
 import Dict
 import Expect
@@ -907,7 +907,7 @@ makeSession id name =
     , isPublic = True
     , members = []
     , managers = []
-    , started = False
+    , state = Pending
     , rulesIsSet = False
     , players = []
     , pendingInvitation = False
