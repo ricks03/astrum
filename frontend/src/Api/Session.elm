@@ -1,4 +1,4 @@
-module Api.Session exposing (Session, SessionPlayer, SessionState(..), isStarted, isPending, isArchived)
+module Api.Session exposing (Session, SessionPlayer, SessionState(..), isArchived, isStarted)
 
 {-| Session type definition.
 
@@ -20,13 +20,6 @@ type SessionState
 isStarted : Session -> Bool
 isStarted session =
     session.state == Started
-
-
-{-| Check if a session is pending (not yet started).
--}
-isPending : Session -> Bool
-isPending session =
-    session.state == Pending
 
 
 {-| Check if a session is archived (game finished).
