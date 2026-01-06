@@ -23,13 +23,20 @@ These decoders handle the JSON responses from the Go backend.
 
 -}
 
+import Api.Density as Density exposing (Density)
 import Api.Invitation exposing (Invitation)
+import Api.LRT as LRT exposing (LRT)
+import Api.LeftoverPointsOption as LeftoverPointsOption exposing (LeftoverPointsOption)
 import Api.OrdersStatus exposing (OrdersStatus, PlayerOrderStatus)
+import Api.PRT as PRT exposing (PRT)
 import Api.Race exposing (Race)
+import Api.ResearchLevel as ResearchLevel exposing (ResearchLevel)
 import Api.Rules exposing (Rules)
 import Api.Server exposing (Server)
 import Api.Session exposing (Session, SessionPlayer, SessionState(..))
+import Api.StartingDistance as StartingDistance exposing (StartingDistance)
 import Api.TurnFiles exposing (TurnFiles)
+import Api.UniverseSize as UniverseSize exposing (UniverseSize)
 import Api.UserProfile exposing (UserProfile)
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -226,15 +233,63 @@ raceList =
 -- =============================================================================
 
 
+{-| Decode a UniverseSize from an integer.
+-}
+universeSizeDecoder : Decoder UniverseSize
+universeSizeDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case UniverseSize.fromInt n of
+                    Just size ->
+                        D.succeed size
+
+                    Nothing ->
+                        D.fail ("Invalid universe size: " ++ String.fromInt n)
+            )
+
+
+{-| Decode a Density from an integer.
+-}
+densityDecoder : Decoder Density
+densityDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case Density.fromInt n of
+                    Just d ->
+                        D.succeed d
+
+                    Nothing ->
+                        D.fail ("Invalid density: " ++ String.fromInt n)
+            )
+
+
+{-| Decode a StartingDistance from an integer.
+-}
+startingDistanceDecoder : Decoder StartingDistance
+startingDistanceDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case StartingDistance.fromInt n of
+                    Just d ->
+                        D.succeed d
+
+                    Nothing ->
+                        D.fail ("Invalid starting distance: " ++ String.fromInt n)
+            )
+
+
 {-| Decode game rules/ruleset.
 -}
 rules : Decoder Rules
 rules =
     D.succeed Rules
         -- Universe Configuration
-        |> optional "universeSize" D.int 1
-        |> optional "density" D.int 1
-        |> optional "startingDistance" D.int 1
+        |> optional "universeSize" universeSizeDecoder UniverseSize.Small
+        |> optional "density" densityDecoder Density.Normal
+        |> optional "startingDistance" startingDistanceDecoder StartingDistance.Moderate
         |> optional "randomSeed" (D.maybe D.int) Nothing
         -- Game Options
         |> optional "maximumMinerals" D.bool False
@@ -434,6 +489,70 @@ lrtInfo =
         |> required "pointCost" D.int
 
 
+{-| Decode a PRT from an integer.
+-}
+prtDecoder : Decoder PRT
+prtDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case PRT.fromInt n of
+                    Just prt ->
+                        D.succeed prt
+
+                    Nothing ->
+                        D.fail ("Invalid PRT index: " ++ String.fromInt n)
+            )
+
+
+{-| Decode an LRT from an integer.
+-}
+lrtDecoder : Decoder LRT
+lrtDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case LRT.fromInt n of
+                    Just lrt ->
+                        D.succeed lrt
+
+                    Nothing ->
+                        D.fail ("Invalid LRT index: " ++ String.fromInt n)
+            )
+
+
+{-| Decode a ResearchLevel from an integer.
+-}
+researchLevelDecoder : Decoder ResearchLevel
+researchLevelDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case ResearchLevel.fromInt n of
+                    Just level ->
+                        D.succeed level
+
+                    Nothing ->
+                        D.fail ("Invalid research level: " ++ String.fromInt n)
+            )
+
+
+{-| Decode a LeftoverPointsOption from an integer.
+-}
+leftoverPointsOptionDecoder : Decoder LeftoverPointsOption
+leftoverPointsOptionDecoder =
+    D.int
+        |> D.andThen
+            (\n ->
+                case LeftoverPointsOption.fromInt n of
+                    Just opt ->
+                        D.succeed opt
+
+                    Nothing ->
+                        D.fail ("Invalid leftover points option: " ++ String.fromInt n)
+            )
+
+
 {-| Decode race config (for templates).
 -}
 raceConfig : Decoder RaceConfig
@@ -443,8 +562,8 @@ raceConfig =
         |> required "pluralName" D.string
         |> optional "password" D.string ""
         |> required "icon" D.int
-        |> required "prt" D.int
-        |> optional "lrt" (D.list D.int) []
+        |> required "prt" prtDecoder
+        |> optional "lrt" (D.list lrtDecoder) []
         |> required "gravityCenter" D.int
         |> required "gravityWidth" D.int
         |> required "gravityImmune" D.bool
@@ -463,11 +582,11 @@ raceConfig =
         |> required "mineOutput" D.int
         |> required "mineCost" D.int
         |> required "mineCount" D.int
-        |> required "researchEnergy" D.int
-        |> required "researchWeapons" D.int
-        |> required "researchPropulsion" D.int
-        |> required "researchConstruction" D.int
-        |> required "researchElectronics" D.int
-        |> required "researchBiotech" D.int
+        |> required "researchEnergy" researchLevelDecoder
+        |> required "researchWeapons" researchLevelDecoder
+        |> required "researchPropulsion" researchLevelDecoder
+        |> required "researchConstruction" researchLevelDecoder
+        |> required "researchElectronics" researchLevelDecoder
+        |> required "researchBiotech" researchLevelDecoder
         |> required "techsStartHigh" D.bool
-        |> required "leftoverPointsOn" D.int
+        |> required "leftoverPointsOn" leftoverPointsOptionDecoder

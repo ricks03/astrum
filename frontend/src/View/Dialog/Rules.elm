@@ -3,6 +3,9 @@ module View.Dialog.Rules exposing (viewRulesDialog)
 {-| Rules dialog for configuring game rules.
 -}
 
+import Api.Density as Density exposing (Density)
+import Api.StartingDistance as StartingDistance exposing (StartingDistance)
+import Api.UniverseSize as UniverseSize exposing (UniverseSize)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -50,34 +53,9 @@ viewRulesDialog form =
                 div [ class "rules-dialog__content" ]
                     [ -- Universe Settings
                       viewRulesSection "Universe Settings"
-                        [ viewRulesSelect form.isManager
-                            "Universe Size"
-                            r.universeSize
-                            [ ( 0, "Tiny (400 ly)" )
-                            , ( 1, "Small (800 ly)" )
-                            , ( 2, "Medium (1200 ly)" )
-                            , ( 3, "Large (1600 ly)" )
-                            , ( 4, "Huge (2000 ly)" )
-                            ]
-                            (RulesMsg << Update.Rules.UpdateRulesUniverseSize)
-                        , viewRulesSelect form.isManager
-                            "Density"
-                            r.density
-                            [ ( 0, "Sparse" )
-                            , ( 1, "Normal" )
-                            , ( 2, "Dense" )
-                            , ( 3, "Packed" )
-                            ]
-                            (RulesMsg << Update.Rules.UpdateRulesDensity)
-                        , viewRulesSelect form.isManager
-                            "Starting Distance"
-                            r.startingDistance
-                            [ ( 0, "Close" )
-                            , ( 1, "Moderate" )
-                            , ( 2, "Farther" )
-                            , ( 3, "Distant" )
-                            ]
-                            (RulesMsg << Update.Rules.UpdateRulesStartingDistance)
+                        [ viewUniverseSizeSelect form.isManager r.universeSize
+                        , viewDensitySelect form.isManager r.density
+                        , viewStartingDistanceSelect form.isManager r.startingDistance
                         ]
 
                     -- Game Options
@@ -257,45 +235,6 @@ viewRulesSection title content =
         ]
 
 
-viewRulesSelect : Bool -> String -> Int -> List ( Int, String ) -> (Int -> Msg) -> Html Msg
-viewRulesSelect isEditable labelText currentValue options toMsg =
-    div [ class "rules-dialog__field" ]
-        [ label [ class "rules-dialog__label" ] [ text labelText ]
-        , if isEditable then
-            select
-                [ class "rules-dialog__select"
-                , onInput (\s -> toMsg (Maybe.withDefault currentValue (String.toInt s)))
-                ]
-                (List.map
-                    (\( val, txt ) ->
-                        option
-                            [ value (String.fromInt val)
-                            , selected (val == currentValue)
-                            ]
-                            [ text txt ]
-                    )
-                    options
-                )
-
-          else
-            span [ class "rules-dialog__value" ]
-                [ text
-                    (List.filterMap
-                        (\( val, txt ) ->
-                            if val == currentValue then
-                                Just txt
-
-                            else
-                                Nothing
-                        )
-                        options
-                        |> List.head
-                        |> Maybe.withDefault "Unknown"
-                    )
-                ]
-        ]
-
-
 viewRulesCheckbox : Bool -> String -> String -> Bool -> (Bool -> Msg) -> Html Msg
 viewRulesCheckbox isEditable labelText description currentValue toMsg =
     div [ class "rules-dialog__field rules-dialog__field--checkbox" ]
@@ -438,4 +377,124 @@ viewRulesVictoryConditionTech isEditable prefix enabled techValueStr fieldsValue
                     [ text fieldsValueStr ]
             , span [] [ text " fields" ]
             ]
+        ]
+
+
+{-| Universe size select using custom type.
+-}
+viewUniverseSizeSelect : Bool -> UniverseSize -> Html Msg
+viewUniverseSizeSelect isEditable currentValue =
+    let
+        options =
+            List.map (\s -> ( s, UniverseSize.toString s )) UniverseSize.all
+    in
+    div [ class "rules-dialog__field" ]
+        [ label [ class "rules-dialog__label" ] [ text "Universe Size" ]
+        , if isEditable then
+            select
+                [ class "rules-dialog__select"
+                , onInput
+                    (\s ->
+                        case String.toInt s |> Maybe.andThen UniverseSize.fromInt of
+                            Just size ->
+                                RulesMsg (Update.Rules.UpdateRulesUniverseSize size)
+
+                            Nothing ->
+                                RulesMsg (Update.Rules.UpdateRulesUniverseSize currentValue)
+                    )
+                ]
+                (List.map
+                    (\( val, txt ) ->
+                        option
+                            [ value (String.fromInt (UniverseSize.toInt val))
+                            , selected (val == currentValue)
+                            ]
+                            [ text txt ]
+                    )
+                    options
+                )
+
+          else
+            span [ class "rules-dialog__value" ]
+                [ text (UniverseSize.toString currentValue) ]
+        ]
+
+
+{-| Density select using custom type.
+-}
+viewDensitySelect : Bool -> Density -> Html Msg
+viewDensitySelect isEditable currentValue =
+    let
+        options =
+            List.map (\d -> ( d, Density.toString d )) Density.all
+    in
+    div [ class "rules-dialog__field" ]
+        [ label [ class "rules-dialog__label" ] [ text "Density" ]
+        , if isEditable then
+            select
+                [ class "rules-dialog__select"
+                , onInput
+                    (\s ->
+                        case String.toInt s |> Maybe.andThen Density.fromInt of
+                            Just d ->
+                                RulesMsg (Update.Rules.UpdateRulesDensity d)
+
+                            Nothing ->
+                                RulesMsg (Update.Rules.UpdateRulesDensity currentValue)
+                    )
+                ]
+                (List.map
+                    (\( val, txt ) ->
+                        option
+                            [ value (String.fromInt (Density.toInt val))
+                            , selected (val == currentValue)
+                            ]
+                            [ text txt ]
+                    )
+                    options
+                )
+
+          else
+            span [ class "rules-dialog__value" ]
+                [ text (Density.toString currentValue) ]
+        ]
+
+
+{-| Starting distance select using custom type.
+-}
+viewStartingDistanceSelect : Bool -> StartingDistance -> Html Msg
+viewStartingDistanceSelect isEditable currentValue =
+    let
+        options =
+            List.map (\d -> ( d, StartingDistance.toString d )) StartingDistance.all
+    in
+    div [ class "rules-dialog__field" ]
+        [ label [ class "rules-dialog__label" ] [ text "Starting Distance" ]
+        , if isEditable then
+            select
+                [ class "rules-dialog__select"
+                , onInput
+                    (\s ->
+                        case String.toInt s |> Maybe.andThen StartingDistance.fromInt of
+                            Just d ->
+                                RulesMsg (Update.Rules.UpdateRulesStartingDistance d)
+
+                            Nothing ->
+                                RulesMsg (Update.Rules.UpdateRulesStartingDistance currentValue)
+                    )
+                ]
+                (List.map
+                    (\( val, txt ) ->
+                        option
+                            [ value (String.fromInt (StartingDistance.toInt val))
+                            , selected (val == currentValue)
+                            ]
+                            [ text txt ]
+                    )
+                    options
+                )
+
+          else
+            span [ class "rules-dialog__value" ]
+                [ text (StartingDistance.toString currentValue) ]
         ]

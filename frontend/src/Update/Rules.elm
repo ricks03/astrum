@@ -9,8 +9,11 @@ Handles rules dialog and all rule field updates.
 
 -}
 
+import Api.Density exposing (Density)
 import Api.Encode as Encode
 import Api.Rules exposing (Rules)
+import Api.StartingDistance exposing (StartingDistance)
+import Api.UniverseSize exposing (UniverseSize)
 import Dict
 import Model exposing (..)
 import Ports
@@ -22,9 +25,9 @@ import Update.Helpers exposing (updateRules, updateRulesForm)
 type Msg
     = OpenRulesDialog String Bool -- sessionId, rulesIsSet
     | GotRules String String (Result String Rules) -- serverUrl, sessionId, result
-    | UpdateRulesUniverseSize Int
-    | UpdateRulesDensity Int
-    | UpdateRulesStartingDistance Int
+    | UpdateRulesUniverseSize UniverseSize
+    | UpdateRulesDensity Density
+    | UpdateRulesStartingDistance StartingDistance
     | UpdateRulesMaximumMinerals Bool
     | UpdateRulesSlowerTechAdvances Bool
     | UpdateRulesAcceleratedBbsPlay Bool
@@ -320,17 +323,17 @@ handleRulesSet model serverUrl result =
 -- =============================================================================
 
 
-handleUpdateRulesUniverseSize : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRulesUniverseSize : Model -> UniverseSize -> ( Model, Cmd Msg )
 handleUpdateRulesUniverseSize model val =
     ( updateRules model (\r -> { r | universeSize = val }), Cmd.none )
 
 
-handleUpdateRulesDensity : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRulesDensity : Model -> Density -> ( Model, Cmd Msg )
 handleUpdateRulesDensity model val =
     ( updateRules model (\r -> { r | density = val }), Cmd.none )
 
 
-handleUpdateRulesStartingDistance : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRulesStartingDistance : Model -> StartingDistance -> ( Model, Cmd Msg )
 handleUpdateRulesStartingDistance model val =
     ( updateRules model (\r -> { r | startingDistance = val }), Cmd.none )
 

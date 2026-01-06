@@ -3,6 +3,10 @@ module View.Dialog.RaceBuilder exposing (viewRaceBuilderDialog)
 {-| Race Builder dialog - create custom races matching Stars! race builder.
 -}
 
+import Api.LRT as LRT exposing (LRT)
+import Api.LeftoverPointsOption as LeftoverPointsOption
+import Api.PRT as PRT exposing (PRT)
+import Api.ResearchLevel as ResearchLevel exposing (ResearchLevel)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -10,138 +14,6 @@ import Model exposing (HabButton(..), HabitabilityDisplay, LRTInfo, PRTInfo, Rac
 import Msg exposing (Msg(..))
 import Update.RaceBuilder as RB
 import Update.Server
-
-
-
--- =============================================================================
--- PRT CONSTANTS (Primary Racial Traits)
--- =============================================================================
-
-
-prtHyperExpansion : Int
-prtHyperExpansion =
-    0
-
-
-prtSuperStealth : Int
-prtSuperStealth =
-    1
-
-
-prtWarMonger : Int
-prtWarMonger =
-    2
-
-
-prtClaimAdjuster : Int
-prtClaimAdjuster =
-    3
-
-
-prtInnerStrength : Int
-prtInnerStrength =
-    4
-
-
-prtSpaceDemolition : Int
-prtSpaceDemolition =
-    5
-
-
-prtPacketPhysics : Int
-prtPacketPhysics =
-    6
-
-
-prtInterstellarTraveler : Int
-prtInterstellarTraveler =
-    7
-
-
-prtAlternateReality : Int
-prtAlternateReality =
-    8
-
-
-prtJackOfAllTrades : Int
-prtJackOfAllTrades =
-    9
-
-
-
--- =============================================================================
--- LRT CONSTANTS (Lesser Racial Traits)
--- =============================================================================
-
-
-lrtImprovedFuelEfficiency : Int
-lrtImprovedFuelEfficiency =
-    0
-
-
-lrtTotalTerraforming : Int
-lrtTotalTerraforming =
-    1
-
-
-lrtAdvancedRemoteMining : Int
-lrtAdvancedRemoteMining =
-    2
-
-
-lrtImprovedStarbases : Int
-lrtImprovedStarbases =
-    3
-
-
-lrtGeneralizedResearch : Int
-lrtGeneralizedResearch =
-    4
-
-
-lrtUltimateRecycling : Int
-lrtUltimateRecycling =
-    5
-
-
-lrtMineralAlchemy : Int
-lrtMineralAlchemy =
-    6
-
-
-lrtNoRamScoopEngines : Int
-lrtNoRamScoopEngines =
-    7
-
-
-lrtCheapEngines : Int
-lrtCheapEngines =
-    8
-
-
-lrtOnlyBasicRemoteMining : Int
-lrtOnlyBasicRemoteMining =
-    9
-
-
-lrtNoAdvancedScanners : Int
-lrtNoAdvancedScanners =
-    10
-
-
-lrtLowStartingPopulation : Int
-lrtLowStartingPopulation =
-    11
-
-
-lrtBleedingEdgeTechnology : Int
-lrtBleedingEdgeTechnology =
-    12
-
-
-lrtRegeneratingShields : Int
-lrtRegeneratingShields =
-    13
 
 
 
@@ -375,15 +247,27 @@ viewIdentityTab config selectedTemplate isReadOnly =
                 , select
                     [ class "race-builder__leftover-select"
                     , id "leftover"
-                    , onInput (String.toInt >> Maybe.withDefault 0 >> RB.UpdateRaceBuilderLeftoverPoints >> RaceBuilderMsg)
+                    , onInput
+                        (\s ->
+                            case String.toInt s |> Maybe.andThen LeftoverPointsOption.fromInt of
+                                Just opt ->
+                                    RaceBuilderMsg (RB.UpdateRaceBuilderLeftoverPoints opt)
+
+                                Nothing ->
+                                    RaceBuilderMsg (RB.UpdateRaceBuilderLeftoverPoints LeftoverPointsOption.SurfaceMinerals)
+                        )
                     , disabled isReadOnly
                     ]
-                    [ option [ value "0", selected (config.leftoverPointsOn == 0) ] [ text "Surface minerals" ]
-                    , option [ value "1", selected (config.leftoverPointsOn == 1) ] [ text "Mineral concentrations" ]
-                    , option [ value "2", selected (config.leftoverPointsOn == 2) ] [ text "Mines" ]
-                    , option [ value "3", selected (config.leftoverPointsOn == 3) ] [ text "Factories" ]
-                    , option [ value "4", selected (config.leftoverPointsOn == 4) ] [ text "Defenses" ]
-                    ]
+                    (List.map
+                        (\opt ->
+                            option
+                                [ value (String.fromInt (LeftoverPointsOption.toInt opt))
+                                , selected (config.leftoverPointsOn == opt)
+                                ]
+                                [ text (LeftoverPointsOption.toString opt) ]
+                        )
+                        LeftoverPointsOption.all
+                    )
                 ]
 
             -- Icon picker (right side, same row)
@@ -466,21 +350,21 @@ Below the grid is a "Description of Trait" section showing the selected PRT's de
 viewPRTTab : RaceConfig -> List PRTInfo -> Bool -> Html Msg
 viewPRTTab config prtInfos isReadOnly =
     let
-        -- Get PRT by index from the list
-        getPRT idx =
-            List.filter (\p -> p.index == idx) prtInfos |> List.head
+        -- Get PRTInfo by PRT type from the list
+        getPRTInfo prt =
+            List.filter (\p -> p.index == PRT.toInt prt) prtInfos |> List.head
 
         -- Get the selected PRT's description
         selectedPRTDesc =
-            getPRT config.prt
+            getPRTInfo config.prt
                 |> Maybe.map .desc
                 |> Maybe.withDefault ""
 
         -- Render a PRT option using data from Houston
-        renderPRT idx =
-            case getPRT idx of
-                Just prt ->
-                    viewPRTOption prt config.prt isReadOnly
+        renderPRT prt =
+            case getPRTInfo prt of
+                Just info ->
+                    viewPRTOption info prt config.prt isReadOnly
 
                 Nothing ->
                     text ""
@@ -488,24 +372,24 @@ viewPRTTab config prtInfos isReadOnly =
     div [ class "race-builder__prt" ]
         [ div [ class "race-builder__prt-grid" ]
             [ -- Row 1: HE, SD
-              renderPRT prtHyperExpansion
-            , renderPRT prtSpaceDemolition
+              renderPRT PRT.HyperExpansion
+            , renderPRT PRT.SpaceDemolition
 
             -- Row 2: SS, PP
-            , renderPRT prtSuperStealth
-            , renderPRT prtPacketPhysics
+            , renderPRT PRT.SuperStealth
+            , renderPRT PRT.PacketPhysics
 
             -- Row 3: WM, IT
-            , renderPRT prtWarMonger
-            , renderPRT prtInterstellarTraveler
+            , renderPRT PRT.WarMonger
+            , renderPRT PRT.InterstellarTraveler
 
             -- Row 4: CA, AR
-            , renderPRT prtClaimAdjuster
-            , renderPRT prtAlternateReality
+            , renderPRT PRT.ClaimAdjuster
+            , renderPRT PRT.AlternateReality
 
             -- Row 5: IS, JOAT
-            , renderPRT prtInnerStrength
-            , renderPRT prtJackOfAllTrades
+            , renderPRT PRT.InnerStrength
+            , renderPRT PRT.JackOfAllTrades
             ]
 
         -- Description of Trait section (like Stars!)
@@ -517,21 +401,21 @@ viewPRTTab config prtInfos isReadOnly =
         ]
 
 
-viewPRTOption : PRTInfo -> Int -> Bool -> Html Msg
-viewPRTOption prt currentPrt isReadOnly =
+viewPRTOption : PRTInfo -> PRT -> PRT -> Bool -> Html Msg
+viewPRTOption info prt currentPrt isReadOnly =
     label
         [ class "race-builder__prt-option"
-        , classList [ ( "is-selected", prt.index == currentPrt ) ]
+        , classList [ ( "is-selected", prt == currentPrt ) ]
         ]
         [ input
             [ type_ "radio"
             , class "race-builder__prt-radio"
-            , checked (prt.index == currentPrt)
-            , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderPRT prt.index))
+            , checked (prt == currentPrt)
+            , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderPRT prt))
             , disabled isReadOnly
             ]
             []
-        , span [ class "race-builder__prt-name" ] [ text prt.name ]
+        , span [ class "race-builder__prt-name" ] [ text info.name ]
         ]
 
 
@@ -547,21 +431,21 @@ Below the grid is a description section showing the first selected LRT's descrip
 viewLRTTab : RaceConfig -> List LRTInfo -> Bool -> Html Msg
 viewLRTTab config lrtInfos isReadOnly =
     let
-        -- Get LRT by index from the list
-        getLRT idx =
-            List.filter (\l -> l.index == idx) lrtInfos |> List.head
+        -- Get LRTInfo by LRT type from the list
+        getLRTInfo lrt =
+            List.filter (\l -> l.index == LRT.toInt lrt) lrtInfos |> List.head
 
         -- Get the first selected LRT for the description
-        firstSelectedLRT =
+        firstSelectedLRTInfo =
             config.lrt
                 |> List.head
-                |> Maybe.andThen getLRT
+                |> Maybe.andThen getLRTInfo
 
         -- Render an LRT option using data from Houston
-        renderLRT idx =
-            case getLRT idx of
-                Just lrt ->
-                    viewLRTOption lrt config.lrt isReadOnly
+        renderLRT lrt =
+            case getLRTInfo lrt of
+                Just info ->
+                    viewLRTOption info lrt config.lrt isReadOnly
 
                 Nothing ->
                     text ""
@@ -569,41 +453,41 @@ viewLRTTab config lrtInfos isReadOnly =
     div [ class "race-builder__lrt" ]
         [ div [ class "race-builder__lrt-grid" ]
             [ -- Row 1: IFE, NRSE
-              renderLRT lrtImprovedFuelEfficiency
-            , renderLRT lrtNoRamScoopEngines
+              renderLRT LRT.ImprovedFuelEfficiency
+            , renderLRT LRT.NoRamScoopEngines
 
             -- Row 2: TT, CE
-            , renderLRT lrtTotalTerraforming
-            , renderLRT lrtCheapEngines
+            , renderLRT LRT.TotalTerraforming
+            , renderLRT LRT.CheapEngines
 
             -- Row 3: ARM, OBRM
-            , renderLRT lrtAdvancedRemoteMining
-            , renderLRT lrtOnlyBasicRemoteMining
+            , renderLRT LRT.AdvancedRemoteMining
+            , renderLRT LRT.OnlyBasicRemoteMining
 
             -- Row 4: ISB, NAS
-            , renderLRT lrtImprovedStarbases
-            , renderLRT lrtNoAdvancedScanners
+            , renderLRT LRT.ImprovedStarbases
+            , renderLRT LRT.NoAdvancedScanners
 
             -- Row 5: GR, LSP
-            , renderLRT lrtGeneralizedResearch
-            , renderLRT lrtLowStartingPopulation
+            , renderLRT LRT.GeneralizedResearch
+            , renderLRT LRT.LowStartingPopulation
 
             -- Row 6: UR, BET
-            , renderLRT lrtUltimateRecycling
-            , renderLRT lrtBleedingEdgeTechnology
+            , renderLRT LRT.UltimateRecycling
+            , renderLRT LRT.BleedingEdgeTechnology
 
             -- Row 7: MA, RS
-            , renderLRT lrtMineralAlchemy
-            , renderLRT lrtRegeneratingShields
+            , renderLRT LRT.MineralAlchemy
+            , renderLRT LRT.RegeneratingShields
             ]
 
         -- Description section (like Stars!) - shows first selected LRT
-        , case firstSelectedLRT of
-            Just lrt ->
+        , case firstSelectedLRTInfo of
+            Just info ->
                 div [ class "race-builder__trait-description" ]
-                    [ div [ class "race-builder__trait-description-label" ] [ text lrt.name ]
+                    [ div [ class "race-builder__trait-description-label" ] [ text info.name ]
                     , div [ class "race-builder__trait-description-box" ]
-                        [ text lrt.desc ]
+                        [ text info.desc ]
                     ]
 
             Nothing ->
@@ -611,11 +495,11 @@ viewLRTTab config lrtInfos isReadOnly =
         ]
 
 
-viewLRTOption : LRTInfo -> List Int -> Bool -> Html Msg
-viewLRTOption lrt selectedLrts isReadOnly =
+viewLRTOption : LRTInfo -> LRT -> List LRT -> Bool -> Html Msg
+viewLRTOption info lrt selectedLrts isReadOnly =
     let
         isSelected =
-            List.member lrt.index selectedLrts
+            List.member lrt selectedLrts
     in
     label
         [ class "race-builder__lrt-option"
@@ -625,11 +509,11 @@ viewLRTOption lrt selectedLrts isReadOnly =
             [ type_ "checkbox"
             , class "race-builder__lrt-checkbox"
             , checked isSelected
-            , onClick (RaceBuilderMsg (RB.ToggleRaceBuilderLRT lrt.index))
+            , onClick (RaceBuilderMsg (RB.ToggleRaceBuilderLRT lrt))
             , disabled isReadOnly
             ]
             []
-        , span [ class "race-builder__lrt-name" ] [ text lrt.name ]
+        , span [ class "race-builder__lrt-name" ] [ text info.name ]
         ]
 
 
@@ -1018,7 +902,7 @@ viewResearchTab config isReadOnly =
 
 {-| A single research box with title and 3 vertically stacked radio options.
 -}
-viewResearchBox : String -> Int -> (Int -> Msg) -> Bool -> Html Msg
+viewResearchBox : String -> ResearchLevel -> (ResearchLevel -> Msg) -> Bool -> Html Msg
 viewResearchBox fieldName currentLevel onChange isReadOnly =
     fieldset [ class "race-builder__research-box" ]
         [ legend [ class "race-builder__research-title" ] [ text (fieldName ++ " Research") ]
@@ -1026,8 +910,8 @@ viewResearchBox fieldName currentLevel onChange isReadOnly =
             [ input
                 [ type_ "radio"
                 , name ("research-" ++ fieldName)
-                , checked (currentLevel == 0)
-                , onClick (onChange 0)
+                , checked (currentLevel == ResearchLevel.Expensive)
+                , onClick (onChange ResearchLevel.Expensive)
                 , disabled isReadOnly
                 ]
                 []
@@ -1037,8 +921,8 @@ viewResearchBox fieldName currentLevel onChange isReadOnly =
             [ input
                 [ type_ "radio"
                 , name ("research-" ++ fieldName)
-                , checked (currentLevel == 1)
-                , onClick (onChange 1)
+                , checked (currentLevel == ResearchLevel.Standard)
+                , onClick (onChange ResearchLevel.Standard)
                 , disabled isReadOnly
                 ]
                 []
@@ -1048,8 +932,8 @@ viewResearchBox fieldName currentLevel onChange isReadOnly =
             [ input
                 [ type_ "radio"
                 , name ("research-" ++ fieldName)
-                , checked (currentLevel == 2)
-                , onClick (onChange 2)
+                , checked (currentLevel == ResearchLevel.Cheap)
+                , onClick (onChange ResearchLevel.Cheap)
                 , disabled isReadOnly
                 ]
                 []

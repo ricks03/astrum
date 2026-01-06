@@ -7744,6 +7744,117 @@ var $author$project$Model$RaceConfig = function (singularName) {
 		};
 	};
 };
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Api$LRT$AdvancedRemoteMining = 2;
+var $author$project$Api$LRT$BleedingEdgeTechnology = 12;
+var $author$project$Api$LRT$CheapEngines = 8;
+var $author$project$Api$LRT$GeneralizedResearch = 4;
+var $author$project$Api$LRT$ImprovedFuelEfficiency = 0;
+var $author$project$Api$LRT$ImprovedStarbases = 3;
+var $author$project$Api$LRT$LowStartingPopulation = 11;
+var $author$project$Api$LRT$MineralAlchemy = 6;
+var $author$project$Api$LRT$NoAdvancedScanners = 10;
+var $author$project$Api$LRT$NoRamScoopEngines = 7;
+var $author$project$Api$LRT$OnlyBasicRemoteMining = 9;
+var $author$project$Api$LRT$RegeneratingShields = 13;
+var $author$project$Api$LRT$TotalTerraforming = 1;
+var $author$project$Api$LRT$UltimateRecycling = 5;
+var $author$project$Api$LRT$fromInt = function (n) {
+	switch (n) {
+		case 0:
+			return $elm$core$Maybe$Just(0);
+		case 1:
+			return $elm$core$Maybe$Just(1);
+		case 2:
+			return $elm$core$Maybe$Just(2);
+		case 3:
+			return $elm$core$Maybe$Just(3);
+		case 4:
+			return $elm$core$Maybe$Just(4);
+		case 5:
+			return $elm$core$Maybe$Just(5);
+		case 6:
+			return $elm$core$Maybe$Just(6);
+		case 7:
+			return $elm$core$Maybe$Just(7);
+		case 8:
+			return $elm$core$Maybe$Just(8);
+		case 9:
+			return $elm$core$Maybe$Just(9);
+		case 10:
+			return $elm$core$Maybe$Just(10);
+		case 11:
+			return $elm$core$Maybe$Just(11);
+		case 12:
+			return $elm$core$Maybe$Just(12);
+		case 13:
+			return $elm$core$Maybe$Just(13);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Api$Decode$lrtDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (n) {
+		var _v0 = $author$project$Api$LRT$fromInt(n);
+		if (!_v0.$) {
+			var lrt = _v0.a;
+			return $elm$json$Json$Decode$succeed(lrt);
+		} else {
+			return $elm$json$Json$Decode$fail(
+				'Invalid LRT index: ' + $elm$core$String$fromInt(n));
+		}
+	},
+	$elm$json$Json$Decode$int);
+var $author$project$Api$PRT$AlternateReality = 8;
+var $author$project$Api$PRT$ClaimAdjuster = 3;
+var $author$project$Api$PRT$HyperExpansion = 0;
+var $author$project$Api$PRT$InnerStrength = 4;
+var $author$project$Api$PRT$InterstellarTraveler = 7;
+var $author$project$Api$PRT$JackOfAllTrades = 9;
+var $author$project$Api$PRT$PacketPhysics = 6;
+var $author$project$Api$PRT$SpaceDemolition = 5;
+var $author$project$Api$PRT$SuperStealth = 1;
+var $author$project$Api$PRT$WarMonger = 2;
+var $author$project$Api$PRT$fromInt = function (n) {
+	switch (n) {
+		case 0:
+			return $elm$core$Maybe$Just(0);
+		case 1:
+			return $elm$core$Maybe$Just(1);
+		case 2:
+			return $elm$core$Maybe$Just(2);
+		case 3:
+			return $elm$core$Maybe$Just(3);
+		case 4:
+			return $elm$core$Maybe$Just(4);
+		case 5:
+			return $elm$core$Maybe$Just(5);
+		case 6:
+			return $elm$core$Maybe$Just(6);
+		case 7:
+			return $elm$core$Maybe$Just(7);
+		case 8:
+			return $elm$core$Maybe$Just(8);
+		case 9:
+			return $elm$core$Maybe$Just(9);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Api$Decode$prtDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (n) {
+		var _v0 = $author$project$Api$PRT$fromInt(n);
+		if (!_v0.$) {
+			var prt = _v0.a;
+			return $elm$json$Json$Decode$succeed(prt);
+		} else {
+			return $elm$json$Json$Decode$fail(
+				'Invalid PRT index: ' + $elm$core$String$fromInt(n));
+		}
+	},
+	$elm$json$Json$Decode$int);
 var $author$project$Api$Decode$raceConfig = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'leftoverPointsOn',
@@ -7851,12 +7962,12 @@ var $author$project$Api$Decode$raceConfig = A3(
 																										A4(
 																											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 																											'lrt',
-																											$elm$json$Json$Decode$list($elm$json$Json$Decode$int),
+																											$elm$json$Json$Decode$list($author$project$Api$Decode$lrtDecoder),
 																											_List_Nil,
 																											A3(
 																												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 																												'prt',
-																												$elm$json$Json$Decode$int,
+																												$author$project$Api$Decode$prtDecoder,
 																												A3(
 																													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 																													'icon',
@@ -10816,7 +10927,6 @@ var $author$project$Update$Auth$update = F2(
 					}
 				}
 			case 10:
-				var serverUrl = msg.a;
 				var result = msg.b;
 				if (!result.$) {
 					var regResult = result.a;
@@ -13054,6 +13164,62 @@ var $author$project$Update$RaceBuilder$handleCreateRaceFromExisting = function (
 			}),
 		$elm$core$Platform$Cmd$none);
 };
+var $author$project$Api$LRT$toInt = function (lrt) {
+	switch (lrt) {
+		case 0:
+			return 0;
+		case 1:
+			return 1;
+		case 2:
+			return 2;
+		case 3:
+			return 3;
+		case 4:
+			return 4;
+		case 5:
+			return 5;
+		case 6:
+			return 6;
+		case 7:
+			return 7;
+		case 8:
+			return 8;
+		case 9:
+			return 9;
+		case 10:
+			return 10;
+		case 11:
+			return 11;
+		case 12:
+			return 12;
+		default:
+			return 13;
+	}
+};
+var $author$project$Api$PRT$toInt = function (prt) {
+	switch (prt) {
+		case 0:
+			return 0;
+		case 1:
+			return 1;
+		case 2:
+			return 2;
+		case 3:
+			return 3;
+		case 4:
+			return 4;
+		case 5:
+			return 5;
+		case 6:
+			return 6;
+		case 7:
+			return 7;
+		case 8:
+			return 8;
+		default:
+			return 9;
+	}
+};
 var $author$project$Api$Encode$encodeRaceConfig = function (config) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
@@ -13072,10 +13238,14 @@ var $author$project$Api$Encode$encodeRaceConfig = function (config) {
 				$elm$json$Json$Encode$int(config.dU)),
 				_Utils_Tuple2(
 				'prt',
-				$elm$json$Json$Encode$int(config.eJ)),
+				$elm$json$Json$Encode$int(
+					$author$project$Api$PRT$toInt(config.eJ))),
 				_Utils_Tuple2(
 				'lrt',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$int, config.ea)),
+				A2(
+					$elm$json$Json$Encode$list,
+					A2($elm$core$Basics$composeL, $elm$json$Json$Encode$int, $author$project$Api$LRT$toInt),
+					config.ea)),
 				_Utils_Tuple2(
 				'gravityCenter',
 				$elm$json$Json$Encode$int(config.dL)),
@@ -13731,24 +13901,24 @@ var $elm$core$List$member = F2(
 			xs);
 	});
 var $author$project$Update$RaceBuilder$handleToggleRaceBuilderLRT = F2(
-	function (model, lrtIndex) {
+	function (model, lrt) {
 		return A2(
 			$author$project$Update$RaceBuilder$updateRaceConfigAndValidate,
 			model,
 			function (c) {
-				return A2($elm$core$List$member, lrtIndex, c.ea) ? _Utils_update(
+				return A2($elm$core$List$member, lrt, c.ea) ? _Utils_update(
 					c,
 					{
 						ea: A2(
 							$elm$core$List$filter,
-							function (i) {
-								return !_Utils_eq(i, lrtIndex);
+							function (l) {
+								return !_Utils_eq(l, lrt);
 							},
 							c.ea)
 					}) : _Utils_update(
 					c,
 					{
-						ea: A2($elm$core$List$cons, lrtIndex, c.ea)
+						ea: A2($elm$core$List$cons, lrt, c.ea)
 					});
 			});
 	});
@@ -14178,8 +14348,8 @@ var $author$project$Update$RaceBuilder$update = F2(
 				var prt = msg.a;
 				return A2($author$project$Update$RaceBuilder$handleUpdateRaceBuilderPRT, model, prt);
 			case 11:
-				var lrtIndex = msg.a;
-				return A2($author$project$Update$RaceBuilder$handleToggleRaceBuilderLRT, model, lrtIndex);
+				var lrt = msg.a;
+				return A2($author$project$Update$RaceBuilder$handleToggleRaceBuilderLRT, model, lrt);
 			case 12:
 				var val = msg.a;
 				return A2($author$project$Update$RaceBuilder$handleUpdateRaceBuilderGravityCenter, model, val);
@@ -17144,8 +17314,8 @@ var $author$project$Update$Sessions$handleGotSessions = F3(
 				A2($author$project$Update$Sessions$GotFetchEndTime, serverUrl, result),
 				$elm$time$Time$now));
 	});
-var $author$project$Update$Sessions$handleHistoricBackupDownloaded = F3(
-	function (model, _v0, result) {
+var $author$project$Update$Sessions$handleHistoricBackupDownloaded = F2(
+	function (model, result) {
 		if (!result.$) {
 			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		} else {
@@ -17343,8 +17513,8 @@ var $author$project$Update$Sessions$handleSessionArchived = F3(
 				$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Update$Sessions$handleSessionBackupDownloaded = F3(
-	function (model, _v0, result) {
+var $author$project$Update$Sessions$handleSessionBackupDownloaded = F2(
+	function (model, result) {
 		if (!result.$) {
 			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		} else {
@@ -17729,16 +17899,14 @@ var $author$project$Update$Sessions$update = F2(
 				var sessionId = msg.a;
 				return A2($author$project$Update$Sessions$handleDownloadSessionBackup, model, sessionId);
 			case 29:
-				var serverUrl = msg.a;
 				var result = msg.b;
-				return A3($author$project$Update$Sessions$handleSessionBackupDownloaded, model, serverUrl, result);
+				return A2($author$project$Update$Sessions$handleSessionBackupDownloaded, model, result);
 			case 30:
 				var sessionId = msg.a;
 				return A2($author$project$Update$Sessions$handleDownloadHistoricBackup, model, sessionId);
 			default:
-				var serverUrl = msg.a;
 				var result = msg.b;
-				return A3($author$project$Update$Sessions$handleHistoricBackupDownloaded, model, serverUrl, result);
+				return A2($author$project$Update$Sessions$handleHistoricBackupDownloaded, model, result);
 		}
 	});
 var $author$project$Model$SettingsDialog = {$: 13};
@@ -18736,7 +18904,6 @@ var $author$project$View$Menus$viewContextMenu = F2(
 		}
 	});
 var $author$project$Update$Server$CloseDialog = {$: 11};
-var $elm$json$Json$Decode$fail = _Json_fail;
 var $author$project$View$Helpers$onMouseDownTarget = F2(
 	function (targetClass, msg) {
 		return A2(
@@ -22892,26 +23059,12 @@ var $author$project$View$Dialog$RaceBuilder$viewIdentityTab = F3(
 						]))
 				]));
 	});
-var $author$project$View$Dialog$RaceBuilder$lrtAdvancedRemoteMining = 2;
-var $author$project$View$Dialog$RaceBuilder$lrtBleedingEdgeTechnology = 12;
-var $author$project$View$Dialog$RaceBuilder$lrtCheapEngines = 8;
-var $author$project$View$Dialog$RaceBuilder$lrtGeneralizedResearch = 4;
-var $author$project$View$Dialog$RaceBuilder$lrtImprovedFuelEfficiency = 0;
-var $author$project$View$Dialog$RaceBuilder$lrtImprovedStarbases = 3;
-var $author$project$View$Dialog$RaceBuilder$lrtLowStartingPopulation = 11;
-var $author$project$View$Dialog$RaceBuilder$lrtMineralAlchemy = 6;
-var $author$project$View$Dialog$RaceBuilder$lrtNoAdvancedScanners = 10;
-var $author$project$View$Dialog$RaceBuilder$lrtNoRamScoopEngines = 7;
-var $author$project$View$Dialog$RaceBuilder$lrtOnlyBasicRemoteMining = 9;
-var $author$project$View$Dialog$RaceBuilder$lrtRegeneratingShields = 13;
-var $author$project$View$Dialog$RaceBuilder$lrtTotalTerraforming = 1;
-var $author$project$View$Dialog$RaceBuilder$lrtUltimateRecycling = 5;
 var $author$project$Update$RaceBuilder$ToggleRaceBuilderLRT = function (a) {
 	return {$: 11, a: a};
 };
-var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F3(
-	function (lrt, selectedLrts, isReadOnly) {
-		var isSelected = A2($elm$core$List$member, lrt.bF, selectedLrts);
+var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F4(
+	function (info, lrt, selectedLrts, isReadOnly) {
+		var isSelected = A2($elm$core$List$member, lrt, selectedLrts);
 		return A2(
 			$elm$html$Html$label,
 			_List_fromArray(
@@ -22934,7 +23087,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F3(
 							$elm$html$Html$Attributes$checked(isSelected),
 							$elm$html$Html$Events$onClick(
 							$author$project$Msg$RaceBuilderMsg(
-								$author$project$Update$RaceBuilder$ToggleRaceBuilderLRT(lrt.bF))),
+								$author$project$Update$RaceBuilder$ToggleRaceBuilderLRT(lrt))),
 							$elm$html$Html$Attributes$disabled(isReadOnly)
 						]),
 					_List_Nil),
@@ -22946,33 +23099,35 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTOption = F3(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(lrt.ek)
+							$elm$html$Html$text(info.ek)
 						]))
 				]));
 	});
 var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 	function (config, lrtInfos, isReadOnly) {
-		var getLRT = function (idx) {
+		var getLRTInfo = function (lrt) {
 			return $elm$core$List$head(
 				A2(
 					$elm$core$List$filter,
 					function (l) {
-						return _Utils_eq(l.bF, idx);
+						return _Utils_eq(
+							l.bF,
+							$author$project$Api$LRT$toInt(lrt));
 					},
 					lrtInfos));
 		};
-		var renderLRT = function (idx) {
-			var _v1 = getLRT(idx);
+		var renderLRT = function (lrt) {
+			var _v1 = getLRTInfo(lrt);
 			if (!_v1.$) {
-				var lrt = _v1.a;
-				return A3($author$project$View$Dialog$RaceBuilder$viewLRTOption, lrt, config.ea, isReadOnly);
+				var info = _v1.a;
+				return A4($author$project$View$Dialog$RaceBuilder$viewLRTOption, info, lrt, config.ea, isReadOnly);
 			} else {
 				return $elm$html$Html$text('');
 			}
 		};
-		var firstSelectedLRT = A2(
+		var firstSelectedLRTInfo = A2(
 			$elm$core$Maybe$andThen,
-			getLRT,
+			getLRTInfo,
 			$elm$core$List$head(config.ea));
 		return A2(
 			$elm$html$Html$div,
@@ -22990,24 +23145,24 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 						]),
 					_List_fromArray(
 						[
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtImprovedFuelEfficiency),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtNoRamScoopEngines),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtTotalTerraforming),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtCheapEngines),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtAdvancedRemoteMining),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtOnlyBasicRemoteMining),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtImprovedStarbases),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtNoAdvancedScanners),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtGeneralizedResearch),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtLowStartingPopulation),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtUltimateRecycling),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtBleedingEdgeTechnology),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtMineralAlchemy),
-							renderLRT($author$project$View$Dialog$RaceBuilder$lrtRegeneratingShields)
+							renderLRT(0),
+							renderLRT(7),
+							renderLRT(1),
+							renderLRT(8),
+							renderLRT(2),
+							renderLRT(9),
+							renderLRT(3),
+							renderLRT(10),
+							renderLRT(4),
+							renderLRT(11),
+							renderLRT(5),
+							renderLRT(12),
+							renderLRT(6),
+							renderLRT(13)
 						])),
 					function () {
-					if (!firstSelectedLRT.$) {
-						var lrt = firstSelectedLRT.a;
+					if (!firstSelectedLRTInfo.$) {
+						var info = firstSelectedLRTInfo.a;
 						return A2(
 							$elm$html$Html$div,
 							_List_fromArray(
@@ -23024,7 +23179,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(lrt.ek)
+											$elm$html$Html$text(info.ek)
 										])),
 									A2(
 									$elm$html$Html$div,
@@ -23034,7 +23189,7 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(lrt.bh)
+											$elm$html$Html$text(info.bh)
 										]))
 								]));
 					} else {
@@ -23043,21 +23198,11 @@ var $author$project$View$Dialog$RaceBuilder$viewLRTTab = F3(
 				}()
 				]));
 	});
-var $author$project$View$Dialog$RaceBuilder$prtAlternateReality = 8;
-var $author$project$View$Dialog$RaceBuilder$prtClaimAdjuster = 3;
-var $author$project$View$Dialog$RaceBuilder$prtHyperExpansion = 0;
-var $author$project$View$Dialog$RaceBuilder$prtInnerStrength = 4;
-var $author$project$View$Dialog$RaceBuilder$prtInterstellarTraveler = 7;
-var $author$project$View$Dialog$RaceBuilder$prtJackOfAllTrades = 9;
-var $author$project$View$Dialog$RaceBuilder$prtPacketPhysics = 6;
-var $author$project$View$Dialog$RaceBuilder$prtSpaceDemolition = 5;
-var $author$project$View$Dialog$RaceBuilder$prtSuperStealth = 1;
-var $author$project$View$Dialog$RaceBuilder$prtWarMonger = 2;
 var $author$project$Update$RaceBuilder$UpdateRaceBuilderPRT = function (a) {
 	return {$: 10, a: a};
 };
-var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
-	function (prt, currentPrt, isReadOnly) {
+var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F4(
+	function (info, prt, currentPrt, isReadOnly) {
 		return A2(
 			$elm$html$Html$label,
 			_List_fromArray(
@@ -23068,7 +23213,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
 						[
 							_Utils_Tuple2(
 							'is-selected',
-							_Utils_eq(prt.bF, currentPrt))
+							_Utils_eq(prt, currentPrt))
 						]))
 				]),
 			_List_fromArray(
@@ -23080,10 +23225,10 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
 							$elm$html$Html$Attributes$type_('radio'),
 							$elm$html$Html$Attributes$class('race-builder__prt-radio'),
 							$elm$html$Html$Attributes$checked(
-							_Utils_eq(prt.bF, currentPrt)),
+							_Utils_eq(prt, currentPrt)),
 							$elm$html$Html$Events$onClick(
 							$author$project$Msg$RaceBuilderMsg(
-								$author$project$Update$RaceBuilder$UpdateRaceBuilderPRT(prt.bF))),
+								$author$project$Update$RaceBuilder$UpdateRaceBuilderPRT(prt))),
 							$elm$html$Html$Attributes$disabled(isReadOnly)
 						]),
 					_List_Nil),
@@ -23095,26 +23240,28 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTOption = F3(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(prt.ek)
+							$elm$html$Html$text(info.ek)
 						]))
 				]));
 	});
 var $author$project$View$Dialog$RaceBuilder$viewPRTTab = F3(
 	function (config, prtInfos, isReadOnly) {
-		var getPRT = function (idx) {
+		var getPRTInfo = function (prt) {
 			return $elm$core$List$head(
 				A2(
 					$elm$core$List$filter,
 					function (p) {
-						return _Utils_eq(p.bF, idx);
+						return _Utils_eq(
+							p.bF,
+							$author$project$Api$PRT$toInt(prt));
 					},
 					prtInfos));
 		};
-		var renderPRT = function (idx) {
-			var _v0 = getPRT(idx);
+		var renderPRT = function (prt) {
+			var _v0 = getPRTInfo(prt);
 			if (!_v0.$) {
-				var prt = _v0.a;
-				return A3($author$project$View$Dialog$RaceBuilder$viewPRTOption, prt, config.eJ, isReadOnly);
+				var info = _v0.a;
+				return A4($author$project$View$Dialog$RaceBuilder$viewPRTOption, info, prt, config.eJ, isReadOnly);
 			} else {
 				return $elm$html$Html$text('');
 			}
@@ -23127,7 +23274,7 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTTab = F3(
 				function ($) {
 					return $.bh;
 				},
-				getPRT(config.eJ)));
+				getPRTInfo(config.eJ)));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -23144,16 +23291,16 @@ var $author$project$View$Dialog$RaceBuilder$viewPRTTab = F3(
 						]),
 					_List_fromArray(
 						[
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtHyperExpansion),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtSpaceDemolition),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtSuperStealth),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtPacketPhysics),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtWarMonger),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtInterstellarTraveler),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtClaimAdjuster),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtAlternateReality),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtInnerStrength),
-							renderPRT($author$project$View$Dialog$RaceBuilder$prtJackOfAllTrades)
+							renderPRT(0),
+							renderPRT(5),
+							renderPRT(1),
+							renderPRT(6),
+							renderPRT(2),
+							renderPRT(7),
+							renderPRT(3),
+							renderPRT(8),
+							renderPRT(4),
+							renderPRT(9)
 						])),
 					A2(
 					$elm$html$Html$div,

@@ -78,7 +78,11 @@ including servers, sessions, connection state, and UI state.
 import Api.BotLevel exposing (BotLevel)
 import Api.BotRace exposing (BotRace)
 import Api.Invitation exposing (Invitation)
+import Api.LRT exposing (LRT)
+import Api.LeftoverPointsOption exposing (LeftoverPointsOption)
 import Api.OrdersStatus exposing (OrdersStatus)
+import Api.PRT exposing (PRT)
+import Api.ResearchLevel exposing (ResearchLevel)
 import Api.Race exposing (Race)
 import Api.Rules exposing (Rules)
 import Api.Server exposing (Server)
@@ -814,8 +818,8 @@ type alias RaceConfig =
     , pluralName : String
     , password : String
     , icon : Int
-    , prt : Int
-    , lrt : List Int -- indices of selected LRTs (0-13)
+    , prt : PRT
+    , lrt : List LRT
     , gravityCenter : Int
     , gravityWidth : Int
     , gravityImmune : Bool
@@ -834,14 +838,14 @@ type alias RaceConfig =
     , mineOutput : Int
     , mineCost : Int
     , mineCount : Int
-    , researchEnergy : Int
-    , researchWeapons : Int
-    , researchPropulsion : Int
-    , researchConstruction : Int
-    , researchElectronics : Int
-    , researchBiotech : Int
+    , researchEnergy : ResearchLevel
+    , researchWeapons : ResearchLevel
+    , researchPropulsion : ResearchLevel
+    , researchConstruction : ResearchLevel
+    , researchElectronics : ResearchLevel
+    , researchBiotech : ResearchLevel
     , techsStartHigh : Bool
-    , leftoverPointsOn : Int
+    , leftoverPointsOn : LeftoverPointsOption
     }
 
 
@@ -914,7 +918,7 @@ defaultRaceConfig =
     , pluralName = "Humanoids"
     , password = ""
     , icon = 1
-    , prt = 9 -- Jack of All Trades
+    , prt = Api.PRT.JackOfAllTrades
     , lrt = []
     , gravityCenter = 50
     , gravityWidth = 35
@@ -934,14 +938,14 @@ defaultRaceConfig =
     , mineOutput = 10
     , mineCost = 5
     , mineCount = 10
-    , researchEnergy = 1 -- Standard
-    , researchWeapons = 1
-    , researchPropulsion = 1
-    , researchConstruction = 1
-    , researchElectronics = 1
-    , researchBiotech = 1
+    , researchEnergy = Api.ResearchLevel.Standard
+    , researchWeapons = Api.ResearchLevel.Standard
+    , researchPropulsion = Api.ResearchLevel.Standard
+    , researchConstruction = Api.ResearchLevel.Standard
+    , researchElectronics = Api.ResearchLevel.Standard
+    , researchBiotech = Api.ResearchLevel.Standard
     , techsStartHigh = False
-    , leftoverPointsOn = 0 -- Surface Minerals
+    , leftoverPointsOn = Api.LeftoverPointsOption.SurfaceMinerals
     }
 
 

@@ -6,14 +6,18 @@ This defines the universe configuration, game options, and victory conditions.
 
 -}
 
+import Api.Density exposing (Density)
+import Api.StartingDistance exposing (StartingDistance)
+import Api.UniverseSize exposing (UniverseSize)
+
 
 {-| Game rules configuration.
 -}
 type alias Rules =
     { -- Universe Configuration
-      universeSize : Int -- 0=Tiny, 1=Small, 2=Medium, 3=Large, 4=Huge
-    , density : Int -- 0=Sparse, 1=Normal, 2=Dense, 3=Packed
-    , startingDistance : Int -- 0=Close, 1=Moderate, 2=Farther, 3=Distant
+      universeSize : UniverseSize
+    , density : Density
+    , startingDistance : StartingDistance
     , randomSeed : Maybe Int
 
     -- Game Options
@@ -53,9 +57,9 @@ type alias Rules =
 defaultRules : Rules
 defaultRules =
     { -- Universe Configuration
-      universeSize = 1 -- Small
-    , density = 1 -- Normal
-    , startingDistance = 1 -- Moderate
+      universeSize = Api.UniverseSize.Small
+    , density = Api.Density.Normal
+    , startingDistance = Api.StartingDistance.Moderate
     , randomSeed = Nothing
 
     -- Game Options

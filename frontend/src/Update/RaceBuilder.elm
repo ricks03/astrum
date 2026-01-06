@@ -10,7 +10,11 @@ Handles race builder form, templates, and validation.
 -}
 
 import Api.Encode as Encode
+import Api.LRT exposing (LRT)
+import Api.LeftoverPointsOption exposing (LeftoverPointsOption)
+import Api.PRT exposing (PRT)
 import Api.Race exposing (Race)
+import Api.ResearchLevel exposing (ResearchLevel)
 import Model exposing (..)
 import Ports
 import Update.Helpers exposing (updateRaceBuilderForm)
@@ -29,11 +33,11 @@ type Msg
     | UpdateRaceBuilderPluralName String
     | UpdateRaceBuilderPassword String
     | UpdateRaceBuilderIcon Int
-    | UpdateRaceBuilderLeftoverPoints Int
+    | UpdateRaceBuilderLeftoverPoints LeftoverPointsOption
       -- PRT tab
-    | UpdateRaceBuilderPRT Int
+    | UpdateRaceBuilderPRT PRT
       -- LRT tab
-    | ToggleRaceBuilderLRT Int
+    | ToggleRaceBuilderLRT LRT
       -- Habitability tab
     | UpdateRaceBuilderGravityCenter Int
     | UpdateRaceBuilderGravityWidth Int
@@ -59,12 +63,12 @@ type Msg
     | UpdateRaceBuilderMineCost Int
     | UpdateRaceBuilderMineCount Int
       -- Research tab
-    | UpdateRaceBuilderResearchEnergy Int
-    | UpdateRaceBuilderResearchWeapons Int
-    | UpdateRaceBuilderResearchPropulsion Int
-    | UpdateRaceBuilderResearchConstruction Int
-    | UpdateRaceBuilderResearchElectronics Int
-    | UpdateRaceBuilderResearchBiotech Int
+    | UpdateRaceBuilderResearchEnergy ResearchLevel
+    | UpdateRaceBuilderResearchWeapons ResearchLevel
+    | UpdateRaceBuilderResearchPropulsion ResearchLevel
+    | UpdateRaceBuilderResearchConstruction ResearchLevel
+    | UpdateRaceBuilderResearchElectronics ResearchLevel
+    | UpdateRaceBuilderResearchBiotech ResearchLevel
     | UpdateRaceBuilderTechsStartHigh Bool
       -- Validation
     | RaceBuilderValidationReceived (Result String RaceValidation)
@@ -115,8 +119,8 @@ update msg model =
         UpdateRaceBuilderPRT prt ->
             handleUpdateRaceBuilderPRT model prt
 
-        ToggleRaceBuilderLRT lrtIndex ->
-            handleToggleRaceBuilderLRT model lrtIndex
+        ToggleRaceBuilderLRT lrt ->
+            handleToggleRaceBuilderLRT model lrt
 
         UpdateRaceBuilderGravityCenter val ->
             handleUpdateRaceBuilderGravityCenter model val
@@ -334,7 +338,7 @@ handleUpdateRaceBuilderIcon model icon =
     updateRaceConfigAndValidate model (\c -> { c | icon = icon })
 
 
-handleUpdateRaceBuilderLeftoverPoints : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderLeftoverPoints : Model -> LeftoverPointsOption -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderLeftoverPoints model option =
     updateRaceConfigAndValidate model (\c -> { c | leftoverPointsOn = option })
 
@@ -345,20 +349,20 @@ handleUpdateRaceBuilderLeftoverPoints model option =
 -- =============================================================================
 
 
-handleUpdateRaceBuilderPRT : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderPRT : Model -> PRT -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderPRT model prt =
     updateRaceConfigAndValidate model (\c -> { c | prt = prt })
 
 
-handleToggleRaceBuilderLRT : Model -> Int -> ( Model, Cmd Msg )
-handleToggleRaceBuilderLRT model lrtIndex =
+handleToggleRaceBuilderLRT : Model -> LRT -> ( Model, Cmd Msg )
+handleToggleRaceBuilderLRT model lrt =
     updateRaceConfigAndValidate model
         (\c ->
-            if List.member lrtIndex c.lrt then
-                { c | lrt = List.filter (\i -> i /= lrtIndex) c.lrt }
+            if List.member lrt c.lrt then
+                { c | lrt = List.filter (\l -> l /= lrt) c.lrt }
 
             else
-                { c | lrt = lrtIndex :: c.lrt }
+                { c | lrt = lrt :: c.lrt }
         )
 
 
@@ -528,32 +532,32 @@ handleUpdateRaceBuilderMineCount model val =
 -- =============================================================================
 
 
-handleUpdateRaceBuilderResearchEnergy : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderResearchEnergy : Model -> ResearchLevel -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderResearchEnergy model val =
     updateRaceConfigAndValidate model (\c -> { c | researchEnergy = val })
 
 
-handleUpdateRaceBuilderResearchWeapons : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderResearchWeapons : Model -> ResearchLevel -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderResearchWeapons model val =
     updateRaceConfigAndValidate model (\c -> { c | researchWeapons = val })
 
 
-handleUpdateRaceBuilderResearchPropulsion : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderResearchPropulsion : Model -> ResearchLevel -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderResearchPropulsion model val =
     updateRaceConfigAndValidate model (\c -> { c | researchPropulsion = val })
 
 
-handleUpdateRaceBuilderResearchConstruction : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderResearchConstruction : Model -> ResearchLevel -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderResearchConstruction model val =
     updateRaceConfigAndValidate model (\c -> { c | researchConstruction = val })
 
 
-handleUpdateRaceBuilderResearchElectronics : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderResearchElectronics : Model -> ResearchLevel -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderResearchElectronics model val =
     updateRaceConfigAndValidate model (\c -> { c | researchElectronics = val })
 
 
-handleUpdateRaceBuilderResearchBiotech : Model -> Int -> ( Model, Cmd Msg )
+handleUpdateRaceBuilderResearchBiotech : Model -> ResearchLevel -> ( Model, Cmd Msg )
 handleUpdateRaceBuilderResearchBiotech model val =
     updateRaceConfigAndValidate model (\c -> { c | researchBiotech = val })
 

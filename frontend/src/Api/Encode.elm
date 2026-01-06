@@ -38,8 +38,15 @@ These encoders create the JSON payloads sent to the Go backend.
 
 -}
 
+import Api.Density as Density
+import Api.LRT as LRT
+import Api.LeftoverPointsOption as LeftoverPointsOption
+import Api.PRT as PRT
+import Api.ResearchLevel as ResearchLevel
 import Api.Rules exposing (Rules)
+import Api.StartingDistance as StartingDistance
 import Api.TurnFiles exposing (TurnFiles)
+import Api.UniverseSize as UniverseSize
 import Json.Encode as E
 import Model exposing (MapOptions, RaceConfig)
 
@@ -320,9 +327,9 @@ encodeRules : Rules -> E.Value
 encodeRules r =
     E.object
         ([ -- Universe Configuration
-           ( "universeSize", E.int r.universeSize )
-         , ( "density", E.int r.density )
-         , ( "startingDistance", E.int r.startingDistance )
+           ( "universeSize", E.int (UniverseSize.toInt r.universeSize) )
+         , ( "density", E.int (Density.toInt r.density) )
+         , ( "startingDistance", E.int (StartingDistance.toInt r.startingDistance) )
          ]
             ++ encodeMaybeInt "randomSeed" r.randomSeed
             ++ [ -- Game Options
@@ -385,8 +392,8 @@ encodeRaceConfig config =
         , ( "pluralName", E.string config.pluralName )
         , ( "password", E.string config.password )
         , ( "icon", E.int config.icon )
-        , ( "prt", E.int config.prt )
-        , ( "lrt", E.list E.int config.lrt )
+        , ( "prt", E.int (PRT.toInt config.prt) )
+        , ( "lrt", E.list (E.int << LRT.toInt) config.lrt )
         , ( "gravityCenter", E.int config.gravityCenter )
         , ( "gravityWidth", E.int config.gravityWidth )
         , ( "gravityImmune", E.bool config.gravityImmune )
@@ -405,14 +412,14 @@ encodeRaceConfig config =
         , ( "mineOutput", E.int config.mineOutput )
         , ( "mineCost", E.int config.mineCost )
         , ( "mineCount", E.int config.mineCount )
-        , ( "researchEnergy", E.int config.researchEnergy )
-        , ( "researchWeapons", E.int config.researchWeapons )
-        , ( "researchPropulsion", E.int config.researchPropulsion )
-        , ( "researchConstruction", E.int config.researchConstruction )
-        , ( "researchElectronics", E.int config.researchElectronics )
-        , ( "researchBiotech", E.int config.researchBiotech )
+        , ( "researchEnergy", E.int (ResearchLevel.toInt config.researchEnergy) )
+        , ( "researchWeapons", E.int (ResearchLevel.toInt config.researchWeapons) )
+        , ( "researchPropulsion", E.int (ResearchLevel.toInt config.researchPropulsion) )
+        , ( "researchConstruction", E.int (ResearchLevel.toInt config.researchConstruction) )
+        , ( "researchElectronics", E.int (ResearchLevel.toInt config.researchElectronics) )
+        , ( "researchBiotech", E.int (ResearchLevel.toInt config.researchBiotech) )
         , ( "techsStartHigh", E.bool config.techsStartHigh )
-        , ( "leftoverPointsOn", E.int config.leftoverPointsOn )
+        , ( "leftoverPointsOn", E.int (LeftoverPointsOption.toInt config.leftoverPointsOn) )
         ]
 
 
