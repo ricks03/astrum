@@ -8,8 +8,8 @@ port module Ports exposing
     , appSettingsReceived
     , approveRegistration
     , approveRegistrationResult
-    , archivedSessionsReceived
     , archiveSession
+    , archivedSessionsReceived
     , autoConnect
     , autoDownloadStarsSet
     , botPlayerAdded
@@ -32,11 +32,11 @@ port module Ports exposing
     , createUser
     , createUserResult
     , declineInvitation
+    , defaultServerAdded
     , deleteRace
     , deleteSession
     , deleteUser
     , deleteUserResult
-    , defaultServerAdded
     , disconnect
     , disconnectResult
     , downloadHistoricBackup
@@ -66,9 +66,9 @@ port module Ports exposing
     , getUserProfiles
     , gifSaved
       -- Events from Go
-    , hasStarsExeResult
     , hasDefaultServer
     , hasDefaultServerResult
+    , hasStarsExeResult
     , historicBackupDownloaded
     , invitationAccepted
     , invitationDeclined
@@ -167,7 +167,6 @@ port module Ports exposing
     , winePrefixesDirSelected
     , zoomKeyPressed
     , zoomLevelSet
-    , logDebug
     )
 
 {-| Ports for communication between Elm and the Go backend via JavaScript.

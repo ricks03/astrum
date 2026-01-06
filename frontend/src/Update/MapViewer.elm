@@ -13,7 +13,7 @@ import Api.Encode as Encode
 import Dict
 import Model exposing (..)
 import Ports
-import Update.Helpers exposing (clearMapContent, updateMapOptions, updateMapViewerForm)
+import Update.Helpers exposing (clearMapContent, updateMapOptions)
 
 
 {-| MapViewer-specific messages.

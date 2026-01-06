@@ -1,52 +1,6 @@
 module Update.RaceBuilder exposing
     ( Msg(..)
     , update
-    , handleOpenRaceBuilder
-    , handleSelectRaceBuilderTab
-    , handleLoadRaceTemplate
-    , handleRaceTemplateLoaded
-    , handleSelectCustomTemplate
-    , handleUpdateRaceBuilderSingularName
-    , handleUpdateRaceBuilderPluralName
-    , handleUpdateRaceBuilderPassword
-    , handleUpdateRaceBuilderIcon
-    , handleUpdateRaceBuilderLeftoverPoints
-    , handleUpdateRaceBuilderPRT
-    , handleToggleRaceBuilderLRT
-    , handleUpdateRaceBuilderGravityCenter
-    , handleUpdateRaceBuilderGravityWidth
-    , handleUpdateRaceBuilderGravityImmune
-    , handleUpdateRaceBuilderTemperatureCenter
-    , handleUpdateRaceBuilderTemperatureWidth
-    , handleUpdateRaceBuilderTemperatureImmune
-    , handleUpdateRaceBuilderRadiationCenter
-    , handleUpdateRaceBuilderRadiationWidth
-    , handleUpdateRaceBuilderRadiationImmune
-    , handleUpdateRaceBuilderGrowthRate
-    , handleHabButtonPressed
-    , handleHabButtonReleased
-    , handleHabButtonTick
-    , handleUpdateRaceBuilderColonistsPerResource
-    , handleUpdateRaceBuilderFactoryOutput
-    , handleUpdateRaceBuilderFactoryCost
-    , handleUpdateRaceBuilderFactoryCount
-    , handleUpdateRaceBuilderFactoriesUseLessGerm
-    , handleUpdateRaceBuilderMineOutput
-    , handleUpdateRaceBuilderMineCost
-    , handleUpdateRaceBuilderMineCount
-    , handleUpdateRaceBuilderResearchEnergy
-    , handleUpdateRaceBuilderResearchWeapons
-    , handleUpdateRaceBuilderResearchPropulsion
-    , handleUpdateRaceBuilderResearchConstruction
-    , handleUpdateRaceBuilderResearchElectronics
-    , handleUpdateRaceBuilderResearchBiotech
-    , handleUpdateRaceBuilderTechsStartHigh
-    , handleRaceBuilderValidationReceived
-    , handleViewRaceInBuilder
-    , handleRaceFileLoaded
-    , handleCreateRaceFromExisting
-    , handleSubmitRaceBuilder
-    , handleRaceBuilderSaved
     )
 
 {-| Update handlers for race builder messages.

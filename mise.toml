@@ -217,6 +217,11 @@ description = "Run elm-review"
 dir = "{{env.FRONTEND_DIR}}"
 run = "npm run review || true"
 
+[tasks."lint:fix"]
+description = "Auto-fix elm-review issues"
+dir = "{{env.FRONTEND_DIR}}"
+run = "yes | npm run review -- --fix"
+
 # ===========================================================================
 # TESTING
 # ===========================================================================

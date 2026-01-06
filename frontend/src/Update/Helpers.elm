@@ -1,6 +1,5 @@
 module Update.Helpers exposing
     ( clearMapContent
-    , insertAt
     , moveItem
     , removeSessionTurn
     , setConnectionState
@@ -10,13 +9,12 @@ module Update.Helpers exposing
     , updateDialogError
     , updateInviteForm
     , updateMapOptions
-    , updateMapViewerForm
+    , updateRaceBuilderForm
     , updateRegisterForm
-    , updateRulesForm
     , updateRules
+    , updateRulesForm
     , updateServerForm
     , updateSetupRaceForm
-    , updateRaceBuilderForm
     )
 
 {-| Shared helper functions for Update modules.
@@ -30,6 +28,7 @@ import Api.Rules exposing (Rules)
 import Api.TurnFiles exposing (TurnFiles)
 import Dict
 import Model exposing (..)
+
 
 
 -- =============================================================================

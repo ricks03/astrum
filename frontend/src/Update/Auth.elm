@@ -184,7 +184,7 @@ update msg model =
                             -- Some other dialog is open, just update connection state
                             ( modelWithError, Cmd.none )
 
-        RegisterResult serverUrl result ->
+        RegisterResult _ result ->
             case result of
                 Ok regResult ->
                     -- API key is saved, show success message

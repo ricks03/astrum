@@ -1,49 +1,5 @@
 module Update.Admin exposing
     ( Msg(..)
-    , handleAddBotResult
-    , handleApproveRegistrationResult
-    , handleCancelApproveRegistration
-    , handleCancelChangeApikey
-    , handleCancelDeleteUser
-    , handleCancelRejectRegistration
-    , handleCancelResetApikey
-    , handleChangeApikeyResult
-    , handleCloseRegistrationMessage
-    , handleConfirmApproveRegistration
-    , handleConfirmDeleteUser
-    , handleConfirmRejectRegistration
-    , handleConfirmResetApikey
-    , handleCopyApiKey
-    , handleCopyToClipboard
-    , handleCreateUserResult
-    , handleDeleteUserResult
-    , handleGotApiKey
-    , handleGotPendingRegistrations
-    , handleHideUserMenu
-    , handleOpenAddBotDialog
-    , handleOpenChangeApikeyDialog
-    , handleOpenCreateUserDialog
-    , handleOpenStarsBrowser
-    , handleOpenUsersListDialog
-    , handleRejectRegistrationResult
-    , handleRemoveBotPlayer
-    , handleRemoveBotResult
-    , handleResetApikeyResult
-    , handleSelectBotLevel
-    , handleSelectBotRace
-    , handleSubmitAddBot
-    , handleSubmitApproveRegistration
-    , handleSubmitChangeApikey
-    , handleSubmitCreateUser
-    , handleSubmitDeleteUser
-    , handleSubmitRejectRegistration
-    , handleSubmitResetApikey
-    , handleSwitchUsersListPane
-    , handleToggleUserMenu
-    , handleUpdateCreateUserEmail
-    , handleUpdateCreateUserNickname
-    , handleUpdateUsersListFilter
-    , handleViewRegistrationMessage
     , update
     )
 

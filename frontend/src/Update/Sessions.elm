@@ -1,38 +1,6 @@
 module Update.Sessions exposing
     ( Msg(..)
     , update
-    , handleArchiveSession
-    , handleDeleteSession
-    , handleDownloadHistoricBackup
-    , handleDownloadSessionBackup
-    , handleFetchArchivedSessions
-    , handleGameStarted
-    , handleGotArchivedSessions
-    , handleGotFetchEndTime
-    , handleGotFetchStartTime
-    , handleGotSession
-    , handleGotSessions
-    , handleHistoricBackupDownloaded
-    , handleJoinSession
-    , handleMemberPromoted
-    , handleOpenCreateSessionDialog
-    , handlePlayerReadyResult
-    , handlePromoteMember
-    , handleRefreshSessions
-    , handleSessionArchived
-    , handleSessionBackupDownloaded
-    , handleSessionCreated
-    , handleSessionDeleted
-    , handleSessionJoined
-    , handleSessionQuitResult
-    , handleSessionsUpdated
-    , handleSetPlayerReady
-    , handleQuitSession
-    , handleSetSessionFilter
-    , handleStartGame
-    , handleSubmitCreateSession
-    , handleUpdateCreateSessionName
-    , handleUpdateCreateSessionPublic
     )
 
 {-| Update handlers for session-related messages.
@@ -192,14 +160,14 @@ update msg model =
         DownloadSessionBackup sessionId ->
             handleDownloadSessionBackup model sessionId
 
-        SessionBackupDownloaded serverUrl result ->
-            handleSessionBackupDownloaded model serverUrl result
+        SessionBackupDownloaded _ result ->
+            handleSessionBackupDownloaded model result
 
         DownloadHistoricBackup sessionId ->
             handleDownloadHistoricBackup model sessionId
 
-        HistoricBackupDownloaded serverUrl result ->
-            handleHistoricBackupDownloaded model serverUrl result
+        HistoricBackupDownloaded _ result ->
+            handleHistoricBackupDownloaded model result
 
 
 
@@ -1048,8 +1016,8 @@ handleDownloadSessionBackup model sessionId =
 
 {-| Handle session backup downloaded result.
 -}
-handleSessionBackupDownloaded : Model -> String -> Result String () -> ( Model, Cmd Msg )
-handleSessionBackupDownloaded model _ result =
+handleSessionBackupDownloaded : Model -> Result String () -> ( Model, Cmd Msg )
+handleSessionBackupDownloaded model result =
     case result of
         Ok _ ->
             ( model, Cmd.none )
@@ -1081,8 +1049,8 @@ handleDownloadHistoricBackup model sessionId =
 
 {-| Handle historic backup downloaded result.
 -}
-handleHistoricBackupDownloaded : Model -> String -> Result String () -> ( Model, Cmd Msg )
-handleHistoricBackupDownloaded model _ result =
+handleHistoricBackupDownloaded : Model -> Result String () -> ( Model, Cmd Msg )
+handleHistoricBackupDownloaded model result =
     case result of
         Ok _ ->
             ( model, Cmd.none )

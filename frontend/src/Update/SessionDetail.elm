@@ -1,23 +1,5 @@
 module Update.SessionDetail exposing
     ( Msg(..)
-    , handleAcceptInvitation
-    , handleCancelSentInvitation
-    , handleCloseSessionDetail
-    , handleDeclineInvitation
-    , handleGotInvitations
-    , handleGotSentInvitations
-    , handleGotUserProfiles
-    , handleInvitationAccepted
-    , handleInvitationDeclined
-    , handleInviteResult
-    , handleOpenInvitationsDialog
-    , handleOpenInviteDialog
-    , handleSelectUserToInvite
-    , handleSentInvitationCanceled
-    , handleSubmitInvite
-    , handleTogglePlayersExpanded
-    , handleViewInvitedSession
-    , handleViewSessionDetail
     , update
     )
 
