@@ -1,14 +1,6 @@
 module Update.UI exposing
-    ( handleCancelEnableBrowserStars
-    , handleClearError
-    , handleConfirmEnableBrowserStars
-    , handleEnableBrowserStarsSet
-    , handleEscapePressed
-    , handleRequestEnableBrowserStars
-    , handleZoomIn
-    , handleZoomLevelSet
-    , handleZoomOut
-    , handleZoomReset
+    ( Msg(..)
+    , update
     )
 
 {-| Update handlers for UI-related messages.
@@ -18,147 +10,99 @@ Handles zoom controls, escape key, error clearing, and browser Stars! feature to
 -}
 
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 
 
-
--- =============================================================================
--- ERROR HANDLING
--- =============================================================================
-
-
-{-| Clear the global error message.
+{-| UI-specific messages.
 -}
-handleClearError : Model -> ( Model, Cmd Msg )
-handleClearError model =
-    ( { model | error = Nothing }
-    , Cmd.none
-    )
+type Msg
+    = ClearError
+    | EscapePressed
+    | ZoomIn
+    | ZoomOut
+    | ZoomReset
+    | ZoomLevelSet (Result String AppSettings)
+    | RequestEnableBrowserStars Bool
+    | ConfirmEnableBrowserStars
+    | CancelEnableBrowserStars
+    | EnableBrowserStarsSet (Result String AppSettings)
 
 
-{-| Handle Escape key press - close dialogs and menus.
+{-| Handle all UI messages.
+
+Returns (Model, Cmd Msg) using this module's own Msg type.
+The parent Update.elm uses Cmd.map to wrap commands.
+
 -}
-handleEscapePressed : Model -> ( Model, Cmd Msg )
-handleEscapePressed model =
-    ( { model
-        | dialog = Nothing
-        , contextMenu = Nothing
-        , showUserMenu = False
-      }
-    , Cmd.none
-    )
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        ClearError ->
+            ( { model | error = Nothing }, Cmd.none )
 
-
-
--- =============================================================================
--- ZOOM CONTROLS
--- =============================================================================
-
-
-{-| Handle zoom in request.
--}
-handleZoomIn : Model -> ( Model, Cmd Msg )
-handleZoomIn model =
-    let
-        currentLevel =
-            model.appSettings
-                |> Maybe.map .zoomLevel
-                |> Maybe.withDefault 100
-
-        newLevel =
-            min 200 (currentLevel + 10)
-    in
-    ( model
-    , Ports.setZoomLevel newLevel
-    )
-
-
-{-| Handle zoom out request.
--}
-handleZoomOut : Model -> ( Model, Cmd Msg )
-handleZoomOut model =
-    let
-        currentLevel =
-            model.appSettings
-                |> Maybe.map .zoomLevel
-                |> Maybe.withDefault 100
-
-        newLevel =
-            max 50 (currentLevel - 10)
-    in
-    ( model
-    , Ports.setZoomLevel newLevel
-    )
-
-
-{-| Handle zoom reset request.
--}
-handleZoomReset : Model -> ( Model, Cmd Msg )
-handleZoomReset model =
-    ( model
-    , Ports.setZoomLevel 100
-    )
-
-
-{-| Handle zoom level set result from backend.
--}
-handleZoomLevelSet : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleZoomLevelSet model result =
-    case result of
-        Ok settings ->
-            ( { model | appSettings = Just settings }
+        EscapePressed ->
+            ( { model
+                | dialog = Nothing
+                , contextMenu = Nothing
+                , showUserMenu = False
+              }
             , Cmd.none
             )
 
-        Err _ ->
-            ( model, Cmd.none )
+        ZoomIn ->
+            let
+                currentLevel =
+                    model.appSettings
+                        |> Maybe.map .zoomLevel
+                        |> Maybe.withDefault 100
 
+                newLevel =
+                    min 200 (currentLevel + 10)
+            in
+            ( model, Ports.setZoomLevel newLevel )
 
+        ZoomOut ->
+            let
+                currentLevel =
+                    model.appSettings
+                        |> Maybe.map .zoomLevel
+                        |> Maybe.withDefault 100
 
--- =============================================================================
--- BROWSER STARS! FEATURE
--- =============================================================================
+                newLevel =
+                    max 50 (currentLevel - 10)
+            in
+            ( model, Ports.setZoomLevel newLevel )
 
+        ZoomReset ->
+            ( model, Ports.setZoomLevel 100 )
 
-{-| Handle request to enable/disable browser Stars! feature.
--}
-handleRequestEnableBrowserStars : Model -> Bool -> ( Model, Cmd Msg )
-handleRequestEnableBrowserStars model enabled =
-    if enabled then
-        -- Show confirmation dialog when enabling
-        ( { model | confirmingBrowserStars = True }, Cmd.none )
+        ZoomLevelSet result ->
+            case result of
+                Ok settings ->
+                    ( { model | appSettings = Just settings }, Cmd.none )
 
-    else
-        -- Disable directly without confirmation
-        ( model, Ports.setEnableBrowserStars False )
+                Err _ ->
+                    ( model, Cmd.none )
 
+        RequestEnableBrowserStars enabled ->
+            if enabled then
+                ( { model | confirmingBrowserStars = True }, Cmd.none )
 
-{-| Handle user confirming the browser Stars! warning.
--}
-handleConfirmEnableBrowserStars : Model -> ( Model, Cmd Msg )
-handleConfirmEnableBrowserStars model =
-    ( { model | confirmingBrowserStars = False }
-    , Ports.setEnableBrowserStars True
-    )
+            else
+                ( model, Ports.setEnableBrowserStars False )
 
-
-{-| Handle user cancelling the browser Stars! warning.
--}
-handleCancelEnableBrowserStars : Model -> ( Model, Cmd Msg )
-handleCancelEnableBrowserStars model =
-    ( { model | confirmingBrowserStars = False }, Cmd.none )
-
-
-{-| Handle browser Stars! setting result from backend.
--}
-handleEnableBrowserStarsSet : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleEnableBrowserStarsSet model result =
-    case result of
-        Ok settings ->
-            ( { model | appSettings = Just settings }
-            , Cmd.none
+        ConfirmEnableBrowserStars ->
+            ( { model | confirmingBrowserStars = False }
+            , Ports.setEnableBrowserStars True
             )
 
-        Err _ ->
-            ( model, Cmd.none )
+        CancelEnableBrowserStars ->
+            ( { model | confirmingBrowserStars = False }, Cmd.none )
+
+        EnableBrowserStarsSet result ->
+            case result of
+                Ok settings ->
+                    ( { model | appSettings = Just settings }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )

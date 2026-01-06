@@ -1,35 +1,6 @@
 module Update.Rules exposing
-    ( handleGotRules
-    , handleOpenRulesDialog
-    , handleRulesSet
-    , handleSubmitRules
-    , handleUpdateRulesAcceleratedBbsPlay
-    , handleUpdateRulesComputerPlayersFormAlliances
-    , handleUpdateRulesDensity
-    , handleUpdateRulesGalaxyClumping
-    , handleUpdateRulesMaximumMinerals
-    , handleUpdateRulesNoRandomEvents
-    , handleUpdateRulesPublicPlayerScores
-    , handleUpdateRulesSlowerTechAdvances
-    , handleUpdateRulesStartingDistance
-    , handleUpdateRulesUniverseSize
-    , handleUpdateRulesVcAttainTechInFields
-    , handleUpdateRulesVcAttainTechInFieldsFieldsValue
-    , handleUpdateRulesVcAttainTechInFieldsTechValue
-    , handleUpdateRulesVcExceedNextPlayerScoreBy
-    , handleUpdateRulesVcExceedNextPlayerScoreByValue
-    , handleUpdateRulesVcExceedScoreOf
-    , handleUpdateRulesVcExceedScoreOfValue
-    , handleUpdateRulesVcHasProductionCapacityOf
-    , handleUpdateRulesVcHasProductionCapacityOfValue
-    , handleUpdateRulesVcHaveHighestScoreAfterYears
-    , handleUpdateRulesVcHaveHighestScoreAfterYearsValue
-    , handleUpdateRulesVcMinYearsBeforeWinner
-    , handleUpdateRulesVcOwnsCapitalShips
-    , handleUpdateRulesVcOwnsCapitalShipsValue
-    , handleUpdateRulesVcOwnsPercentOfPlanets
-    , handleUpdateRulesVcOwnsPercentOfPlanetsValue
-    , handleUpdateRulesVcWinnerMustMeet
+    ( Msg(..)
+    , update
     )
 
 {-| Update handlers for rules dialog messages.
@@ -42,9 +13,143 @@ import Api.Encode as Encode
 import Api.Rules exposing (Rules)
 import Dict
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 import Update.Helpers exposing (updateRules, updateRulesForm)
+
+
+{-| Rules-specific messages.
+-}
+type Msg
+    = OpenRulesDialog String Bool -- sessionId, rulesIsSet
+    | GotRules String String (Result String Rules) -- serverUrl, sessionId, result
+    | UpdateRulesUniverseSize Int
+    | UpdateRulesDensity Int
+    | UpdateRulesStartingDistance Int
+    | UpdateRulesMaximumMinerals Bool
+    | UpdateRulesSlowerTechAdvances Bool
+    | UpdateRulesAcceleratedBbsPlay Bool
+    | UpdateRulesNoRandomEvents Bool
+    | UpdateRulesComputerPlayersFormAlliances Bool
+    | UpdateRulesPublicPlayerScores Bool
+    | UpdateRulesGalaxyClumping Bool
+    | UpdateRulesVcOwnsPercentOfPlanets Bool
+    | UpdateRulesVcOwnsPercentOfPlanetsValue String
+    | UpdateRulesVcAttainTechInFields Bool
+    | UpdateRulesVcAttainTechInFieldsTechValue String
+    | UpdateRulesVcAttainTechInFieldsFieldsValue String
+    | UpdateRulesVcExceedScoreOf Bool
+    | UpdateRulesVcExceedScoreOfValue String
+    | UpdateRulesVcExceedNextPlayerScoreBy Bool
+    | UpdateRulesVcExceedNextPlayerScoreByValue String
+    | UpdateRulesVcHasProductionCapacityOf Bool
+    | UpdateRulesVcHasProductionCapacityOfValue String
+    | UpdateRulesVcOwnsCapitalShips Bool
+    | UpdateRulesVcOwnsCapitalShipsValue String
+    | UpdateRulesVcHaveHighestScoreAfterYears Bool
+    | UpdateRulesVcHaveHighestScoreAfterYearsValue String
+    | UpdateRulesVcWinnerMustMeet String
+    | UpdateRulesVcMinYearsBeforeWinner String
+    | SubmitRules
+    | RulesSet String (Result String Rules) -- serverUrl, result
+
+
+{-| Handle all Rules messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OpenRulesDialog sessionId rulesIsSet ->
+            handleOpenRulesDialog model sessionId rulesIsSet
+
+        GotRules serverUrl sessionId result ->
+            handleGotRules model serverUrl sessionId result
+
+        UpdateRulesUniverseSize val ->
+            handleUpdateRulesUniverseSize model val
+
+        UpdateRulesDensity val ->
+            handleUpdateRulesDensity model val
+
+        UpdateRulesStartingDistance val ->
+            handleUpdateRulesStartingDistance model val
+
+        UpdateRulesMaximumMinerals val ->
+            handleUpdateRulesMaximumMinerals model val
+
+        UpdateRulesSlowerTechAdvances val ->
+            handleUpdateRulesSlowerTechAdvances model val
+
+        UpdateRulesAcceleratedBbsPlay val ->
+            handleUpdateRulesAcceleratedBbsPlay model val
+
+        UpdateRulesNoRandomEvents val ->
+            handleUpdateRulesNoRandomEvents model val
+
+        UpdateRulesComputerPlayersFormAlliances val ->
+            handleUpdateRulesComputerPlayersFormAlliances model val
+
+        UpdateRulesPublicPlayerScores val ->
+            handleUpdateRulesPublicPlayerScores model val
+
+        UpdateRulesGalaxyClumping val ->
+            handleUpdateRulesGalaxyClumping model val
+
+        UpdateRulesVcOwnsPercentOfPlanets val ->
+            handleUpdateRulesVcOwnsPercentOfPlanets model val
+
+        UpdateRulesVcOwnsPercentOfPlanetsValue val ->
+            handleUpdateRulesVcOwnsPercentOfPlanetsValue model val
+
+        UpdateRulesVcAttainTechInFields val ->
+            handleUpdateRulesVcAttainTechInFields model val
+
+        UpdateRulesVcAttainTechInFieldsTechValue val ->
+            handleUpdateRulesVcAttainTechInFieldsTechValue model val
+
+        UpdateRulesVcAttainTechInFieldsFieldsValue val ->
+            handleUpdateRulesVcAttainTechInFieldsFieldsValue model val
+
+        UpdateRulesVcExceedScoreOf val ->
+            handleUpdateRulesVcExceedScoreOf model val
+
+        UpdateRulesVcExceedScoreOfValue val ->
+            handleUpdateRulesVcExceedScoreOfValue model val
+
+        UpdateRulesVcExceedNextPlayerScoreBy val ->
+            handleUpdateRulesVcExceedNextPlayerScoreBy model val
+
+        UpdateRulesVcExceedNextPlayerScoreByValue val ->
+            handleUpdateRulesVcExceedNextPlayerScoreByValue model val
+
+        UpdateRulesVcHasProductionCapacityOf val ->
+            handleUpdateRulesVcHasProductionCapacityOf model val
+
+        UpdateRulesVcHasProductionCapacityOfValue val ->
+            handleUpdateRulesVcHasProductionCapacityOfValue model val
+
+        UpdateRulesVcOwnsCapitalShips val ->
+            handleUpdateRulesVcOwnsCapitalShips model val
+
+        UpdateRulesVcOwnsCapitalShipsValue val ->
+            handleUpdateRulesVcOwnsCapitalShipsValue model val
+
+        UpdateRulesVcHaveHighestScoreAfterYears val ->
+            handleUpdateRulesVcHaveHighestScoreAfterYears model val
+
+        UpdateRulesVcHaveHighestScoreAfterYearsValue val ->
+            handleUpdateRulesVcHaveHighestScoreAfterYearsValue model val
+
+        UpdateRulesVcWinnerMustMeet val ->
+            handleUpdateRulesVcWinnerMustMeet model val
+
+        UpdateRulesVcMinYearsBeforeWinner val ->
+            handleUpdateRulesVcMinYearsBeforeWinner model val
+
+        SubmitRules ->
+            handleSubmitRules model
+
+        RulesSet serverUrl result ->
+            handleRulesSet model serverUrl result
 
 
 

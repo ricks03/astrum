@@ -1,5 +1,7 @@
 module Update.Sessions exposing
-    ( handleArchiveSession
+    ( Msg(..)
+    , update
+    , handleArchiveSession
     , handleDeleteSession
     , handleDownloadHistoricBackup
     , handleDownloadSessionBackup
@@ -44,12 +46,160 @@ import Api.Session exposing (Session)
 import Dict
 import Json.Encode as E
 import Model exposing (..)
-import Msg exposing (Msg(..))
 import Ports
 import Set
 import Task
 import Time
 import Update.Helpers exposing (updateCreateSessionForm, updateDialogError)
+
+
+{-| Messages for the sessions domain.
+-}
+type Msg
+    = GotSessions String (Result String (List Session))
+    | GotFetchStartTime String Time.Posix
+    | GotFetchEndTime String (Result String (List Session)) Time.Posix
+    | SetSessionFilter SessionFilter
+    | RefreshSessions
+    | FetchArchivedSessions
+    | GotArchivedSessions String (Result String (List Session))
+    | GotSession String (Result String Session)
+      -- Session Creation
+    | OpenCreateSessionDialog
+    | UpdateCreateSessionName String
+    | UpdateCreateSessionPublic Bool
+    | SubmitCreateSession
+    | SessionCreated String (Result String Session)
+      -- Session Join
+    | JoinSession String
+    | SessionJoined String (Result String Session)
+      -- Session Delete
+    | DeleteSession String
+    | SessionDeleted String (Result String ())
+      -- Session Quit
+    | QuitSession String
+    | SessionQuitResult String (Result String ())
+      -- Member Promote
+    | PromoteMember String String
+    | MemberPromoted String (Result String ())
+      -- Session Archive
+    | ArchiveSession String
+    | SessionArchived String (Result String ())
+      -- Player Ready State
+    | SetPlayerReady String Bool
+    | PlayerReadyResult String (Result String ())
+      -- Start Game
+    | StartGame String
+    | GameStarted String (Result String ())
+      -- External Events
+    | SessionsUpdated String
+      -- Session Backup
+    | DownloadSessionBackup String
+    | SessionBackupDownloaded String (Result String ())
+    | DownloadHistoricBackup String
+    | HistoricBackupDownloaded String (Result String ())
+
+
+{-| Update function for sessions messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        GotSessions serverUrl result ->
+            handleGotSessions model serverUrl result
+
+        GotFetchStartTime serverUrl time ->
+            handleGotFetchStartTime model serverUrl time
+
+        GotFetchEndTime serverUrl result time ->
+            handleGotFetchEndTime model serverUrl result time
+
+        SetSessionFilter filter ->
+            handleSetSessionFilter model filter
+
+        RefreshSessions ->
+            handleRefreshSessions model
+
+        FetchArchivedSessions ->
+            handleFetchArchivedSessions model
+
+        GotArchivedSessions serverUrl result ->
+            handleGotArchivedSessions model serverUrl result
+
+        GotSession serverUrl result ->
+            handleGotSession model serverUrl result
+
+        OpenCreateSessionDialog ->
+            handleOpenCreateSessionDialog model
+
+        UpdateCreateSessionName name ->
+            handleUpdateCreateSessionName model name
+
+        UpdateCreateSessionPublic isPublic ->
+            handleUpdateCreateSessionPublic model isPublic
+
+        SubmitCreateSession ->
+            handleSubmitCreateSession model
+
+        SessionCreated serverUrl result ->
+            handleSessionCreated model serverUrl result
+
+        JoinSession sessionId ->
+            handleJoinSession model sessionId
+
+        SessionJoined serverUrl result ->
+            handleSessionJoined model serverUrl result
+
+        DeleteSession sessionId ->
+            handleDeleteSession model sessionId
+
+        SessionDeleted serverUrl result ->
+            handleSessionDeleted model serverUrl result
+
+        QuitSession sessionId ->
+            handleQuitSession model sessionId
+
+        SessionQuitResult serverUrl result ->
+            handleSessionQuitResult model serverUrl result
+
+        PromoteMember sessionId memberId ->
+            handlePromoteMember model sessionId memberId
+
+        MemberPromoted serverUrl result ->
+            handleMemberPromoted model serverUrl result
+
+        ArchiveSession sessionId ->
+            handleArchiveSession model sessionId
+
+        SessionArchived serverUrl result ->
+            handleSessionArchived model serverUrl result
+
+        SetPlayerReady sessionId ready ->
+            handleSetPlayerReady model sessionId ready
+
+        PlayerReadyResult serverUrl result ->
+            handlePlayerReadyResult model serverUrl result
+
+        StartGame sessionId ->
+            handleStartGame model sessionId
+
+        GameStarted serverUrl result ->
+            handleGameStarted model serverUrl result
+
+        SessionsUpdated serverUrl ->
+            handleSessionsUpdated model serverUrl
+
+        DownloadSessionBackup sessionId ->
+            handleDownloadSessionBackup model sessionId
+
+        SessionBackupDownloaded serverUrl result ->
+            handleSessionBackupDownloaded model serverUrl result
+
+        DownloadHistoricBackup sessionId ->
+            handleDownloadHistoricBackup model sessionId
+
+        HistoricBackupDownloaded serverUrl result ->
+            handleHistoricBackupDownloaded model serverUrl result
 
 
 

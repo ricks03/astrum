@@ -8,6 +8,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (AddBotForm)
 import Msg exposing (Msg(..))
+import Update.Admin
+import Update.Server
 import View.Helpers exposing (viewFormError)
 
 
@@ -74,7 +76,7 @@ viewAddBotDialog form =
             [ h2 [ class "dialog__title" ] [ text "Add Bot Player" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -84,7 +86,7 @@ viewAddBotDialog form =
                 [ label [ class "form-label" ] [ text "Bot Race" ]
                 , select
                     [ class "form-select"
-                    , onInput (\s -> SelectBotRace (Maybe.withDefault 0 (String.toInt s)))
+                    , onInput (\s -> AdminMsg (Update.Admin.SelectBotRace (Maybe.withDefault 0 (String.toInt s))))
                     ]
                     (List.map
                         (\i ->
@@ -101,7 +103,7 @@ viewAddBotDialog form =
                 [ label [ class "form-label" ] [ text "Difficulty" ]
                 , select
                     [ class "form-select"
-                    , onInput (\s -> SelectBotLevel (Maybe.withDefault 2 (String.toInt s)))
+                    , onInput (\s -> AdminMsg (Update.Admin.SelectBotLevel (Maybe.withDefault 2 (String.toInt s))))
                     ]
                     (List.map
                         (\i ->
@@ -118,13 +120,13 @@ viewAddBotDialog form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-primary"
                 , classList [ ( "btn-loading", form.submitting ) ]
-                , onClick SubmitAddBot
+                , onClick (AdminMsg Update.Admin.SubmitAddBot)
                 , disabled form.submitting
                 ]
                 [ text "Add Bot" ]

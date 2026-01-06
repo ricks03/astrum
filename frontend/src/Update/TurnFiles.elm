@@ -1,12 +1,6 @@
 module Update.TurnFiles exposing
-    ( handleGotHasStarsExe
-    , handleGotLatestTurn
-    , handleGotOrdersStatus
-    , handleGotTurnFiles
-    , handleLaunchStars
-    , handleLaunchStarsResult
-    , handleOpenGameDir
-    , handleOpenTurnFilesDialog
+    ( Msg(..)
+    , update
     )
 
 {-| Update handlers for turn files and game execution messages.
@@ -20,9 +14,51 @@ import Api.OrdersStatus exposing (OrdersStatus)
 import Api.TurnFiles exposing (TurnFiles)
 import Dict
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 import Update.Helpers exposing (storeSessionTurn)
+
+
+{-| TurnFiles-specific messages.
+-}
+type Msg
+    = OpenTurnFilesDialog String Int Bool -- sessionId, year, isLatestYear
+    | GotTurnFiles String (Result String TurnFiles) -- serverUrl, result
+    | GotLatestTurn String (Result String TurnFiles) -- serverUrl, result
+    | OpenGameDir String -- sessionId
+    | LaunchStars String -- sessionId
+    | LaunchStarsResult (Result String ())
+    | GotHasStarsExe (Result String { serverUrl : String, sessionId : String, hasStarsExe : Bool })
+    | GotOrdersStatus String (Result String OrdersStatus) -- serverUrl, result
+
+
+{-| Handle all TurnFiles messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OpenTurnFilesDialog sessionId year isLatestYear ->
+            handleOpenTurnFilesDialog model sessionId year isLatestYear
+
+        GotTurnFiles serverUrl result ->
+            handleGotTurnFiles model serverUrl result
+
+        GotLatestTurn serverUrl result ->
+            handleGotLatestTurn model serverUrl result
+
+        OpenGameDir sessionId ->
+            handleOpenGameDir model sessionId
+
+        LaunchStars sessionId ->
+            handleLaunchStars model sessionId
+
+        LaunchStarsResult result ->
+            handleLaunchStarsResult model result
+
+        GotHasStarsExe result ->
+            handleGotHasStarsExe model result
+
+        GotOrdersStatus serverUrl result ->
+            handleGotOrdersStatus model serverUrl result
 
 
 

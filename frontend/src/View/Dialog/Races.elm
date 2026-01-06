@@ -12,6 +12,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (RaceBuilderOrigin(..), SetupRaceForm)
 import Msg exposing (Msg(..))
+import Update.RaceBuilder
+import Update.Races
+import Update.Server
 import View.Helpers exposing (viewFormError)
 
 
@@ -24,7 +27,7 @@ viewRacesDialog errorMsg races =
             [ h2 [ class "dialog__title" ] [ text "My Races" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -39,12 +42,12 @@ viewRacesDialog errorMsg races =
             , div [ class "races-dialog__actions" ]
                 [ button
                     [ class "btn btn-primary"
-                    , onClick (OpenRaceBuilder FromRacesDialog)
+                    , onClick (RaceBuilderMsg (Update.RaceBuilder.OpenRaceBuilder FromRacesDialog))
                     ]
                     [ text "Create Race" ]
                 , button
                     [ class "btn btn-secondary"
-                    , onClick UploadRace
+                    , onClick (RacesMsg Update.Races.UploadRace)
                     ]
                     [ text "Upload Race" ]
                 ]
@@ -59,7 +62,7 @@ viewRacesDialog errorMsg races =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Close" ]
             ]
@@ -78,19 +81,19 @@ viewRaceCard race =
         , div [ class "race-card__actions" ]
             [ button
                 [ class "btn btn--secondary btn--sm"
-                , onClick (ViewRaceInBuilder race.id race.namePlural)
+                , onClick (RaceBuilderMsg (Update.RaceBuilder.ViewRaceInBuilder race.id race.namePlural))
                 , title "View race details"
                 ]
                 [ text "View" ]
             , button
                 [ class "btn btn--secondary btn--sm"
-                , onClick (DownloadRace race.id)
+                , onClick (RacesMsg (Update.Races.DownloadRace race.id))
                 , title "Download race file"
                 ]
                 [ text "Download" ]
             , button
                 [ class "btn btn--danger btn--sm"
-                , onClick (DeleteRace race.id)
+                , onClick (RacesMsg (Update.Races.DeleteRace race.id))
                 , title "Delete race"
                 ]
                 [ text "Delete" ]
@@ -107,7 +110,7 @@ viewSetupRaceDialog form races =
             [ h2 [ class "dialog__title" ] [ text "Setup My Race" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -118,12 +121,12 @@ viewSetupRaceDialog form races =
             , div [ class "setup-race-dialog__actions" ]
                 [ button
                     [ class "btn btn-primary"
-                    , onClick (OpenRaceBuilder (FromSetupRaceDialog form.sessionId))
+                    , onClick (RaceBuilderMsg (Update.RaceBuilder.OpenRaceBuilder (FromSetupRaceDialog form.sessionId)))
                     ]
                     [ text "Create New Race" ]
                 , button
                     [ class "btn btn-secondary"
-                    , onClick UploadAndSetRace
+                    , onClick (RacesMsg Update.Races.UploadAndSetRace)
                     ]
                     [ text "Upload Race" ]
                 ]
@@ -138,13 +141,13 @@ viewSetupRaceDialog form races =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-primary"
                 , disabled (form.selectedRaceId == Nothing || form.submitting)
-                , onClick SubmitSetupRace
+                , onClick (RacesMsg Update.Races.SubmitSetupRace)
                 ]
                 [ text
                     (if form.submitting then
@@ -167,7 +170,7 @@ viewSetupRaceOption selectedRaceId race =
     div
         [ class "setup-race-dialog__race"
         , classList [ ( "is-selected", isSelected ) ]
-        , onClick (SelectRaceForSession race.id)
+        , onClick (RacesMsg (Update.Races.SelectRaceForSession race.id))
         ]
         [ div [ class "setup-race-dialog__race-name" ]
             [ text race.namePlural ]

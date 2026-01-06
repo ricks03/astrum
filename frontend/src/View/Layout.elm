@@ -17,6 +17,10 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (..)
 import Msg exposing (Msg(..))
+import Update.Admin
+import Update.Sessions
+import Update.Settings
+import Update.UI
 import View.Dialog exposing (viewDialog)
 import View.Menus exposing (viewContextMenu, viewUserMenu)
 import View.ServerBar exposing (viewServerBar)
@@ -95,7 +99,7 @@ viewHeader model =
                         Connected info ->
                             button
                                 [ class "header__user-btn is-connected"
-                                , onClick ToggleUserMenu
+                                , onClick (AdminMsg Update.Admin.ToggleUserMenu)
                                 ]
                                 [ span [ class "status-dot" ] []
                                 , text info.username
@@ -130,7 +134,7 @@ viewHeader model =
         [ div [ class "header__actions" ]
             [ button
                 [ class "header__settings-btn"
-                , onClick OpenSettingsDialog
+                , onClick (SettingsMsg Update.Settings.OpenSettingsDialog)
                 , title "Settings"
                 ]
                 [ text "⚙" ]
@@ -155,7 +159,7 @@ viewHeader model =
                                     [ disabled True ]
 
                                 else
-                                    [ onClick RefreshSessions ]
+                                    [ onClick (SessionsMsg Update.Sessions.RefreshSessions) ]
                                )
                         )
                         [ text "⟳" ]
@@ -165,7 +169,7 @@ viewHeader model =
             , if isGlobalManager then
                 button
                     [ class "header__admin-btn"
-                    , onClick OpenUsersListDialog
+                    , onClick (AdminMsg Update.Admin.OpenUsersListDialog)
                     , title "Manage Users"
                     ]
                     [ text "👤"
@@ -341,7 +345,7 @@ viewStatusBar model =
                 Just err ->
                     span
                         [ class "status-bar__item status-bar__error status-bar__error--dismissible"
-                        , onClick ClearError
+                        , onClick (UIMsg Update.UI.ClearError)
                         , title "Click to dismiss"
                         ]
                         [ text err

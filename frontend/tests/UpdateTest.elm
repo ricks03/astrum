@@ -17,6 +17,9 @@ import Msg exposing (Msg(..))
 import Test exposing (..)
 import Time
 import Update exposing (update)
+import Update.Sessions
+import Update.SessionDetail
+import Update.TurnFiles
 
 
 {-| Test suite for update isolation between servers.
@@ -51,7 +54,7 @@ sessionUpdateTests =
                         -- Process GotFetchEndTime for serverA
                         ( updatedModel, _ ) =
                             update
-                                (GotFetchEndTime "http://serverA" (Ok newSessionsForServerA) (Time.millisToPosix 1000))
+                                (SessionsMsg (Update.Sessions.GotFetchEndTime "http://serverA" (Ok newSessionsForServerA) (Time.millisToPosix 1000)))
                                 initialModel
 
                         -- Get sessions for each server
@@ -86,7 +89,7 @@ sessionUpdateTests =
 
                         ( updatedModel, _ ) =
                             update
-                                (GotFetchEndTime "http://serverB" (Ok newSessionsForServerB) (Time.millisToPosix 1000))
+                                (SessionsMsg (Update.Sessions.GotFetchEndTime "http://serverB" (Ok newSessionsForServerB) (Time.millisToPosix 1000)))
                                 initialModel
 
                         serverAData =
@@ -117,7 +120,7 @@ sessionUpdateTests =
                         -- Empty sessions list (all deleted) for serverA
                         ( updatedModel, _ ) =
                             update
-                                (GotFetchEndTime "http://serverA" (Ok []) (Time.millisToPosix 1000))
+                                (SessionsMsg (Update.Sessions.GotFetchEndTime "http://serverA" (Ok []) (Time.millisToPosix 1000)))
                                 initialModel
 
                         serverAData =
@@ -154,7 +157,7 @@ sessionUpdateTests =
 
                         ( updatedModel, _ ) =
                             update
-                                (GotFetchEndTime "http://serverA" (Ok newSessions) (Time.millisToPosix 1000))
+                                (SessionsMsg (Update.Sessions.GotFetchEndTime "http://serverA" (Ok newSessions) (Time.millisToPosix 1000)))
                                 initialModel
 
                         serverAData =
@@ -185,7 +188,7 @@ sessionUpdateTests =
                         -- GotSessions should create a command (Task) but not update model directly
                         ( updatedModel, _ ) =
                             update
-                                (GotSessions "http://serverA" (Ok [ makeSession "new" "New" ]))
+                                (SessionsMsg (Update.Sessions.GotSessions "http://serverA" (Ok [ makeSession "new" "New" ])))
                                 initialModel
                     in
                     -- Model should be unchanged (GotSessions just forwards via Task)
@@ -206,26 +209,30 @@ sessionUpdateTests =
                         -- Simulate: conn1 receives updated sessions (private1 renamed)
                         ( afterConn1Update, _ ) =
                             update
-                                (GotFetchEndTime "http://server:8080/userA"
-                                    (Ok
-                                        [ makeSession "public1" "Public Session"
-                                        , makeSession "private1" "Private Session MODIFIED"
-                                        ]
+                                (SessionsMsg
+                                    (Update.Sessions.GotFetchEndTime "http://server:8080/userA"
+                                        (Ok
+                                            [ makeSession "public1" "Public Session"
+                                            , makeSession "private1" "Private Session MODIFIED"
+                                            ]
+                                        )
+                                        (Time.millisToPosix 1000)
                                     )
-                                    (Time.millisToPosix 1000)
                                 )
                                 initialModel
 
                         -- Simulate: conn2 receives updated sessions (private1 renamed)
                         ( afterConn2Update, _ ) =
                             update
-                                (GotFetchEndTime "http://server:8080/userB"
-                                    (Ok
-                                        [ makeSession "public1" "Public Session"
-                                        , makeSession "private1" "Private Session MODIFIED"
-                                        ]
+                                (SessionsMsg
+                                    (Update.Sessions.GotFetchEndTime "http://server:8080/userB"
+                                        (Ok
+                                            [ makeSession "public1" "Public Session"
+                                            , makeSession "private1" "Private Session MODIFIED"
+                                            ]
+                                        )
+                                        (Time.millisToPosix 1000)
                                     )
-                                    (Time.millisToPosix 1000)
                                 )
                                 afterConn1Update
 
@@ -268,18 +275,22 @@ sessionUpdateTests =
                         -- Simulate: conn1 receives sessions without private1
                         ( afterConn1Update, _ ) =
                             update
-                                (GotFetchEndTime "http://server:8080/userA"
-                                    (Ok [ makeSession "public1" "Public Session" ])
-                                    (Time.millisToPosix 1000)
+                                (SessionsMsg
+                                    (Update.Sessions.GotFetchEndTime "http://server:8080/userA"
+                                        (Ok [ makeSession "public1" "Public Session" ])
+                                        (Time.millisToPosix 1000)
+                                    )
                                 )
                                 initialModel
 
                         -- Simulate: conn2 receives sessions without private1
                         ( afterConn2Update, _ ) =
                             update
-                                (GotFetchEndTime "http://server:8080/userB"
-                                    (Ok [ makeSession "public1" "Public Session" ])
-                                    (Time.millisToPosix 1000)
+                                (SessionsMsg
+                                    (Update.Sessions.GotFetchEndTime "http://server:8080/userB"
+                                        (Ok [ makeSession "public1" "Public Session" ])
+                                        (Time.millisToPosix 1000)
+                                    )
                                 )
                                 afterConn1Update
 
@@ -332,7 +343,7 @@ turnFilesTests =
 
                         ( updatedModel, _ ) =
                             update
-                                (GotTurnFiles "http://serverA" (Ok turnFiles))
+                                (TurnFilesMsg (Update.TurnFiles.GotTurnFiles "http://serverA" (Ok turnFiles)))
                                 initialModel
 
                         serverAData =
@@ -369,7 +380,7 @@ turnFilesTests =
                         -- ServerB is NOT selected, but we receive turn files for it
                         ( updatedModel, _ ) =
                             update
-                                (GotTurnFiles "http://serverB" (Ok turnFiles))
+                                (TurnFilesMsg (Update.TurnFiles.GotTurnFiles "http://serverB" (Ok turnFiles)))
                                 initialModel
 
                         serverBData =
@@ -394,7 +405,7 @@ turnFilesTests =
 
                         ( updatedModel, _ ) =
                             update
-                                (GotLatestTurn "http://serverA" (Ok turnFiles))
+                                (TurnFilesMsg (Update.TurnFiles.GotLatestTurn "http://serverA" (Ok turnFiles)))
                                 initialModel
 
                         serverAData =
@@ -426,7 +437,7 @@ turnFilesTests =
 
                         ( updatedModel, _ ) =
                             update
-                                (GotLatestTurn "http://serverB" (Ok turnFiles))
+                                (TurnFilesMsg (Update.TurnFiles.GotLatestTurn "http://serverB" (Ok turnFiles)))
                                 initialModel
 
                         serverBData =
@@ -458,7 +469,7 @@ ordersStatusTests =
 
                         ( updatedModel, _ ) =
                             update
-                                (GotOrdersStatus "http://serverA" (Ok ordersStatus))
+                                (TurnFilesMsg (Update.TurnFiles.GotOrdersStatus "http://serverA" (Ok ordersStatus)))
                                 initialModel
 
                         serverAData =
@@ -495,7 +506,7 @@ ordersStatusTests =
                         -- ServerB is NOT selected, but we receive orders status for it
                         ( updatedModel, _ ) =
                             update
-                                (GotOrdersStatus "http://serverB" (Ok ordersStatus))
+                                (TurnFilesMsg (Update.TurnFiles.GotOrdersStatus "http://serverB" (Ok ordersStatus)))
                                 initialModel
 
                         serverBData =
@@ -520,13 +531,13 @@ ordersStatusTests =
                         -- userA receives the orders status
                         ( afterUserA, _ ) =
                             update
-                                (GotOrdersStatus "http://server:8080/userA" (Ok ordersStatus))
+                                (TurnFilesMsg (Update.TurnFiles.GotOrdersStatus "http://server:8080/userA" (Ok ordersStatus)))
                                 initialModel
 
                         -- userB receives the orders status
                         ( afterUserB, _ ) =
                             update
-                                (GotOrdersStatus "http://server:8080/userB" (Ok ordersStatus))
+                                (TurnFilesMsg (Update.TurnFiles.GotOrdersStatus "http://server:8080/userB" (Ok ordersStatus)))
                                 afterUserA
 
                         conn1Data =
@@ -585,7 +596,7 @@ viewInvitedSessionTests =
                             }
 
                         ( updatedModel, _ ) =
-                            update (ViewInvitedSession "invited-session") initialModel
+                            update (SessionDetailMsg (Update.SessionDetail.ViewInvitedSession "invited-session")) initialModel
                     in
                     Expect.all
                         [ \_ -> Expect.equal updatedModel.pendingViewSessionId (Just "invited-session")
@@ -602,7 +613,7 @@ viewInvitedSessionTests =
                             { initialModel | dialog = Just InvitationsDialog }
 
                         ( updatedModel, _ ) =
-                            update (ViewInvitedSession "invited-session") modelWithDialog
+                            update (SessionDetailMsg (Update.SessionDetail.ViewInvitedSession "invited-session")) modelWithDialog
                     in
                     Expect.all
                         [ \_ -> Expect.equal updatedModel.pendingViewSessionId Nothing
@@ -622,7 +633,7 @@ viewInvitedSessionTests =
                             makeSession "session1" "Updated Session One"
 
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverA" (Ok updatedSession)) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverA" (Ok updatedSession))) initialModel
 
                         serverAData =
                             getServerData "http://serverA" updatedModel.serverData
@@ -654,7 +665,7 @@ viewInvitedSessionTests =
                             makeSession "new-session" "Brand New Session"
 
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverA" (Ok newSession)) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverA" (Ok newSession))) initialModel
 
                         serverAData =
                             getServerData "http://serverA" updatedModel.serverData
@@ -680,7 +691,7 @@ viewInvitedSessionTests =
                             makeSession "new-session" "Brand New Session"
 
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverB" (Ok newSession)) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverB" (Ok newSession))) initialModel
 
                         serverAData =
                             getServerData "http://serverA" updatedModel.serverData
@@ -714,7 +725,7 @@ viewInvitedSessionTests =
                             makeSession "new-session" "Fetched Session"
 
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverA" (Ok newSession)) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverA" (Ok newSession))) initialModel
                     in
                     Expect.all
                         [ -- Session detail should be opened (serverA is selected)
@@ -744,7 +755,7 @@ viewInvitedSessionTests =
 
                         -- Session comes from serverB but serverA is selected
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverB" (Ok newSession)) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverB" (Ok newSession))) initialModel
                     in
                     Expect.all
                         [ -- Session detail should NOT be opened (wrong server)
@@ -777,7 +788,7 @@ viewInvitedSessionTests =
                             makeSession "session1" "Updated Session"
 
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverA" (Ok newSession)) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverA" (Ok newSession))) initialModel
                     in
                     Expect.all
                         [ -- Session detail should NOT be opened
@@ -797,7 +808,7 @@ viewInvitedSessionTests =
                             { base | pendingViewSessionId = Just "some-session" }
 
                         ( updatedModel, _ ) =
-                            update (GotSession "http://serverA" (Err "Session not found")) initialModel
+                            update (SessionsMsg (Update.Sessions.GotSession "http://serverA" (Err "Session not found"))) initialModel
                     in
                     Expect.equal updatedModel.pendingViewSessionId Nothing
             ]

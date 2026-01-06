@@ -1,9 +1,8 @@
 module Update.Admin exposing
-    ( handleAddBotResult
+    ( Msg(..)
+    , handleAddBotResult
     , handleApproveRegistrationResult
     , handleCancelApproveRegistration
-    , handleRemoveBotPlayer
-    , handleRemoveBotResult
     , handleCancelChangeApikey
     , handleCancelDeleteUser
     , handleCancelRejectRegistration
@@ -20,7 +19,6 @@ module Update.Admin exposing
     , handleDeleteUserResult
     , handleGotApiKey
     , handleGotPendingRegistrations
-    , handleHideToast
     , handleHideUserMenu
     , handleOpenAddBotDialog
     , handleOpenChangeApikeyDialog
@@ -28,6 +26,8 @@ module Update.Admin exposing
     , handleOpenStarsBrowser
     , handleOpenUsersListDialog
     , handleRejectRegistrationResult
+    , handleRemoveBotPlayer
+    , handleRemoveBotResult
     , handleResetApikeyResult
     , handleSelectBotLevel
     , handleSelectBotRace
@@ -44,6 +44,7 @@ module Update.Admin exposing
     , handleUpdateCreateUserNickname
     , handleUpdateUsersListFilter
     , handleViewRegistrationMessage
+    , update
     )
 
 {-| Update handlers for admin messages.
@@ -57,10 +58,206 @@ import Api.Encode as Encode
 import Api.UserProfile exposing (UserProfile)
 import Json.Encode as E
 import Model exposing (..)
-import Msg exposing (Msg(..))
 import Ports
 import Process
 import Task
+
+
+{-| Admin messages.
+-}
+type Msg
+    = -- Bot Player Messages
+      OpenAddBotDialog String -- sessionId
+    | SelectBotRace Int -- raceId (0-6)
+    | SelectBotLevel Int -- level (0-4)
+    | SubmitAddBot
+    | AddBotResult String (Result String ()) -- serverUrl, result
+    | RemoveBotPlayer String String -- sessionId, playerRaceId (userProfileId for bots)
+    | RemoveBotResult String (Result String ()) -- serverUrl, result
+      -- Admin/Manager Messages
+    | OpenUsersListDialog
+    | UpdateUsersListFilter String -- filter users by nickname/email
+    | OpenCreateUserDialog -- open create user dialog (admin)
+    | UpdateCreateUserNickname String
+    | UpdateCreateUserEmail String
+    | SubmitCreateUser
+    | CreateUserResult String (Result String { id : String, nickname : String, email : String }) -- serverUrl, result
+    | ConfirmDeleteUser String String -- userId, nickname - show confirmation
+    | CancelDeleteUser -- cancel confirmation
+    | SubmitDeleteUser String -- userId - actually delete
+    | DeleteUserResult String (Result String ()) -- serverUrl, result
+    | ConfirmResetApikey String -- userId - show confirmation
+    | CancelResetApikey -- cancel confirmation
+    | SubmitResetApikey String -- userId - actually reset
+    | ResetApikeyResult (Result String String) -- Result error newApikey
+      -- Pending Registrations
+    | SwitchUsersListPane -- toggle between users and pending pane
+    | GotPendingRegistrations String (Result String (List { id : String, nickname : String, email : String, message : Maybe String })) -- serverUrl, result
+    | ViewRegistrationMessage String String String -- userId, nickname, message
+    | CloseRegistrationMessage
+    | ConfirmApproveRegistration String String -- userId, nickname
+    | CancelApproveRegistration
+    | SubmitApproveRegistration String -- userId
+    | ApproveRegistrationResult String (Result String String) -- serverUrl, Result error apikey
+    | ConfirmRejectRegistration String String -- userId, nickname
+    | CancelRejectRegistration
+    | SubmitRejectRegistration String -- userId
+    | RejectRegistrationResult String (Result String ()) -- serverUrl, result
+      -- Change Own API Key Messages
+    | OpenChangeApikeyDialog -- open confirmation dialog
+    | CancelChangeApikey -- cancel
+    | SubmitChangeApikey -- submit the change
+    | ChangeApikeyResult (Result String String) -- Result error newApikey
+      -- User Menu Messages
+    | ToggleUserMenu
+    | HideUserMenu
+    | CopyApiKey String -- serverUrl - fetches and copies API key to clipboard
+    | GotApiKey String (Result String String) -- serverUrl, apiKey
+    | CopyToClipboard String -- message to show
+    | HideToast -- hide toast after delay
+      -- Stars Browser Messages
+    | OpenStarsBrowser String String -- serverUrl, sessionId
+
+
+{-| Update function for admin messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OpenAddBotDialog sessionId ->
+            handleOpenAddBotDialog model sessionId
+
+        SelectBotRace raceId ->
+            handleSelectBotRace model raceId
+
+        SelectBotLevel level ->
+            handleSelectBotLevel model level
+
+        SubmitAddBot ->
+            handleSubmitAddBot model
+
+        AddBotResult serverUrl result ->
+            handleAddBotResult model serverUrl result
+
+        RemoveBotPlayer sessionId playerRaceId ->
+            handleRemoveBotPlayer model sessionId playerRaceId
+
+        RemoveBotResult serverUrl result ->
+            handleRemoveBotResult model serverUrl result
+
+        OpenUsersListDialog ->
+            handleOpenUsersListDialog model
+
+        UpdateUsersListFilter query ->
+            handleUpdateUsersListFilter model query
+
+        OpenCreateUserDialog ->
+            handleOpenCreateUserDialog model
+
+        UpdateCreateUserNickname nickname ->
+            handleUpdateCreateUserNickname model nickname
+
+        UpdateCreateUserEmail email ->
+            handleUpdateCreateUserEmail model email
+
+        SubmitCreateUser ->
+            handleSubmitCreateUser model
+
+        CreateUserResult serverUrl result ->
+            handleCreateUserResult model serverUrl result
+
+        ConfirmDeleteUser userId nickname ->
+            handleConfirmDeleteUser model userId nickname
+
+        CancelDeleteUser ->
+            handleCancelDeleteUser model
+
+        SubmitDeleteUser userId ->
+            handleSubmitDeleteUser model userId
+
+        DeleteUserResult serverUrl result ->
+            handleDeleteUserResult model serverUrl result
+
+        ConfirmResetApikey userId ->
+            handleConfirmResetApikey model userId
+
+        CancelResetApikey ->
+            handleCancelResetApikey model
+
+        SubmitResetApikey userId ->
+            handleSubmitResetApikey model userId
+
+        ResetApikeyResult result ->
+            handleResetApikeyResult model result
+
+        SwitchUsersListPane ->
+            handleSwitchUsersListPane model
+
+        GotPendingRegistrations serverUrl result ->
+            handleGotPendingRegistrations model serverUrl result
+
+        ViewRegistrationMessage userId nickname message ->
+            handleViewRegistrationMessage model userId nickname message
+
+        CloseRegistrationMessage ->
+            handleCloseRegistrationMessage model
+
+        ConfirmApproveRegistration userId nickname ->
+            handleConfirmApproveRegistration model userId nickname
+
+        CancelApproveRegistration ->
+            handleCancelApproveRegistration model
+
+        SubmitApproveRegistration userId ->
+            handleSubmitApproveRegistration model userId
+
+        ApproveRegistrationResult serverUrl result ->
+            handleApproveRegistrationResult model serverUrl result
+
+        ConfirmRejectRegistration userId nickname ->
+            handleConfirmRejectRegistration model userId nickname
+
+        CancelRejectRegistration ->
+            handleCancelRejectRegistration model
+
+        SubmitRejectRegistration userId ->
+            handleSubmitRejectRegistration model userId
+
+        RejectRegistrationResult _ result ->
+            handleRejectRegistrationResult model result
+
+        OpenChangeApikeyDialog ->
+            handleOpenChangeApikeyDialog model
+
+        CancelChangeApikey ->
+            handleCancelChangeApikey model
+
+        SubmitChangeApikey ->
+            handleSubmitChangeApikey model
+
+        ChangeApikeyResult result ->
+            handleChangeApikeyResult model result
+
+        ToggleUserMenu ->
+            handleToggleUserMenu model
+
+        HideUserMenu ->
+            handleHideUserMenu model
+
+        CopyApiKey serverUrl ->
+            handleCopyApiKey model serverUrl
+
+        GotApiKey _ result ->
+            handleGotApiKey model result
+
+        CopyToClipboard text ->
+            handleCopyToClipboard model text
+
+        HideToast ->
+            ( { model | toast = Nothing }, Cmd.none )
+
+        OpenStarsBrowser serverUrl sessionId ->
+            handleOpenStarsBrowser model serverUrl sessionId
 
 
 
@@ -992,13 +1189,4 @@ handleCopyToClipboard : Model -> String -> ( Model, Cmd Msg )
 handleCopyToClipboard model text =
     ( model
     , Ports.copyToClipboard text
-    )
-
-
-{-| Hide toast.
--}
-handleHideToast : Model -> ( Model, Cmd Msg )
-handleHideToast model =
-    ( { model | toast = Nothing }
-    , Cmd.none
     )

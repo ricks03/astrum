@@ -16,6 +16,14 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Model exposing (..)
 import Msg exposing (Msg(..))
+import Update.Admin
+import Update.DragDrop
+import Update.MapViewer
+import Update.Races
+import Update.Rules
+import Update.SessionDetail
+import Update.Sessions
+import Update.TurnFiles
 import View.Helpers exposing (getCurrentUserId, getNickname)
 import View.Icons as Icons
 import View.SessionList exposing (viewOrdersSummary)
@@ -153,7 +161,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
         [ div [ class "session-detail__header" ]
             [ button
                 [ class "session-detail__back"
-                , onClick CloseSessionDetail
+                , onClick (SessionDetailMsg Update.SessionDetail.CloseSessionDetail)
                 ]
                 [ text "< Back" ]
             , h2 [ class "session-detail__title" ] [ text session.name ]
@@ -162,7 +170,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if canJoin then
                     button
                         [ class "btn btn--primary"
-                        , onClick (JoinSession session.id)
+                        , onClick (SessionsMsg (Update.Sessions.JoinSession session.id))
                         ]
                         [ text "Join" ]
 
@@ -197,7 +205,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                             Nothing ->
                                 button
                                     [ class "btn btn--success"
-                                    , onClick (StartGame session.id)
+                                    , onClick (SessionsMsg (Update.Sessions.StartGame session.id))
                                     ]
                                     [ text "Start Game" ]
 
@@ -207,7 +215,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if isManager && not (isStarted session) then
                     button
                         [ class "btn btn--primary"
-                        , onClick OpenInviteDialog
+                        , onClick (SessionDetailMsg Update.SessionDetail.OpenInviteDialog)
                         ]
                         [ text "Invite User" ]
 
@@ -217,7 +225,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if isManager && isStarted session then
                     button
                         [ class "btn btn--secondary"
-                        , onClick (DownloadSessionBackup session.id)
+                        , onClick (SessionsMsg (Update.Sessions.DownloadSessionBackup session.id))
                         , attribute "title" "Download session backup"
                         ]
                         [ text (Icons.download ++ " Backup") ]
@@ -228,7 +236,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if isPlayer && isStarted session then
                     button
                         [ class "btn btn--secondary"
-                        , onClick (DownloadHistoricBackup session.id)
+                        , onClick (SessionsMsg (Update.Sessions.DownloadHistoricBackup session.id))
                         , attribute "title" "Download all historic game files"
                         ]
                         [ text (Icons.download ++ " Historic") ]
@@ -239,7 +247,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if isManager && isStarted session then
                     button
                         [ class "btn btn--secondary"
-                        , onClick (ArchiveSession session.id)
+                        , onClick (SessionsMsg (Update.Sessions.ArchiveSession session.id))
                         , attribute "title" "Mark session as archived (finished)"
                         ]
                         [ text (Icons.archive ++ " Archive") ]
@@ -250,7 +258,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if isManager then
                     button
                         [ class "btn btn--danger"
-                        , onClick (DeleteSession session.id)
+                        , onClick (SessionsMsg (Update.Sessions.DeleteSession session.id))
                         ]
                         [ text "Delete" ]
 
@@ -260,7 +268,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                   if canQuit then
                     button
                         [ class "btn btn--secondary"
-                        , onClick (QuitSession session.id)
+                        , onClick (SessionsMsg (Update.Sessions.QuitSession session.id))
                         ]
                         [ text "Quit" ]
 
@@ -324,7 +332,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                                 -- Rules exist - anyone can view, managers can also edit
                                 button
                                     [ class "btn btn-sm btn-secondary"
-                                    , onClick (OpenRulesDialog session.id session.rulesIsSet)
+                                    , onClick (RulesMsg (Update.Rules.OpenRulesDialog session.id session.rulesIsSet))
                                     ]
                                     [ text "View Rules" ]
 
@@ -332,7 +340,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                                 -- Rules not set - only managers can create them
                                 button
                                     [ class "btn btn-sm btn-primary"
-                                    , onClick (OpenRulesDialog session.id session.rulesIsSet)
+                                    , onClick (RulesMsg (Update.Rules.OpenRulesDialog session.id session.rulesIsSet))
                                     ]
                                     [ text "Configure Rules" ]
 
@@ -386,7 +394,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                     [ h3
                         [ class "session-detail__section-title session-detail__section-title--clickable"
                         , title "Players are members who have already set the race with which they want to play. Click to expand/collapse."
-                        , onClick TogglePlayersExpanded
+                        , onClick (SessionDetailMsg Update.SessionDetail.TogglePlayersExpanded)
                         ]
                         [ span [ class "session-detail__expand-icon" ]
                             [ text
@@ -403,7 +411,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                     , if showSetupRaceButton then
                         button
                             [ class "btn btn-success btn-sm"
-                            , onClick (OpenSetupRaceDialog session.id)
+                            , onClick (RacesMsg (Update.Races.OpenSetupRaceDialog session.id))
                             ]
                             [ text
                                 (if isPlayer then
@@ -419,7 +427,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                     , if canAddBot then
                         button
                             [ class "btn btn-secondary btn-sm"
-                            , onClick (OpenAddBotDialog session.id)
+                            , onClick (AdminMsg (Update.Admin.OpenAddBotDialog session.id))
                             , title "Add a bot player to this session"
                             ]
                             [ text "+ Add Bot" ]
@@ -482,7 +490,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                               else if hasStarsExe then
                                 button
                                     [ class "btn btn--primary btn--sm"
-                                    , onClick (LaunchStars session.id)
+                                    , onClick (TurnFilesMsg (Update.TurnFiles.LaunchStars session.id))
                                     ]
                                     [ text "Launch Stars!" ]
 
@@ -495,7 +503,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                                     [ text "Launch Stars!" ]
                             , button
                                 [ class "btn btn--secondary btn--sm"
-                                , onClick (OpenGameDir session.id)
+                                , onClick (TurnFilesMsg (Update.TurnFiles.OpenGameDir session.id))
                                 ]
                                 [ text "Open Game Dir" ]
                             , -- Play in Browser button: only show when browser mode is enabled
@@ -504,7 +512,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                                     Just serverUrl ->
                                         button
                                             [ class "btn btn--primary btn--sm"
-                                            , onClick (OpenStarsBrowser serverUrl session.id session.name)
+                                            , onClick (AdminMsg (Update.Admin.OpenStarsBrowser serverUrl session.id))
                                             , title "Play Stars! in the browser using DOSBox emulation"
                                             ]
                                             [ text "Play in Browser" ]
@@ -520,7 +528,7 @@ viewSessionDetail session detail availableTurns ordersStatusByYear model =
                                         Just _ ->
                                             button
                                                 [ class "btn btn--secondary btn--sm"
-                                                , onClick (OpenMapViewer session.id year race.nameSingular currentPlayerNumber)
+                                                , onClick (MapViewerMsg (Update.MapViewer.OpenMapViewer session.id year race.nameSingular currentPlayerNumber))
                                                 ]
                                                 [ text "View Map" ]
 
@@ -603,12 +611,12 @@ viewPlayerRow userProfiles myRace sessionId currentUserId isManager sessionStart
             if isManager then
                 [ preventDefaultOn "mousedown"
                     (Decode.map2
-                        (\x y -> ( MouseDownOnPlayer player.userProfileId player.userProfileId x y, True ))
+                        (\x y -> ( DragDropMsg (Update.DragDrop.MouseDownOnPlayer player.userProfileId player.userProfileId x y), True ))
                         (Decode.field "clientX" Decode.float)
                         (Decode.field "clientY" Decode.float)
                     )
-                , on "mouseenter" (Decode.succeed (MouseEnterPlayer player.userProfileId))
-                , on "mouseleave" (Decode.succeed MouseLeavePlayer)
+                , on "mouseenter" (Decode.succeed (DragDropMsg (Update.DragDrop.MouseEnterPlayer player.userProfileId)))
+                , on "mouseleave" (Decode.succeed (DragDropMsg Update.DragDrop.MouseLeavePlayer))
                 ]
 
             else
@@ -668,7 +676,7 @@ viewPlayerRow userProfiles myRace sessionId currentUserId isManager sessionStart
                          else
                             "btn btn-success btn-sm"
                         )
-                    , onClick (SetPlayerReady sessionId (not player.ready))
+                    , onClick (SessionsMsg (Update.Sessions.SetPlayerReady sessionId (not player.ready)))
                     ]
                     [ text
                         (if player.ready then
@@ -683,7 +691,7 @@ viewPlayerRow userProfiles myRace sessionId currentUserId isManager sessionStart
                 -- Remove bot button (only for managers, before game starts)
                 button
                     [ class "btn btn-danger btn-sm session-detail__remove-bot"
-                    , onClick (RemoveBotPlayer sessionId player.id)
+                    , onClick (AdminMsg (Update.Admin.RemoveBotPlayer sessionId player.id))
                     , title "Remove bot player"
                     ]
                     [ text "×" ]
@@ -705,7 +713,7 @@ viewMemberWithPromote userProfiles isManager sessionId memberId =
             [ if isManager then
                 button
                     [ class "btn btn--primary btn--xs"
-                    , onClick (PromoteMember sessionId memberId)
+                    , onClick (SessionsMsg (Update.Sessions.PromoteMember sessionId memberId))
                     , title "Promote to manager"
                     ]
                     [ text "Promote" ]
@@ -730,7 +738,7 @@ viewInvitee invitation =
         [ span [ class "session-detail__invitee-name" ] [ text invitation.inviteeNickname ]
         , button
             [ class "btn btn--danger btn--xs"
-            , onClick (CancelSentInvitation invitation.id)
+            , onClick (SessionDetailMsg (Update.SessionDetail.CancelSentInvitation invitation.id))
             , title "Cancel invitation"
             ]
             [ text "×" ]
@@ -759,7 +767,7 @@ viewTurnItem sessionId year isLatest maybeOrdersStatus =
     button
         [ class "session-detail__turn-link"
         , classList [ ( "session-detail__turn-link--latest", isLatest ) ]
-        , onClick (OpenTurnFilesDialog sessionId year isLatest)
+        , onClick (TurnFilesMsg (Update.TurnFiles.OpenTurnFilesDialog sessionId year isLatest))
         ]
         [ text ("Year " ++ String.fromInt year)
         , ordersBadge

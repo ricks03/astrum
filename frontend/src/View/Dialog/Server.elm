@@ -12,6 +12,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (ServerForm, defaultServerUrl)
 import Msg exposing (Msg(..))
+import Update.Server
 import View.Helpers exposing (viewFormError)
 
 
@@ -24,7 +25,7 @@ viewAddServerDialog hasDefaultServer form =
             [ h2 [ class "dialog__title" ] [ text "Add Server" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -36,7 +37,7 @@ viewAddServerDialog hasDefaultServer form =
                         [ p [] [ text "The official free Neper server is not configured." ]
                         , button
                             [ class "btn btn-primary btn-sm"
-                            , onClick AddDefaultServer
+                            , onClick (ServerMsg Update.Server.AddDefaultServer)
                             ]
                             [ text "Add Neper Server" ]
                         ]
@@ -51,7 +52,7 @@ viewAddServerDialog hasDefaultServer form =
                     , type_ "text"
                     , placeholder "My Server"
                     , value form.name
-                    , onInput UpdateServerFormName
+                    , onInput (ServerMsg << Update.Server.UpdateServerFormName)
                     ]
                     []
                 ]
@@ -62,7 +63,7 @@ viewAddServerDialog hasDefaultServer form =
                     , type_ "url"
                     , placeholder "https://neper.example.com"
                     , value form.url
-                    , onInput UpdateServerFormUrl
+                    , onInput (ServerMsg << Update.Server.UpdateServerFormUrl)
                     ]
                     []
                 ]
@@ -70,13 +71,13 @@ viewAddServerDialog hasDefaultServer form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-primary"
                 , classList [ ( "btn-loading", form.submitting ) ]
-                , onClick SubmitAddServer
+                , onClick (ServerMsg Update.Server.SubmitAddServer)
                 , disabled form.submitting
                 ]
                 [ text "Add Server" ]
@@ -102,7 +103,7 @@ viewEditServerDialog serverUrl form =
             [ h2 [ class "dialog__title" ] [ text "Edit Server" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -114,7 +115,7 @@ viewEditServerDialog serverUrl form =
                     [ class "form-input"
                     , type_ "text"
                     , value form.name
-                    , onInput UpdateServerFormName
+                    , onInput (ServerMsg << Update.Server.UpdateServerFormName)
                     ]
                     []
                 ]
@@ -124,7 +125,7 @@ viewEditServerDialog serverUrl form =
                     [ class "form-input"
                     , type_ "url"
                     , value form.url
-                    , onInput UpdateServerFormUrl
+                    , onInput (ServerMsg << Update.Server.UpdateServerFormUrl)
                     ]
                     []
                 ]
@@ -142,13 +143,13 @@ viewEditServerDialog serverUrl form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-primary"
                 , classList [ ( "btn-loading", form.submitting ) ]
-                , onClick (SubmitEditServer serverUrl)
+                , onClick (ServerMsg (Update.Server.SubmitEditServer serverUrl))
                 , disabled form.submitting
                 ]
                 [ text "Save Changes" ]
@@ -182,12 +183,12 @@ viewRemoveServerDialog serverUrl =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-danger"
-                , onClick (ConfirmRemoveServer serverUrl)
+                , onClick (ServerMsg (Update.Server.ConfirmRemoveServer serverUrl))
                 ]
                 [ text "Remove" ]
             ]

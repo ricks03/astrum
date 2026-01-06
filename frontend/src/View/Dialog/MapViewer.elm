@@ -8,6 +8,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Model exposing (MapOptions, MapOutputFormat(..), MapViewerForm)
 import Msg exposing (Msg(..))
+import Update.MapViewer
+import Update.Server
 
 
 {-| View the map viewer dialog.
@@ -30,7 +32,7 @@ viewHeader form =
             [ text ("Map Viewer - Year " ++ String.fromInt form.year) ]
         , button
             [ class "dialog__close"
-            , onClick CloseDialog
+            , onClick (ServerMsg Update.Server.CloseDialog)
             ]
             [ text "×" ]
         ]
@@ -70,7 +72,7 @@ viewFormatOptions options =
                 [ type_ "radio"
                 , name "mapFormat"
                 , checked (options.outputFormat == SVGFormat)
-                , onClick (SelectMapFormat "svg")
+                , onClick (MapViewerMsg (Update.MapViewer.SelectMapFormat "svg"))
                 ]
                 []
             , text "Static Map (SVG) - current year"
@@ -80,7 +82,7 @@ viewFormatOptions options =
                 [ type_ "radio"
                 , name "mapFormat"
                 , checked (options.outputFormat == GIFFormat)
-                , onClick (SelectMapFormat "gif")
+                , onClick (MapViewerMsg (Update.MapViewer.SelectMapFormat "gif"))
                 ]
                 []
             , text "Animated Map (GIF) - full history"
@@ -103,7 +105,7 @@ viewGifDelayInput delay =
         , input
             [ type_ "number"
             , value (String.fromInt delay)
-            , onInput UpdateGifDelay
+            , onInput (MapViewerMsg << Update.MapViewer.UpdateGifDelay)
             , Html.Attributes.min "100"
             , Html.Attributes.max "2000"
             , Html.Attributes.step "100"
@@ -119,7 +121,7 @@ viewResolutionOptions options =
     div [ class "map-viewer-dialog__resolution" ]
         [ div [ class "map-viewer-dialog__presets" ]
             [ label [] [ text "Preset:" ]
-            , select [ onInput SelectMapPreset ]
+            , select [ onInput (MapViewerMsg << Update.MapViewer.SelectMapPreset) ]
                 [ option [ value "800x600", selected (options.width == 800 && options.height == 600) ] [ text "800 x 600" ]
                 , option [ value "1024x768", selected (options.width == 1024 && options.height == 768) ] [ text "1024 x 768" ]
                 , option [ value "1920x1080", selected (options.width == 1920 && options.height == 1080) ] [ text "1920 x 1080 (Full HD)" ]
@@ -132,7 +134,7 @@ viewResolutionOptions options =
             , input
                 [ type_ "number"
                 , value (String.fromInt options.width)
-                , onInput UpdateMapWidth
+                , onInput (MapViewerMsg << Update.MapViewer.UpdateMapWidth)
                 , Html.Attributes.min "400"
                 , Html.Attributes.max "4096"
                 ]
@@ -141,7 +143,7 @@ viewResolutionOptions options =
             , input
                 [ type_ "number"
                 , value (String.fromInt options.height)
-                , onInput UpdateMapHeight
+                , onInput (MapViewerMsg << Update.MapViewer.UpdateMapHeight)
                 , Html.Attributes.min "300"
                 , Html.Attributes.max "4096"
                 ]
@@ -155,13 +157,13 @@ viewResolutionOptions options =
 viewDisplayOptions : MapOptions -> Html Msg
 viewDisplayOptions options =
     div [ class "map-viewer-dialog__display-options" ]
-        [ viewCheckbox "Show planet names" options.showNames ToggleShowNames
-        , viewCheckbox "Show fleets" options.showFleets ToggleShowFleets
+        [ viewCheckbox "Show planet names" options.showNames (MapViewerMsg Update.MapViewer.ToggleShowNames)
+        , viewCheckbox "Show fleets" options.showFleets (MapViewerMsg Update.MapViewer.ToggleShowFleets)
         , viewFleetPathsInput options.showFleetPaths
-        , viewCheckbox "Show minefields" options.showMines ToggleShowMines
-        , viewCheckbox "Show wormholes" options.showWormholes ToggleShowWormholes
-        , viewCheckbox "Show legend" options.showLegend ToggleShowLegend
-        , viewCheckbox "Show scanner coverage" options.showScannerCoverage ToggleShowScannerCoverage
+        , viewCheckbox "Show minefields" options.showMines (MapViewerMsg Update.MapViewer.ToggleShowMines)
+        , viewCheckbox "Show wormholes" options.showWormholes (MapViewerMsg Update.MapViewer.ToggleShowWormholes)
+        , viewCheckbox "Show legend" options.showLegend (MapViewerMsg Update.MapViewer.ToggleShowLegend)
+        , viewCheckbox "Show scanner coverage" options.showScannerCoverage (MapViewerMsg Update.MapViewer.ToggleShowScannerCoverage)
         ]
 
 
@@ -189,7 +191,7 @@ viewFleetPathsInput years =
         , input
             [ type_ "number"
             , value (String.fromInt years)
-            , onInput UpdateShowFleetPaths
+            , onInput (MapViewerMsg << Update.MapViewer.UpdateShowFleetPaths)
             , Html.Attributes.min "0"
             , Html.Attributes.max "10"
             , placeholder "0 = off"
@@ -228,7 +230,7 @@ viewMapContent form =
                     []
                 , button
                     [ class "map-viewer-dialog__fullscreen-btn"
-                    , onClick ToggleMapFullscreen
+                    , onClick (MapViewerMsg Update.MapViewer.ToggleMapFullscreen)
                     , title "View fullscreen"
                     ]
                     [ text "⛶" ]
@@ -312,7 +314,7 @@ viewFooter form =
                 ++ viewSaveButton form
                 ++ [ button
                         [ class "btn"
-                        , onClick CloseDialog
+                        , onClick (ServerMsg Update.Server.CloseDialog)
                         ]
                         [ text "Close" ]
                    ]
@@ -328,7 +330,7 @@ viewGenerateButton form =
         SVGFormat ->
             [ button
                 [ class "btn btn--primary"
-                , onClick GenerateMap
+                , onClick (MapViewerMsg Update.MapViewer.GenerateMap)
                 , disabled (form.generating || form.generatingGif)
                 ]
                 [ text
@@ -344,7 +346,7 @@ viewGenerateButton form =
         GIFFormat ->
             [ button
                 [ class "btn btn--primary"
-                , onClick GenerateAnimatedMap
+                , onClick (MapViewerMsg Update.MapViewer.GenerateAnimatedMap)
                 , disabled (form.generating || form.generatingGif)
                 ]
                 [ text
@@ -366,7 +368,7 @@ viewSaveButton form =
         ( Just _, _ ) ->
             [ button
                 [ class "btn btn--secondary"
-                , onClick SaveMap
+                , onClick (MapViewerMsg Update.MapViewer.SaveMap)
                 , disabled form.saving
                 ]
                 [ text
@@ -382,7 +384,7 @@ viewSaveButton form =
         ( Nothing, Just _ ) ->
             [ button
                 [ class "btn btn--secondary"
-                , onClick SaveGif
+                , onClick (MapViewerMsg Update.MapViewer.SaveGif)
                 , disabled form.saving
                 ]
                 [ text

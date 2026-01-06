@@ -8,6 +8,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (AppSettings, NtvdmCheckResult)
 import Msg exposing (Msg(..))
+import Update.Server
+import Update.Settings
+import Update.UI
 
 
 {-| Dialog for configuring application settings.
@@ -55,7 +58,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
             [ h2 [ class "dialog__title" ] [ text "Settings" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "\u{00D7}" ]
             ]
@@ -68,7 +71,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                     , div [ class "settings-dialog__zoom-row" ]
                         [ button
                             [ class "btn btn--secondary btn--small"
-                            , onClick ZoomOut
+                            , onClick (UIMsg Update.UI.ZoomOut)
                             , disabled (zoomLevel <= 50)
                             ]
                             [ text "-" ]
@@ -81,13 +84,13 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                             ]
                         , button
                             [ class "btn btn--secondary btn--small"
-                            , onClick ZoomIn
+                            , onClick (UIMsg Update.UI.ZoomIn)
                             , disabled (zoomLevel >= 200)
                             ]
                             [ text "+" ]
                         , button
                             [ class "btn btn--secondary btn--small"
-                            , onClick ZoomReset
+                            , onClick (UIMsg Update.UI.ZoomReset)
                             ]
                             [ text "Reset" ]
                         ]
@@ -103,7 +106,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                         [ span [ class "settings-dialog__path" ] [ text serversDir ]
                         , button
                             [ class "btn btn--secondary btn--small"
-                            , onClick SelectServersDir
+                            , onClick (SettingsMsg Update.Settings.SelectServersDir)
                             ]
                             [ text "Change..." ]
                         ]
@@ -115,7 +118,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                         [ input
                             [ type_ "checkbox"
                             , checked autoDownloadStars
-                            , onCheck SetAutoDownloadStars
+                            , onCheck (SettingsMsg << Update.Settings.SetAutoDownloadStars)
                             ]
                             []
                         , text "Auto download Stars.exe"
@@ -131,7 +134,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                         [ input
                             [ type_ "checkbox"
                             , checked useWine
-                            , onCheck SetUseWine
+                            , onCheck (SettingsMsg << Update.Settings.SetUseWine)
                             ]
                             []
                         , text "Use Wine to launch Stars!"
@@ -145,7 +148,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                         [ span [ class "settings-dialog__path" ] [ text winePrefixesDir ]
                         , button
                             [ class "btn btn--secondary btn--small"
-                            , onClick SelectWinePrefixesDir
+                            , onClick (SettingsMsg Update.Settings.SelectWinePrefixesDir)
                             , disabled (not useWine)
                             ]
                             [ text "Change..." ]
@@ -157,7 +160,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                     [ div [ class "settings-dialog__wine-check-row" ]
                         [ button
                             [ class "btn btn--secondary"
-                            , onClick CheckWineInstall
+                            , onClick (SettingsMsg Update.Settings.CheckWineInstall)
                             , disabled (not useWine || wineCheckInProgress)
                             ]
                             [ text
@@ -184,7 +187,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                     [ div [ class "settings-dialog__wine-check-row" ]
                         [ button
                             [ class "btn btn--secondary"
-                            , onClick CheckNtvdmSupport
+                            , onClick (SettingsMsg Update.Settings.CheckNtvdmSupport)
                             , disabled ntvdmCheckInProgress
                             ]
                             [ text
@@ -208,7 +211,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
                         [ input
                             [ type_ "checkbox"
                             , checked enableBrowserStars
-                            , onCheck RequestEnableBrowserStars
+                            , onCheck (UIMsg << Update.UI.RequestEnableBrowserStars)
                             ]
                             []
                         , text "Enable Stars! in Browser"
@@ -221,7 +224,7 @@ viewSettingsDialog maybeSettings wineCheckInProgress wineCheckMessage ntvdmCheck
         , div [ class "dialog__footer" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Close" ]
             ]
@@ -251,12 +254,12 @@ viewBrowserStarsConfirmation show =
                 , div [ class "confirmation-dialog__footer" ]
                     [ button
                         [ class "btn btn--secondary"
-                        , onClick CancelEnableBrowserStars
+                        , onClick (UIMsg Update.UI.CancelEnableBrowserStars)
                         ]
                         [ text "Cancel" ]
                     , button
                         [ class "btn btn--primary"
-                        , onClick ConfirmEnableBrowserStars
+                        , onClick (UIMsg Update.UI.ConfirmEnableBrowserStars)
                         ]
                         [ text "Enable" ]
                     ]

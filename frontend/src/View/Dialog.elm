@@ -9,6 +9,7 @@ import Html.Attributes exposing (..)
 import Model exposing (..)
 import Msg exposing (Msg(..))
 import Set
+import Update.Server
 import View.Dialog.ApiKey exposing (viewChangeApikeyDialog)
 import View.Dialog.Auth exposing (viewConnectDialog, viewRegisterDialog)
 import View.Dialog.Bots exposing (viewAddBotDialog)
@@ -39,7 +40,7 @@ viewDialog model =
         Just dialog ->
             div
                 [ class "dialog-overlay"
-                , onMouseDownTarget "dialog-overlay" CloseDialog
+                , onMouseDownTarget "dialog-overlay" (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ div
                     [ class "dialog"

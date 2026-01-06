@@ -1,50 +1,52 @@
 module Update.RaceBuilder exposing
-    ( handleCreateRaceFromExisting
+    ( Msg(..)
+    , update
+    , handleOpenRaceBuilder
+    , handleSelectRaceBuilderTab
+    , handleLoadRaceTemplate
+    , handleRaceTemplateLoaded
+    , handleSelectCustomTemplate
+    , handleUpdateRaceBuilderSingularName
+    , handleUpdateRaceBuilderPluralName
+    , handleUpdateRaceBuilderPassword
+    , handleUpdateRaceBuilderIcon
+    , handleUpdateRaceBuilderLeftoverPoints
+    , handleUpdateRaceBuilderPRT
+    , handleToggleRaceBuilderLRT
+    , handleUpdateRaceBuilderGravityCenter
+    , handleUpdateRaceBuilderGravityWidth
+    , handleUpdateRaceBuilderGravityImmune
+    , handleUpdateRaceBuilderTemperatureCenter
+    , handleUpdateRaceBuilderTemperatureWidth
+    , handleUpdateRaceBuilderTemperatureImmune
+    , handleUpdateRaceBuilderRadiationCenter
+    , handleUpdateRaceBuilderRadiationWidth
+    , handleUpdateRaceBuilderRadiationImmune
+    , handleUpdateRaceBuilderGrowthRate
     , handleHabButtonPressed
     , handleHabButtonReleased
     , handleHabButtonTick
-    , handleLoadRaceTemplate
-    , handleOpenRaceBuilder
-    , handleRaceBuilderSaved
-    , handleRaceBuilderValidationReceived
-    , handleRaceFileLoaded
-    , handleRaceTemplateLoaded
-    , handleSelectCustomTemplate
-    , handleSelectRaceBuilderTab
-    , handleSubmitRaceBuilder
-    , handleToggleRaceBuilderLRT
     , handleUpdateRaceBuilderColonistsPerResource
-    , handleUpdateRaceBuilderFactoriesUseLessGerm
+    , handleUpdateRaceBuilderFactoryOutput
     , handleUpdateRaceBuilderFactoryCost
     , handleUpdateRaceBuilderFactoryCount
-    , handleUpdateRaceBuilderFactoryOutput
-    , handleUpdateRaceBuilderGravityCenter
-    , handleUpdateRaceBuilderGravityImmune
-    , handleUpdateRaceBuilderGravityWidth
-    , handleUpdateRaceBuilderGrowthRate
-    , handleUpdateRaceBuilderIcon
-    , handleUpdateRaceBuilderLeftoverPoints
+    , handleUpdateRaceBuilderFactoriesUseLessGerm
+    , handleUpdateRaceBuilderMineOutput
     , handleUpdateRaceBuilderMineCost
     , handleUpdateRaceBuilderMineCount
-    , handleUpdateRaceBuilderMineOutput
-    , handleUpdateRaceBuilderPRT
-    , handleUpdateRaceBuilderPassword
-    , handleUpdateRaceBuilderPluralName
-    , handleUpdateRaceBuilderRadiationCenter
-    , handleUpdateRaceBuilderRadiationImmune
-    , handleUpdateRaceBuilderRadiationWidth
-    , handleUpdateRaceBuilderResearchBiotech
+    , handleUpdateRaceBuilderResearchEnergy
+    , handleUpdateRaceBuilderResearchWeapons
+    , handleUpdateRaceBuilderResearchPropulsion
     , handleUpdateRaceBuilderResearchConstruction
     , handleUpdateRaceBuilderResearchElectronics
-    , handleUpdateRaceBuilderResearchEnergy
-    , handleUpdateRaceBuilderResearchPropulsion
-    , handleUpdateRaceBuilderResearchWeapons
-    , handleUpdateRaceBuilderSingularName
+    , handleUpdateRaceBuilderResearchBiotech
     , handleUpdateRaceBuilderTechsStartHigh
-    , handleUpdateRaceBuilderTemperatureCenter
-    , handleUpdateRaceBuilderTemperatureImmune
-    , handleUpdateRaceBuilderTemperatureWidth
+    , handleRaceBuilderValidationReceived
     , handleViewRaceInBuilder
+    , handleRaceFileLoaded
+    , handleCreateRaceFromExisting
+    , handleSubmitRaceBuilder
+    , handleRaceBuilderSaved
     )
 
 {-| Update handlers for race builder messages.
@@ -56,9 +58,213 @@ Handles race builder form, templates, and validation.
 import Api.Encode as Encode
 import Api.Race exposing (Race)
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 import Update.Helpers exposing (updateRaceBuilderForm)
+
+
+{-| Messages for the race builder domain.
+-}
+type Msg
+    = OpenRaceBuilder RaceBuilderOrigin
+    | SelectRaceBuilderTab RaceBuilderTab
+    | LoadRaceTemplate String
+    | RaceTemplateLoaded (Result String RaceConfig)
+    | SelectCustomTemplate
+      -- Identity tab
+    | UpdateRaceBuilderSingularName String
+    | UpdateRaceBuilderPluralName String
+    | UpdateRaceBuilderPassword String
+    | UpdateRaceBuilderIcon Int
+    | UpdateRaceBuilderLeftoverPoints Int
+      -- PRT tab
+    | UpdateRaceBuilderPRT Int
+      -- LRT tab
+    | ToggleRaceBuilderLRT Int
+      -- Habitability tab
+    | UpdateRaceBuilderGravityCenter Int
+    | UpdateRaceBuilderGravityWidth Int
+    | UpdateRaceBuilderGravityImmune Bool
+    | UpdateRaceBuilderTemperatureCenter Int
+    | UpdateRaceBuilderTemperatureWidth Int
+    | UpdateRaceBuilderTemperatureImmune Bool
+    | UpdateRaceBuilderRadiationCenter Int
+    | UpdateRaceBuilderRadiationWidth Int
+    | UpdateRaceBuilderRadiationImmune Bool
+    | UpdateRaceBuilderGrowthRate Int
+      -- Hab button hold-to-repeat
+    | HabButtonPressed HabButton
+    | HabButtonReleased
+    | HabButtonTick
+      -- Economy tab
+    | UpdateRaceBuilderColonistsPerResource Int
+    | UpdateRaceBuilderFactoryOutput Int
+    | UpdateRaceBuilderFactoryCost Int
+    | UpdateRaceBuilderFactoryCount Int
+    | UpdateRaceBuilderFactoriesUseLessGerm Bool
+    | UpdateRaceBuilderMineOutput Int
+    | UpdateRaceBuilderMineCost Int
+    | UpdateRaceBuilderMineCount Int
+      -- Research tab
+    | UpdateRaceBuilderResearchEnergy Int
+    | UpdateRaceBuilderResearchWeapons Int
+    | UpdateRaceBuilderResearchPropulsion Int
+    | UpdateRaceBuilderResearchConstruction Int
+    | UpdateRaceBuilderResearchElectronics Int
+    | UpdateRaceBuilderResearchBiotech Int
+    | UpdateRaceBuilderTechsStartHigh Bool
+      -- Validation
+    | RaceBuilderValidationReceived (Result String RaceValidation)
+      -- View/Copy race
+    | ViewRaceInBuilder String String
+    | RaceFileLoaded (Result String RaceConfig)
+    | CreateRaceFromExisting
+      -- Save
+    | SubmitRaceBuilder
+    | RaceBuilderSaved (Result String Race)
+
+
+{-| Update function for race builder messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OpenRaceBuilder origin ->
+            handleOpenRaceBuilder model origin
+
+        SelectRaceBuilderTab tab ->
+            handleSelectRaceBuilderTab model tab
+
+        LoadRaceTemplate templateName ->
+            handleLoadRaceTemplate model templateName
+
+        RaceTemplateLoaded result ->
+            handleRaceTemplateLoaded model result
+
+        SelectCustomTemplate ->
+            handleSelectCustomTemplate model
+
+        UpdateRaceBuilderSingularName name ->
+            handleUpdateRaceBuilderSingularName model name
+
+        UpdateRaceBuilderPluralName name ->
+            handleUpdateRaceBuilderPluralName model name
+
+        UpdateRaceBuilderPassword password ->
+            handleUpdateRaceBuilderPassword model password
+
+        UpdateRaceBuilderIcon icon ->
+            handleUpdateRaceBuilderIcon model icon
+
+        UpdateRaceBuilderLeftoverPoints option ->
+            handleUpdateRaceBuilderLeftoverPoints model option
+
+        UpdateRaceBuilderPRT prt ->
+            handleUpdateRaceBuilderPRT model prt
+
+        ToggleRaceBuilderLRT lrtIndex ->
+            handleToggleRaceBuilderLRT model lrtIndex
+
+        UpdateRaceBuilderGravityCenter val ->
+            handleUpdateRaceBuilderGravityCenter model val
+
+        UpdateRaceBuilderGravityWidth val ->
+            handleUpdateRaceBuilderGravityWidth model val
+
+        UpdateRaceBuilderGravityImmune val ->
+            handleUpdateRaceBuilderGravityImmune model val
+
+        UpdateRaceBuilderTemperatureCenter val ->
+            handleUpdateRaceBuilderTemperatureCenter model val
+
+        UpdateRaceBuilderTemperatureWidth val ->
+            handleUpdateRaceBuilderTemperatureWidth model val
+
+        UpdateRaceBuilderTemperatureImmune val ->
+            handleUpdateRaceBuilderTemperatureImmune model val
+
+        UpdateRaceBuilderRadiationCenter val ->
+            handleUpdateRaceBuilderRadiationCenter model val
+
+        UpdateRaceBuilderRadiationWidth val ->
+            handleUpdateRaceBuilderRadiationWidth model val
+
+        UpdateRaceBuilderRadiationImmune val ->
+            handleUpdateRaceBuilderRadiationImmune model val
+
+        UpdateRaceBuilderGrowthRate val ->
+            handleUpdateRaceBuilderGrowthRate model val
+
+        HabButtonPressed btn ->
+            handleHabButtonPressed model btn
+
+        HabButtonReleased ->
+            handleHabButtonReleased model
+
+        HabButtonTick ->
+            handleHabButtonTick model
+
+        UpdateRaceBuilderColonistsPerResource val ->
+            handleUpdateRaceBuilderColonistsPerResource model val
+
+        UpdateRaceBuilderFactoryOutput val ->
+            handleUpdateRaceBuilderFactoryOutput model val
+
+        UpdateRaceBuilderFactoryCost val ->
+            handleUpdateRaceBuilderFactoryCost model val
+
+        UpdateRaceBuilderFactoryCount val ->
+            handleUpdateRaceBuilderFactoryCount model val
+
+        UpdateRaceBuilderFactoriesUseLessGerm val ->
+            handleUpdateRaceBuilderFactoriesUseLessGerm model val
+
+        UpdateRaceBuilderMineOutput val ->
+            handleUpdateRaceBuilderMineOutput model val
+
+        UpdateRaceBuilderMineCost val ->
+            handleUpdateRaceBuilderMineCost model val
+
+        UpdateRaceBuilderMineCount val ->
+            handleUpdateRaceBuilderMineCount model val
+
+        UpdateRaceBuilderResearchEnergy val ->
+            handleUpdateRaceBuilderResearchEnergy model val
+
+        UpdateRaceBuilderResearchWeapons val ->
+            handleUpdateRaceBuilderResearchWeapons model val
+
+        UpdateRaceBuilderResearchPropulsion val ->
+            handleUpdateRaceBuilderResearchPropulsion model val
+
+        UpdateRaceBuilderResearchConstruction val ->
+            handleUpdateRaceBuilderResearchConstruction model val
+
+        UpdateRaceBuilderResearchElectronics val ->
+            handleUpdateRaceBuilderResearchElectronics model val
+
+        UpdateRaceBuilderResearchBiotech val ->
+            handleUpdateRaceBuilderResearchBiotech model val
+
+        UpdateRaceBuilderTechsStartHigh val ->
+            handleUpdateRaceBuilderTechsStartHigh model val
+
+        RaceBuilderValidationReceived result ->
+            handleRaceBuilderValidationReceived model result
+
+        ViewRaceInBuilder raceId raceName ->
+            handleViewRaceInBuilder model raceId raceName
+
+        RaceFileLoaded result ->
+            handleRaceFileLoaded model result
+
+        CreateRaceFromExisting ->
+            handleCreateRaceFromExisting model
+
+        SubmitRaceBuilder ->
+            handleSubmitRaceBuilder model
+
+        RaceBuilderSaved result ->
+            handleRaceBuilderSaved model result
 
 
 

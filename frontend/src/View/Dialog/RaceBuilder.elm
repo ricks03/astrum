@@ -8,6 +8,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (HabButton(..), HabitabilityDisplay, LRTInfo, PRTInfo, RaceBuilderForm, RaceBuilderMode(..), RaceBuilderTab(..), RaceConfig, RaceValidation)
 import Msg exposing (Msg(..))
+import Update.RaceBuilder as RB
+import Update.Server
 
 
 
@@ -194,7 +196,7 @@ viewHeader mode =
         [ h2 [ class "dialog__title" ] [ text title ]
         , button
             [ class "dialog__close"
-            , onClick CloseDialog
+            , onClick (ServerMsg Update.Server.CloseDialog)
             ]
             [ text "x" ]
         ]
@@ -219,7 +221,7 @@ viewTab tab label activeTab =
     button
         [ class "race-builder__tab"
         , classList [ ( "is-active", tab == activeTab ) ]
-        , onClick (SelectRaceBuilderTab tab)
+        , onClick (RaceBuilderMsg (RB.SelectRaceBuilderTab tab))
         ]
         [ text label ]
 
@@ -303,7 +305,7 @@ viewIdentityTab config selectedTemplate isReadOnly =
                 , class "race-builder__identity-input"
                 , id "singularName"
                 , value config.singularName
-                , onInput UpdateRaceBuilderSingularName
+                , onInput (RaceBuilderMsg << RB.UpdateRaceBuilderSingularName)
                 , maxlength 15
                 , disabled isReadOnly
                 ]
@@ -318,7 +320,7 @@ viewIdentityTab config selectedTemplate isReadOnly =
                 , class "race-builder__identity-input"
                 , id "pluralName"
                 , value config.pluralName
-                , onInput UpdateRaceBuilderPluralName
+                , onInput (RaceBuilderMsg << RB.UpdateRaceBuilderPluralName)
                 , maxlength 15
                 , disabled isReadOnly
                 ]
@@ -333,7 +335,7 @@ viewIdentityTab config selectedTemplate isReadOnly =
                 , class "race-builder__identity-input race-builder__identity-input--short"
                 , id "password"
                 , value config.password
-                , onInput UpdateRaceBuilderPassword
+                , onInput (RaceBuilderMsg << RB.UpdateRaceBuilderPassword)
                 , maxlength 15
                 , disabled isReadOnly
                 ]
@@ -356,7 +358,7 @@ viewIdentityTab config selectedTemplate isReadOnly =
                         [ type_ "radio"
                         , name "template"
                         , checked (selectedTemplate == "custom")
-                        , onClick SelectCustomTemplate
+                        , onClick (RaceBuilderMsg RB.SelectCustomTemplate)
                         , disabled isReadOnly
                         ]
                         []
@@ -373,7 +375,7 @@ viewIdentityTab config selectedTemplate isReadOnly =
                 , select
                     [ class "race-builder__leftover-select"
                     , id "leftover"
-                    , onInput (String.toInt >> Maybe.withDefault 0 >> UpdateRaceBuilderLeftoverPoints)
+                    , onInput (String.toInt >> Maybe.withDefault 0 >> RB.UpdateRaceBuilderLeftoverPoints >> RaceBuilderMsg)
                     , disabled isReadOnly
                     ]
                     [ option [ value "0", selected (config.leftoverPointsOn == 0) ] [ text "Surface minerals" ]
@@ -395,14 +397,14 @@ viewIdentityTab config selectedTemplate isReadOnly =
                 , div [ class "race-builder__icon-nav" ]
                     [ button
                         [ class "race-builder__icon-btn"
-                        , onClick (UpdateRaceBuilderIcon (wrapIcon (config.icon - 1)))
+                        , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderIcon (wrapIcon (config.icon - 1))))
                         , disabled isReadOnly
                         , title "Previous icon"
                         ]
                         [ text "<" ]
                     , button
                         [ class "race-builder__icon-btn"
-                        , onClick (UpdateRaceBuilderIcon (wrapIcon (config.icon + 1)))
+                        , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderIcon (wrapIcon (config.icon + 1))))
                         , disabled isReadOnly
                         , title "Next icon"
                         ]
@@ -444,7 +446,7 @@ viewTemplateOption templateId displayName selectedTemplate isReadOnly =
             [ type_ "radio"
             , name "template"
             , checked (selectedTemplate == templateId)
-            , onClick (LoadRaceTemplate templateId)
+            , onClick (RaceBuilderMsg (RB.LoadRaceTemplate templateId))
             , disabled isReadOnly
             ]
             []
@@ -525,7 +527,7 @@ viewPRTOption prt currentPrt isReadOnly =
             [ type_ "radio"
             , class "race-builder__prt-radio"
             , checked (prt.index == currentPrt)
-            , onClick (UpdateRaceBuilderPRT prt.index)
+            , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderPRT prt.index))
             , disabled isReadOnly
             ]
             []
@@ -623,7 +625,7 @@ viewLRTOption lrt selectedLrts isReadOnly =
             [ type_ "checkbox"
             , class "race-builder__lrt-checkbox"
             , checked isSelected
-            , onClick (ToggleRaceBuilderLRT lrt.index)
+            , onClick (RaceBuilderMsg (RB.ToggleRaceBuilderLRT lrt.index))
             , disabled isReadOnly
             ]
             []
@@ -642,9 +644,9 @@ viewHabitabilityTab config habDisplay isReadOnly =
             , center = config.gravityCenter
             , width = config.gravityWidth
             , immune = config.gravityImmune
-            , onCenterChange = UpdateRaceBuilderGravityCenter
-            , onWidthChange = UpdateRaceBuilderGravityWidth
-            , onImmuneChange = UpdateRaceBuilderGravityImmune
+            , onCenterChange = RaceBuilderMsg << RB.UpdateRaceBuilderGravityCenter
+            , onWidthChange = RaceBuilderMsg << RB.UpdateRaceBuilderGravityWidth
+            , onImmuneChange = RaceBuilderMsg << RB.UpdateRaceBuilderGravityImmune
             , minDisplay = habDisplay.gravityMin
             , maxDisplay = habDisplay.gravityMax
             , rangeDisplay = habDisplay.gravityRange
@@ -662,9 +664,9 @@ viewHabitabilityTab config habDisplay isReadOnly =
             , center = config.temperatureCenter
             , width = config.temperatureWidth
             , immune = config.temperatureImmune
-            , onCenterChange = UpdateRaceBuilderTemperatureCenter
-            , onWidthChange = UpdateRaceBuilderTemperatureWidth
-            , onImmuneChange = UpdateRaceBuilderTemperatureImmune
+            , onCenterChange = RaceBuilderMsg << RB.UpdateRaceBuilderTemperatureCenter
+            , onWidthChange = RaceBuilderMsg << RB.UpdateRaceBuilderTemperatureWidth
+            , onImmuneChange = RaceBuilderMsg << RB.UpdateRaceBuilderTemperatureImmune
             , minDisplay = habDisplay.temperatureMin
             , maxDisplay = habDisplay.temperatureMax
             , rangeDisplay = habDisplay.temperatureRange
@@ -682,9 +684,9 @@ viewHabitabilityTab config habDisplay isReadOnly =
             , center = config.radiationCenter
             , width = config.radiationWidth
             , immune = config.radiationImmune
-            , onCenterChange = UpdateRaceBuilderRadiationCenter
-            , onWidthChange = UpdateRaceBuilderRadiationWidth
-            , onImmuneChange = UpdateRaceBuilderRadiationImmune
+            , onCenterChange = RaceBuilderMsg << RB.UpdateRaceBuilderRadiationCenter
+            , onWidthChange = RaceBuilderMsg << RB.UpdateRaceBuilderRadiationWidth
+            , onImmuneChange = RaceBuilderMsg << RB.UpdateRaceBuilderRadiationImmune
             , minDisplay = habDisplay.radiationMin
             , maxDisplay = habDisplay.radiationMax
             , rangeDisplay = habDisplay.radiationRange
@@ -710,7 +712,7 @@ viewHabitabilityTab config habDisplay isReadOnly =
                     , Html.Attributes.min "1"
                     , Html.Attributes.max "20"
                     , value (String.fromInt config.growthRate)
-                    , onInput (String.toInt >> Maybe.withDefault 15 >> UpdateRaceBuilderGrowthRate)
+                    , onInput (String.toInt >> Maybe.withDefault 15 >> RB.UpdateRaceBuilderGrowthRate >> RaceBuilderMsg)
                     , disabled isReadOnly
                     ]
                     []
@@ -783,9 +785,9 @@ viewHabRange opts =
             , button
                 [ class "race-builder__hab-btn race-builder__hab-btn--move"
                 , disabled (not canMoveLeft || opts.immune)
-                , onMouseDown (HabButtonPressed opts.leftBtn)
-                , onMouseUp HabButtonReleased
-                , onMouseLeave HabButtonReleased
+                , onMouseDown (RaceBuilderMsg (RB.HabButtonPressed opts.leftBtn))
+                , onMouseUp (RaceBuilderMsg RB.HabButtonReleased)
+                , onMouseLeave (RaceBuilderMsg RB.HabButtonReleased)
                 , title "Move range left (hold to repeat)"
                 ]
                 [ text "<" ]
@@ -810,9 +812,9 @@ viewHabRange opts =
             , button
                 [ class "race-builder__hab-btn race-builder__hab-btn--move"
                 , disabled (not canMoveRight || opts.immune)
-                , onMouseDown (HabButtonPressed opts.rightBtn)
-                , onMouseUp HabButtonReleased
-                , onMouseLeave HabButtonReleased
+                , onMouseDown (RaceBuilderMsg (RB.HabButtonPressed opts.rightBtn))
+                , onMouseUp (RaceBuilderMsg RB.HabButtonReleased)
+                , onMouseLeave (RaceBuilderMsg RB.HabButtonReleased)
                 , title "Move range right (hold to repeat)"
                 ]
                 [ text ">" ]
@@ -830,9 +832,9 @@ viewHabRange opts =
             [ button
                 [ class "race-builder__hab-btn"
                 , disabled (not canExpand || opts.immune)
-                , onMouseDown (HabButtonPressed opts.expandBtn)
-                , onMouseUp HabButtonReleased
-                , onMouseLeave HabButtonReleased
+                , onMouseDown (RaceBuilderMsg (RB.HabButtonPressed opts.expandBtn))
+                , onMouseUp (RaceBuilderMsg RB.HabButtonReleased)
+                , onMouseLeave (RaceBuilderMsg RB.HabButtonReleased)
                 , title "Expand range (hold to repeat)"
                 ]
                 [ text "<< >>" ]
@@ -849,9 +851,9 @@ viewHabRange opts =
             , button
                 [ class "race-builder__hab-btn"
                 , disabled (not canShrink || opts.immune)
-                , onMouseDown (HabButtonPressed opts.shrinkBtn)
-                , onMouseUp HabButtonReleased
-                , onMouseLeave HabButtonReleased
+                , onMouseDown (RaceBuilderMsg (RB.HabButtonPressed opts.shrinkBtn))
+                , onMouseUp (RaceBuilderMsg RB.HabButtonReleased)
+                , onMouseLeave (RaceBuilderMsg RB.HabButtonReleased)
                 , title "Shrink range (hold to repeat)"
                 ]
                 [ text ">> <<" ]
@@ -872,7 +874,7 @@ viewEconomyTab config isReadOnly =
             , minVal = 700
             , maxVal = 2500
             , step = 100
-            , onChange = UpdateRaceBuilderColonistsPerResource
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderColonistsPerResource
             , isReadOnly = isReadOnly
             }
 
@@ -885,7 +887,7 @@ viewEconomyTab config isReadOnly =
             , minVal = 5
             , maxVal = 15
             , step = 1
-            , onChange = UpdateRaceBuilderFactoryOutput
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderFactoryOutput
             , isReadOnly = isReadOnly
             }
         , viewEconomyRow
@@ -895,7 +897,7 @@ viewEconomyTab config isReadOnly =
             , minVal = 5
             , maxVal = 25
             , step = 1
-            , onChange = UpdateRaceBuilderFactoryCost
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderFactoryCost
             , isReadOnly = isReadOnly
             }
         , viewEconomyRow
@@ -905,14 +907,14 @@ viewEconomyTab config isReadOnly =
             , minVal = 5
             , maxVal = 25
             , step = 1
-            , onChange = UpdateRaceBuilderFactoryCount
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderFactoryCount
             , isReadOnly = isReadOnly
             }
         , label [ class "race-builder__checkbox-field" ]
             [ input
                 [ type_ "checkbox"
                 , checked config.factoriesUseLessGerm
-                , onClick (UpdateRaceBuilderFactoriesUseLessGerm (not config.factoriesUseLessGerm))
+                , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderFactoriesUseLessGerm (not config.factoriesUseLessGerm)))
                 , disabled isReadOnly
                 ]
                 []
@@ -928,7 +930,7 @@ viewEconomyTab config isReadOnly =
             , minVal = 5
             , maxVal = 25
             , step = 1
-            , onChange = UpdateRaceBuilderMineOutput
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderMineOutput
             , isReadOnly = isReadOnly
             }
         , viewEconomyRow
@@ -938,7 +940,7 @@ viewEconomyTab config isReadOnly =
             , minVal = 2
             , maxVal = 15
             , step = 1
-            , onChange = UpdateRaceBuilderMineCost
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderMineCost
             , isReadOnly = isReadOnly
             }
         , viewEconomyRow
@@ -948,7 +950,7 @@ viewEconomyTab config isReadOnly =
             , minVal = 5
             , maxVal = 25
             , step = 1
-            , onChange = UpdateRaceBuilderMineCount
+            , onChange = RaceBuilderMsg << RB.UpdateRaceBuilderMineCount
             , isReadOnly = isReadOnly
             }
         ]
@@ -992,12 +994,12 @@ viewResearchTab config isReadOnly =
     div [ class "race-builder__research" ]
         [ -- 2x3 grid of research boxes
           div [ class "race-builder__research-grid" ]
-            [ viewResearchBox "Energy" config.researchEnergy UpdateRaceBuilderResearchEnergy isReadOnly
-            , viewResearchBox "Construction" config.researchConstruction UpdateRaceBuilderResearchConstruction isReadOnly
-            , viewResearchBox "Weapons" config.researchWeapons UpdateRaceBuilderResearchWeapons isReadOnly
-            , viewResearchBox "Electronics" config.researchElectronics UpdateRaceBuilderResearchElectronics isReadOnly
-            , viewResearchBox "Propulsion" config.researchPropulsion UpdateRaceBuilderResearchPropulsion isReadOnly
-            , viewResearchBox "Biotechnology" config.researchBiotech UpdateRaceBuilderResearchBiotech isReadOnly
+            [ viewResearchBox "Energy" config.researchEnergy (RaceBuilderMsg << RB.UpdateRaceBuilderResearchEnergy) isReadOnly
+            , viewResearchBox "Construction" config.researchConstruction (RaceBuilderMsg << RB.UpdateRaceBuilderResearchConstruction) isReadOnly
+            , viewResearchBox "Weapons" config.researchWeapons (RaceBuilderMsg << RB.UpdateRaceBuilderResearchWeapons) isReadOnly
+            , viewResearchBox "Electronics" config.researchElectronics (RaceBuilderMsg << RB.UpdateRaceBuilderResearchElectronics) isReadOnly
+            , viewResearchBox "Propulsion" config.researchPropulsion (RaceBuilderMsg << RB.UpdateRaceBuilderResearchPropulsion) isReadOnly
+            , viewResearchBox "Biotechnology" config.researchBiotech (RaceBuilderMsg << RB.UpdateRaceBuilderResearchBiotech) isReadOnly
             ]
 
         -- Techs start high checkbox
@@ -1005,7 +1007,7 @@ viewResearchTab config isReadOnly =
             [ input
                 [ type_ "checkbox"
                 , checked config.techsStartHigh
-                , onClick (UpdateRaceBuilderTechsStartHigh (not config.techsStartHigh))
+                , onClick (RaceBuilderMsg (RB.UpdateRaceBuilderTechsStartHigh (not config.techsStartHigh)))
                 , disabled isReadOnly
                 ]
                 []
@@ -1078,7 +1080,7 @@ viewFooter form =
                 text ""
         , button
             [ class "btn btn-secondary"
-            , onClick CloseDialog
+            , onClick (ServerMsg Update.Server.CloseDialog)
             ]
             [ text
                 (if isViewMode then
@@ -1091,7 +1093,7 @@ viewFooter form =
         , if isViewMode then
             button
                 [ class "btn btn-primary"
-                , onClick CreateRaceFromExisting
+                , onClick (RaceBuilderMsg RB.CreateRaceFromExisting)
                 ]
                 [ text "Create Race from This" ]
 
@@ -1099,7 +1101,7 @@ viewFooter form =
             button
                 [ class "btn btn-primary"
                 , disabled (not form.validation.isValid || form.submitting)
-                , onClick SubmitRaceBuilder
+                , onClick (RaceBuilderMsg RB.SubmitRaceBuilder)
                 ]
                 [ text
                     (if form.submitting then

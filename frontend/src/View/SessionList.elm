@@ -16,6 +16,8 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Model exposing (..)
 import Msg exposing (Msg(..))
+import Update.SessionDetail
+import Update.Sessions
 import View.Helpers exposing (getCurrentUserId)
 
 
@@ -39,12 +41,12 @@ viewSessionList model =
             , div [ class "session-list__actions" ]
                 [ button
                     [ class "btn btn-secondary btn-sm"
-                    , onClick RefreshSessions
+                    , onClick (SessionsMsg Update.Sessions.RefreshSessions)
                     ]
                     [ text "Refresh" ]
                 , button
                     [ class "btn btn-primary btn-sm"
-                    , onClick OpenCreateSessionDialog
+                    , onClick (SessionsMsg Update.Sessions.OpenCreateSessionDialog)
                     ]
                     [ text "Create Session" ]
                 ]
@@ -64,7 +66,7 @@ viewSessionList model =
                     [ p [] [ text "Archived sessions are not loaded by default." ]
                     , button
                         [ class "btn btn-primary"
-                        , onClick FetchArchivedSessions
+                        , onClick (SessionsMsg Update.Sessions.FetchArchivedSessions)
                         ]
                         [ text "Fetch Archived Sessions" ]
                     ]
@@ -84,7 +86,7 @@ viewFilterButton filter label activeFilter =
     button
         [ class "filter-btn"
         , classList [ ( "is-active", filter == activeFilter ) ]
-        , onClick (SetSessionFilter filter)
+        , onClick (SessionsMsg (Update.Sessions.SetSessionFilter filter))
         ]
         [ text label ]
 
@@ -94,7 +96,7 @@ viewFilterButtonWithTooltip filter label activeFilter tooltip =
     button
         [ class "filter-btn"
         , classList [ ( "is-active", filter == activeFilter ) ]
-        , onClick (SetSessionFilter filter)
+        , onClick (SessionsMsg (Update.Sessions.SetSessionFilter filter))
         , attribute "title" tooltip
         ]
         [ text label ]
@@ -260,7 +262,7 @@ viewSessionCard maybeUserId allSessionTurns allSessionOrdersStatus session =
     in
     div
         [ class "session-card"
-        , onClick (ViewSessionDetail session.id)
+        , onClick (SessionDetailMsg (Update.SessionDetail.ViewSessionDetail session.id))
         ]
         [ div [ class "session-card__header" ]
             [ h3 [ class "session-card__title" ] [ text session.name ]
@@ -335,8 +337,8 @@ viewSessionCard maybeUserId allSessionTurns allSessionOrdersStatus session =
             , if not isAlreadyMemberOrManager && not (isStarted session) then
                 button
                     [ class "btn btn-sm btn-primary session-card__action"
-                    , onClick (JoinSession session.id)
-                    , stopPropagationOn "click" (Decode.succeed ( JoinSession session.id, True ))
+                    , onClick (SessionsMsg (Update.Sessions.JoinSession session.id))
+                    , stopPropagationOn "click" (Decode.succeed ( SessionsMsg (Update.Sessions.JoinSession session.id), True ))
                     ]
                     [ text "Join" ]
 

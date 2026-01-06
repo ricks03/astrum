@@ -8,6 +8,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (ChangeApikeyState(..))
 import Msg exposing (Msg(..))
+import Update.Admin
 
 
 {-| Dialog for changing your own API key.
@@ -19,7 +20,7 @@ viewChangeApikeyDialog state =
             [ h2 [ class "dialog__title" ] [ text "Change API Key" ]
             , button
                 [ class "dialog__close"
-                , onClick CancelChangeApikey
+                , onClick (AdminMsg Update.Admin.CancelChangeApikey)
                 ]
                 [ text "\u{00D7}" ]
             ]
@@ -52,12 +53,12 @@ viewConfirmChangeApikey =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CancelChangeApikey
+                , onClick (AdminMsg Update.Admin.CancelChangeApikey)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn--warning"
-                , onClick SubmitChangeApikey
+                , onClick (AdminMsg Update.Admin.SubmitChangeApikey)
                 ]
                 [ text "Change API Key" ]
             ]
@@ -90,7 +91,7 @@ viewChangeApikeyComplete newApikey =
             [ text "Your stored credentials have been updated automatically." ]
         , button
             [ class "btn btn--primary"
-            , onClick CancelChangeApikey
+            , onClick (AdminMsg Update.Admin.CancelChangeApikey)
             ]
             [ text "Done" ]
         ]

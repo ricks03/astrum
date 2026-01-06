@@ -8,6 +8,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (CreateSessionForm)
 import Msg exposing (Msg(..))
+import Update.Server
+import Update.Sessions
 import View.Helpers exposing (viewFormError)
 
 
@@ -20,7 +22,7 @@ viewCreateSessionDialog form =
             [ h2 [ class "dialog__title" ] [ text "Create Session" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -33,14 +35,14 @@ viewCreateSessionDialog form =
                     , type_ "text"
                     , placeholder "My Game Session"
                     , value form.name
-                    , onInput UpdateCreateSessionName
+                    , onInput (SessionsMsg << Update.Sessions.UpdateCreateSessionName)
                     ]
                     []
                 ]
             , div [ class "form-group" ]
                 [ div
                     [ class "form-checkbox"
-                    , onClick (UpdateCreateSessionPublic (not form.isPublic))
+                    , onClick (SessionsMsg (Update.Sessions.UpdateCreateSessionPublic (not form.isPublic)))
                     ]
                     [ input
                         [ type_ "checkbox"
@@ -56,13 +58,13 @@ viewCreateSessionDialog form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-primary"
                 , classList [ ( "btn-loading", form.submitting ) ]
-                , onClick SubmitCreateSession
+                , onClick (SessionsMsg Update.Sessions.SubmitCreateSession)
                 , disabled form.submitting
                 ]
                 [ text "Create Session" ]

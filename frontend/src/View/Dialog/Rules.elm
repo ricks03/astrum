@@ -8,6 +8,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (RulesForm)
 import Msg exposing (Msg(..))
+import Update.Rules
+import Update.Server
 import View.Helpers exposing (viewFormError)
 
 
@@ -32,7 +34,7 @@ viewRulesDialog form =
                 ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -57,7 +59,7 @@ viewRulesDialog form =
                             , ( 3, "Large (1600 ly)" )
                             , ( 4, "Huge (2000 ly)" )
                             ]
-                            UpdateRulesUniverseSize
+                            (RulesMsg << Update.Rules.UpdateRulesUniverseSize)
                         , viewRulesSelect form.isManager
                             "Density"
                             r.density
@@ -66,7 +68,7 @@ viewRulesDialog form =
                             , ( 2, "Dense" )
                             , ( 3, "Packed" )
                             ]
-                            UpdateRulesDensity
+                            (RulesMsg << Update.Rules.UpdateRulesDensity)
                         , viewRulesSelect form.isManager
                             "Starting Distance"
                             r.startingDistance
@@ -75,7 +77,7 @@ viewRulesDialog form =
                             , ( 2, "Farther" )
                             , ( 3, "Distant" )
                             ]
-                            UpdateRulesStartingDistance
+                            (RulesMsg << Update.Rules.UpdateRulesStartingDistance)
                         ]
 
                     -- Game Options
@@ -84,37 +86,37 @@ viewRulesDialog form =
                             "Maximum Minerals"
                             "Start with maximum mineral concentrations"
                             r.maximumMinerals
-                            UpdateRulesMaximumMinerals
+                            (RulesMsg << Update.Rules.UpdateRulesMaximumMinerals)
                         , viewRulesCheckbox form.isManager
                             "Slower Tech Advances"
                             "Technology costs 2x more to research"
                             r.slowerTechAdvances
-                            UpdateRulesSlowerTechAdvances
+                            (RulesMsg << Update.Rules.UpdateRulesSlowerTechAdvances)
                         , viewRulesCheckbox form.isManager
                             "Accelerated BBS Play"
                             "Faster game progression for play-by-post"
                             r.acceleratedBbsPlay
-                            UpdateRulesAcceleratedBbsPlay
+                            (RulesMsg << Update.Rules.UpdateRulesAcceleratedBbsPlay)
                         , viewRulesCheckbox form.isManager
                             "No Random Events"
                             "Disable mystery traders, comets, etc."
                             r.noRandomEvents
-                            UpdateRulesNoRandomEvents
+                            (RulesMsg << Update.Rules.UpdateRulesNoRandomEvents)
                         , viewRulesCheckbox form.isManager
                             "Computer Players Form Alliances"
                             "AI players can ally with each other"
                             r.computerPlayersFormAlliances
-                            UpdateRulesComputerPlayersFormAlliances
+                            (RulesMsg << Update.Rules.UpdateRulesComputerPlayersFormAlliances)
                         , viewRulesCheckbox form.isManager
                             "Public Player Scores"
                             "All players can see everyone's scores"
                             r.publicPlayerScores
-                            UpdateRulesPublicPlayerScores
+                            (RulesMsg << Update.Rules.UpdateRulesPublicPlayerScores)
                         , viewRulesCheckbox form.isManager
                             "Galaxy Clumping"
                             "Stars cluster together in the galaxy"
                             r.galaxyClumping
-                            UpdateRulesGalaxyClumping
+                            (RulesMsg << Update.Rules.UpdateRulesGalaxyClumping)
                         ]
 
                     -- Victory Conditions
@@ -124,51 +126,51 @@ viewRulesDialog form =
                             r.vcOwnsPercentOfPlanets
                             (String.fromInt r.vcOwnsPercentOfPlanetsValue)
                             "% of all planets"
-                            UpdateRulesVcOwnsPercentOfPlanets
-                            UpdateRulesVcOwnsPercentOfPlanetsValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcOwnsPercentOfPlanets)
+                            (RulesMsg << Update.Rules.UpdateRulesVcOwnsPercentOfPlanetsValue)
                         , viewRulesVictoryConditionTech form.isManager
                             "Attain tech level"
                             r.vcAttainTechInFields
                             (String.fromInt r.vcAttainTechInFieldsTechValue)
                             (String.fromInt r.vcAttainTechInFieldsFieldsValue)
-                            UpdateRulesVcAttainTechInFields
-                            UpdateRulesVcAttainTechInFieldsTechValue
-                            UpdateRulesVcAttainTechInFieldsFieldsValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcAttainTechInFields)
+                            (RulesMsg << Update.Rules.UpdateRulesVcAttainTechInFieldsTechValue)
+                            (RulesMsg << Update.Rules.UpdateRulesVcAttainTechInFieldsFieldsValue)
                         , viewRulesVictoryCondition form.isManager
                             "Exceed score of"
                             r.vcExceedScoreOf
                             (String.fromInt r.vcExceedScoreOfValue)
                             ""
-                            UpdateRulesVcExceedScoreOf
-                            UpdateRulesVcExceedScoreOfValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcExceedScoreOf)
+                            (RulesMsg << Update.Rules.UpdateRulesVcExceedScoreOfValue)
                         , viewRulesVictoryCondition form.isManager
                             "Exceed second place score by"
                             r.vcExceedNextPlayerScoreBy
                             (String.fromInt r.vcExceedNextPlayerScoreByValue)
                             "%"
-                            UpdateRulesVcExceedNextPlayerScoreBy
-                            UpdateRulesVcExceedNextPlayerScoreByValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcExceedNextPlayerScoreBy)
+                            (RulesMsg << Update.Rules.UpdateRulesVcExceedNextPlayerScoreByValue)
                         , viewRulesVictoryCondition form.isManager
                             "Production capacity of"
                             r.vcHasProductionCapacityOf
                             (String.fromInt r.vcHasProductionCapacityOfValue)
                             "k resources"
-                            UpdateRulesVcHasProductionCapacityOf
-                            UpdateRulesVcHasProductionCapacityOfValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcHasProductionCapacityOf)
+                            (RulesMsg << Update.Rules.UpdateRulesVcHasProductionCapacityOfValue)
                         , viewRulesVictoryCondition form.isManager
                             "Owns"
                             r.vcOwnsCapitalShips
                             (String.fromInt r.vcOwnsCapitalShipsValue)
                             "capital ships"
-                            UpdateRulesVcOwnsCapitalShips
-                            UpdateRulesVcOwnsCapitalShipsValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcOwnsCapitalShips)
+                            (RulesMsg << Update.Rules.UpdateRulesVcOwnsCapitalShipsValue)
                         , viewRulesVictoryCondition form.isManager
                             "Highest score after"
                             r.vcHaveHighestScoreAfterYears
                             (String.fromInt r.vcHaveHighestScoreAfterYearsValue)
                             "years"
-                            UpdateRulesVcHaveHighestScoreAfterYears
-                            UpdateRulesVcHaveHighestScoreAfterYearsValue
+                            (RulesMsg << Update.Rules.UpdateRulesVcHaveHighestScoreAfterYears)
+                            (RulesMsg << Update.Rules.UpdateRulesVcHaveHighestScoreAfterYearsValue)
                         ]
 
                     -- Victory Condition Meta
@@ -183,7 +185,7 @@ viewRulesDialog form =
                                     , value (String.fromInt r.vcWinnerMustMeet)
                                     , Html.Attributes.min "0"
                                     , Html.Attributes.max "7"
-                                    , onInput UpdateRulesVcWinnerMustMeet
+                                    , onInput (RulesMsg << Update.Rules.UpdateRulesVcWinnerMustMeet)
                                     ]
                                     []
 
@@ -202,7 +204,7 @@ viewRulesDialog form =
                                     , value (String.fromInt r.vcMinYearsBeforeWinner)
                                     , Html.Attributes.min "30"
                                     , Html.Attributes.max "500"
-                                    , onInput UpdateRulesVcMinYearsBeforeWinner
+                                    , onInput (RulesMsg << Update.Rules.UpdateRulesVcMinYearsBeforeWinner)
                                     ]
                                     []
 
@@ -216,7 +218,7 @@ viewRulesDialog form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text
                     (if form.isManager then
@@ -230,7 +232,7 @@ viewRulesDialog form =
                 button
                     [ class "btn btn-primary"
                     , disabled form.submitting
-                    , onClick SubmitRules
+                    , onClick (RulesMsg Update.Rules.SubmitRules)
                     ]
                     [ text
                         (if form.submitting then

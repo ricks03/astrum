@@ -12,6 +12,11 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (..)
 import Msg exposing (Msg(..))
+import Update.Admin
+import Update.Auth
+import Update.Races
+import Update.Server
+import Update.SessionDetail
 
 
 {-| Render the context menu for server buttons.
@@ -30,7 +35,7 @@ viewContextMenu maybeMenu serverData =
             div []
                 [ div
                     [ class "context-menu-backdrop"
-                    , onClick HideContextMenu
+                    , onClick (ServerMsg Update.Server.HideContextMenu)
                     ]
                     []
                 , div
@@ -48,7 +53,7 @@ viewContextMenu maybeMenu serverData =
                        else
                         div
                             [ class "context-menu__item"
-                            , onClick (OpenEditServerDialog menu.serverUrl)
+                            , onClick (ServerMsg (Update.Server.OpenEditServerDialog menu.serverUrl))
                             ]
                             [ text "Edit Server" ]
                      ]
@@ -56,7 +61,7 @@ viewContextMenu maybeMenu serverData =
                                 [ div [ class "context-menu__separator" ] []
                                 , div
                                     [ class "context-menu__item"
-                                    , onClick (Disconnect menu.serverUrl)
+                                    , onClick (AuthMsg (Update.Auth.Disconnect menu.serverUrl))
                                     ]
                                     [ text "Disconnect" ]
                                 ]
@@ -71,7 +76,7 @@ viewContextMenu maybeMenu serverData =
                                 [ div [ class "context-menu__separator" ] []
                                 , div
                                     [ class "context-menu__item is-danger"
-                                    , onClick (OpenRemoveServerDialog menu.serverUrl "")
+                                    , onClick (ServerMsg (Update.Server.OpenRemoveServerDialog menu.serverUrl ""))
                                     ]
                                     [ text "Remove Server" ]
                                 ]
@@ -112,7 +117,7 @@ viewUserMenu model =
                 div []
                     [ div
                         [ class "user-menu-backdrop"
-                        , onClick HideUserMenu
+                        , onClick (AdminMsg Update.Admin.HideUserMenu)
                         ]
                         []
                     , div [ class "user-menu" ]
@@ -124,7 +129,7 @@ viewUserMenu model =
                                         [ span [ class "user-menu__serial-value" ] [ text serialKey ]
                                         , button
                                             [ class "user-menu__copy-btn"
-                                            , onClick (CopyToClipboard serialKey)
+                                            , onClick (AdminMsg (Update.Admin.CopyToClipboard serialKey))
                                             , attribute "title" "Copy to clipboard"
                                             ]
                                             [ text "\u{1F4CB}" ]
@@ -136,29 +141,29 @@ viewUserMenu model =
                          , div [ class "user-menu__separator" ] []
                          , div
                             [ class "user-menu__item"
-                            , onClick OpenRacesDialog
+                            , onClick (RacesMsg Update.Races.OpenRacesDialog)
                             ]
                             [ text "My Races" ]
                          , div
                             [ class "user-menu__item"
-                            , onClick OpenInvitationsDialog
+                            , onClick (SessionDetailMsg Update.SessionDetail.OpenInvitationsDialog)
                             ]
                             [ text "Invitations" ]
                          , div [ class "user-menu__separator" ] []
                          , div
                             [ class "user-menu__item"
-                            , onClick (CopyApiKey serverUrl)
+                            , onClick (AdminMsg (Update.Admin.CopyApiKey serverUrl))
                             ]
                             [ text "Copy API Key" ]
                          , div
                             [ class "user-menu__item"
-                            , onClick OpenChangeApikeyDialog
+                            , onClick (AdminMsg Update.Admin.OpenChangeApikeyDialog)
                             ]
                             [ text "Change API Key" ]
                          , div [ class "user-menu__separator" ] []
                          , div
                             [ class "user-menu__item"
-                            , onClick (Disconnect serverUrl)
+                            , onClick (AuthMsg (Update.Auth.Disconnect serverUrl))
                             ]
                             [ text "Disconnect" ]
                          ]

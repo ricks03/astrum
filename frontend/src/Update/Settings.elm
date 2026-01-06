@@ -1,18 +1,6 @@
 module Update.Settings exposing
-    ( handleAutoDownloadStarsSet
-    , handleCheckNtvdmSupport
-    , handleCheckWineInstall
-    , handleGotAppSettings
-    , handleNtvdmChecked
-    , handleOpenSettingsDialog
-    , handleSelectServersDir
-    , handleSelectWinePrefixesDir
-    , handleServersDirSelected
-    , handleSetAutoDownloadStars
-    , handleSetUseWine
-    , handleUseWineSet
-    , handleWineInstallChecked
-    , handleWinePrefixesDirSelected
+    ( Msg(..)
+    , update
     )
 
 {-| Update handlers for app settings messages.
@@ -22,213 +10,145 @@ Handles settings dialog, directories, Wine/NTVDM configuration.
 -}
 
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 
 
-
--- =============================================================================
--- SETTINGS DIALOG
--- =============================================================================
-
-
-{-| Open settings dialog.
+{-| Settings-specific messages.
 -}
-handleOpenSettingsDialog : Model -> ( Model, Cmd Msg )
-handleOpenSettingsDialog model =
-    ( { model | dialog = Just SettingsDialog }
-    , Ports.getAppSettings ()
-    )
+type Msg
+    = OpenSettingsDialog
+    | SelectServersDir
+    | GotAppSettings (Result String AppSettings)
+    | ServersDirSelected (Result String AppSettings)
+    | SetAutoDownloadStars Bool
+    | AutoDownloadStarsSet (Result String AppSettings)
+    | SetUseWine Bool
+    | UseWineSet (Result String AppSettings)
+    | SelectWinePrefixesDir
+    | WinePrefixesDirSelected (Result String AppSettings)
+    | CheckWineInstall
+    | WineInstallChecked (Result String { valid : Bool, message : String })
+    | CheckNtvdmSupport
+    | NtvdmChecked (Result String NtvdmCheckResult)
 
 
-{-| Handle app settings result.
+{-| Handle all Settings messages.
+
+Returns (Model, Cmd Msg) using this module's own Msg type.
+The parent Update.elm uses Cmd.map to wrap commands.
+
 -}
-handleGotAppSettings : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleGotAppSettings model result =
-    case result of
-        Ok settings ->
-            ( { model | appSettings = Just settings }
-            , Cmd.none
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OpenSettingsDialog ->
+            ( { model | dialog = Just SettingsDialog }
+            , Ports.getAppSettings ()
             )
 
-        Err _ ->
-            ( model, Cmd.none )
+        SelectServersDir ->
+            ( model, Ports.selectServersDir () )
 
+        GotAppSettings result ->
+            case result of
+                Ok settings ->
+                    ( { model | appSettings = Just settings }, Cmd.none )
 
+                Err _ ->
+                    ( model, Cmd.none )
 
--- =============================================================================
--- SERVERS DIRECTORY
--- =============================================================================
+        ServersDirSelected result ->
+            case result of
+                Ok settings ->
+                    ( { model | appSettings = Just settings }, Cmd.none )
 
+                Err _ ->
+                    ( model, Cmd.none )
 
-{-| Handle select servers directory request.
--}
-handleSelectServersDir : Model -> ( Model, Cmd Msg )
-handleSelectServersDir model =
-    ( model
-    , Ports.selectServersDir ()
-    )
+        SetAutoDownloadStars enabled ->
+            ( model, Ports.setAutoDownloadStars enabled )
 
+        AutoDownloadStarsSet result ->
+            case result of
+                Ok settings ->
+                    ( { model | appSettings = Just settings }, Cmd.none )
 
-{-| Handle servers directory selected result.
--}
-handleServersDirSelected : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleServersDirSelected model result =
-    case result of
-        Ok settings ->
-            ( { model | appSettings = Just settings }
-            , Cmd.none
+                Err _ ->
+                    ( model, Cmd.none )
+
+        SetUseWine enabled ->
+            ( model, Ports.setUseWine enabled )
+
+        UseWineSet result ->
+            case result of
+                Ok settings ->
+                    ( { model
+                        | appSettings = Just settings
+                        , wineCheckMessage = Nothing
+                      }
+                    , Cmd.none
+                    )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
+        SelectWinePrefixesDir ->
+            ( model, Ports.selectWinePrefixesDir () )
+
+        WinePrefixesDirSelected result ->
+            case result of
+                Ok settings ->
+                    ( { model | appSettings = Just settings }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
+        CheckWineInstall ->
+            ( { model | wineCheckInProgress = True, wineCheckMessage = Nothing }
+            , Ports.checkWineInstall ()
             )
 
-        Err _ ->
-            ( model, Cmd.none )
+        WineInstallChecked result ->
+            case result of
+                Ok checkResult ->
+                    let
+                        updatedSettings =
+                            model.appSettings
+                                |> Maybe.map (\s -> { s | validWineInstall = checkResult.valid })
+                    in
+                    ( { model
+                        | appSettings = updatedSettings
+                        , wineCheckInProgress = False
+                        , wineCheckMessage = Just checkResult.message
+                      }
+                    , Cmd.none
+                    )
 
+                Err errMsg ->
+                    ( { model
+                        | wineCheckInProgress = False
+                        , wineCheckMessage = Just ("Check failed: " ++ errMsg)
+                      }
+                    , Cmd.none
+                    )
 
+        CheckNtvdmSupport ->
+            ( { model | ntvdmCheckInProgress = True }, Ports.checkNtvdmSupport () )
 
--- =============================================================================
--- AUTO DOWNLOAD STARS
--- =============================================================================
+        NtvdmChecked result ->
+            case result of
+                Ok checkResult ->
+                    ( { model
+                        | ntvdmCheckInProgress = False
+                        , ntvdmCheckResult = Just checkResult
+                      }
+                    , Cmd.none
+                    )
 
-
-{-| Handle set auto download stars request.
--}
-handleSetAutoDownloadStars : Model -> Bool -> ( Model, Cmd Msg )
-handleSetAutoDownloadStars model enabled =
-    ( model, Ports.setAutoDownloadStars enabled )
-
-
-{-| Handle auto download stars set result.
--}
-handleAutoDownloadStarsSet : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleAutoDownloadStarsSet model result =
-    case result of
-        Ok settings ->
-            ( { model | appSettings = Just settings }
-            , Cmd.none
-            )
-
-        Err _ ->
-            ( model, Cmd.none )
-
-
-
--- =============================================================================
--- WINE CONFIGURATION
--- =============================================================================
-
-
-{-| Handle set use Wine request.
--}
-handleSetUseWine : Model -> Bool -> ( Model, Cmd Msg )
-handleSetUseWine model enabled =
-    ( model, Ports.setUseWine enabled )
-
-
-{-| Handle use Wine set result.
--}
-handleUseWineSet : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleUseWineSet model result =
-    case result of
-        Ok settings ->
-            ( { model
-                | appSettings = Just settings
-                , wineCheckMessage = Nothing
-              }
-            , Cmd.none
-            )
-
-        Err _ ->
-            ( model, Cmd.none )
-
-
-{-| Handle select Wine prefixes directory request.
--}
-handleSelectWinePrefixesDir : Model -> ( Model, Cmd Msg )
-handleSelectWinePrefixesDir model =
-    ( model, Ports.selectWinePrefixesDir () )
-
-
-{-| Handle Wine prefixes directory selected result.
--}
-handleWinePrefixesDirSelected : Model -> Result String AppSettings -> ( Model, Cmd Msg )
-handleWinePrefixesDirSelected model result =
-    case result of
-        Ok settings ->
-            ( { model | appSettings = Just settings }
-            , Cmd.none
-            )
-
-        Err _ ->
-            ( model, Cmd.none )
-
-
-{-| Handle check Wine install request.
--}
-handleCheckWineInstall : Model -> ( Model, Cmd Msg )
-handleCheckWineInstall model =
-    ( { model | wineCheckInProgress = True, wineCheckMessage = Nothing }
-    , Ports.checkWineInstall ()
-    )
-
-
-{-| Handle Wine install check result.
--}
-handleWineInstallChecked : Model -> Result String { valid : Bool, message : String } -> ( Model, Cmd Msg )
-handleWineInstallChecked model result =
-    case result of
-        Ok checkResult ->
-            let
-                updatedSettings =
-                    model.appSettings
-                        |> Maybe.map (\s -> { s | validWineInstall = checkResult.valid })
-            in
-            ( { model
-                | appSettings = updatedSettings
-                , wineCheckInProgress = False
-                , wineCheckMessage = Just checkResult.message
-              }
-            , Cmd.none
-            )
-
-        Err errMsg ->
-            ( { model
-                | wineCheckInProgress = False
-                , wineCheckMessage = Just ("Check failed: " ++ errMsg)
-              }
-            , Cmd.none
-            )
-
-
-
--- =============================================================================
--- NTVDM CONFIGURATION (Windows)
--- =============================================================================
-
-
-{-| Handle check NTVDM support request.
--}
-handleCheckNtvdmSupport : Model -> ( Model, Cmd Msg )
-handleCheckNtvdmSupport model =
-    ( { model | ntvdmCheckInProgress = True }, Ports.checkNtvdmSupport () )
-
-
-{-| Handle NTVDM check result.
--}
-handleNtvdmChecked : Model -> Result String NtvdmCheckResult -> ( Model, Cmd Msg )
-handleNtvdmChecked model result =
-    case result of
-        Ok checkResult ->
-            ( { model
-                | ntvdmCheckInProgress = False
-                , ntvdmCheckResult = Just checkResult
-              }
-            , Cmd.none
-            )
-
-        Err errMsg ->
-            ( { model
-                | ntvdmCheckInProgress = False
-                , ntvdmCheckResult = Just { available = False, is64Bit = False, message = "Check failed: " ++ errMsg, helpUrl = Nothing }
-              }
-            , Cmd.none
-            )
+                Err errMsg ->
+                    ( { model
+                        | ntvdmCheckInProgress = False
+                        , ntvdmCheckResult = Just { available = False, is64Bit = False, message = "Check failed: " ++ errMsg, helpUrl = Nothing }
+                      }
+                    , Cmd.none
+                    )

@@ -15,6 +15,20 @@ import Model exposing (Dialog(..), Model)
 import Msg exposing (Msg(..))
 import Ports
 import Time
+import Update.Auth
+import Update.DragDrop
+import Update.MapViewer
+import Update.Notifications
+import Update.RaceBuilder
+import Update.Races
+import Update.Rules
+import Update.Server
+import Update.Settings
+import Update.TurnFiles
+import Update.SessionDetail
+import Update.Sessions
+import Update.UI
+import Update.Admin
 
 
 
@@ -33,11 +47,11 @@ subscriptions model =
                     case detail.dragState of
                         Just _ ->
                             [ Browser.Events.onMouseMove
-                                (D.map2 MouseMoveWhileDragging
+                                (D.map2 (\x y -> DragDropMsg (Update.DragDrop.MouseMoveWhileDragging x y))
                                     (D.field "clientX" D.float)
                                     (D.field "clientY" D.float)
                                 )
-                            , Browser.Events.onMouseUp (D.succeed MouseUpEndDrag)
+                            , Browser.Events.onMouseUp (D.succeed (DragDropMsg Update.DragDrop.MouseUpEndDrag))
                             ]
 
                         Nothing ->
@@ -51,8 +65,8 @@ subscriptions model =
             case model.serverDragState of
                 Just _ ->
                     [ Browser.Events.onMouseMove
-                        (D.map ServerDragMove (D.field "clientY" D.float))
-                    , Browser.Events.onMouseUp (D.succeed ServerDragEnd)
+                        (D.map (\y -> DragDropMsg (Update.DragDrop.ServerDragMove y)) (D.field "clientY" D.float))
+                    , Browser.Events.onMouseUp (D.succeed (DragDropMsg Update.DragDrop.ServerDragEnd))
                     ]
 
                 Nothing ->
@@ -65,7 +79,7 @@ subscriptions model =
                     case form.heldHabButton of
                         Just _ ->
                             -- Tick every 100ms while button is held
-                            [ Time.every 100 (\_ -> HabButtonTick) ]
+                            [ Time.every 100 (\_ -> RaceBuilderMsg Update.RaceBuilder.HabButtonTick) ]
 
                         Nothing ->
                             []
@@ -78,12 +92,12 @@ subscriptions model =
             ++ serverDragSubs
             ++ habButtonSubs
             ++ [ -- Server management results
-                 Ports.serversReceived (decodeResult Decode.serverList GotServers)
-        , Ports.serverAdded (decodeResult Decode.server ServerAdded)
-        , Ports.serverUpdated (decodeResult (D.succeed ()) ServerUpdated)
-        , Ports.serverRemoved (decodeResult (D.succeed ()) ServerRemoved)
-        , Ports.hasDefaultServerResult (decodeResult D.bool GotHasDefaultServer)
-        , Ports.defaultServerAdded (decodeResult Decode.server DefaultServerAdded)
+                 Ports.serversReceived (decodeResult Decode.serverList (ServerMsg << Update.Server.GotServers))
+        , Ports.serverAdded (decodeResult Decode.server (ServerMsg << Update.Server.ServerAdded))
+        , Ports.serverUpdated (decodeResult (D.succeed ()) (ServerMsg << Update.Server.ServerUpdated))
+        , Ports.serverRemoved (decodeResult (D.succeed ()) (ServerMsg << Update.Server.ServerRemoved))
+        , Ports.hasDefaultServerResult (decodeResult D.bool (ServerMsg << Update.Server.GotHasDefaultServer))
+        , Ports.defaultServerAdded (decodeResult Decode.server (ServerMsg << Update.Server.DefaultServerAdded))
 
         -- Authentication results
         , Ports.connectResult decodeConnectResult
@@ -99,66 +113,66 @@ subscriptions model =
         , Ports.sessionsReceived decodeSessionsReceived
         , Ports.archivedSessionsReceived decodeArchivedSessionsReceived
         , Ports.sessionReceived decodeSessionReceived
-        , Ports.sessionCreated (decodeResultWithServerUrl Decode.session SessionCreated)
-        , Ports.sessionJoined (decodeResultWithServerUrl Decode.session SessionJoined)
-        , Ports.sessionDeleted (decodeResultWithServerUrl (D.succeed ()) SessionDeleted)
-        , Ports.sessionQuit (decodeResultWithServerUrl (D.succeed ()) SessionQuitResult)
-        , Ports.memberPromoted (decodeResultWithServerUrl (D.succeed ()) MemberPromoted)
-        , Ports.sessionArchived (decodeResultWithServerUrl (D.succeed ()) SessionArchived)
+        , Ports.sessionCreated (decodeResultWithServerUrl Decode.session (\url result -> SessionsMsg (Update.Sessions.SessionCreated url result)))
+        , Ports.sessionJoined (decodeResultWithServerUrl Decode.session (\url result -> SessionsMsg (Update.Sessions.SessionJoined url result)))
+        , Ports.sessionDeleted (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.SessionDeleted url result)))
+        , Ports.sessionQuit (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.SessionQuitResult url result)))
+        , Ports.memberPromoted (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.MemberPromoted url result)))
+        , Ports.sessionArchived (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.SessionArchived url result)))
 
         -- User profiles & invitations
-        , Ports.userProfilesReceived (decodeResultWithServerUrl Decode.userProfileList GotUserProfiles)
-        , Ports.inviteResult (decodeResultWithServerUrl (D.succeed ()) InviteResult)
+        , Ports.userProfilesReceived (decodeResultWithServerUrl Decode.userProfileList (\url result -> SessionDetailMsg (Update.SessionDetail.GotUserProfiles url result)))
+        , Ports.inviteResult (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionDetailMsg (Update.SessionDetail.InviteResult url result)))
         , Ports.invitationsReceived decodeInvitationsReceived
         , Ports.sentInvitationsReceived decodeSentInvitationsReceived
-        , Ports.invitationAccepted (decodeResultWithServerUrl Decode.session InvitationAccepted)
-        , Ports.invitationDeclined (decodeResultWithServerUrl (D.succeed ()) InvitationDeclined)
-        , Ports.sentInvitationCanceled (decodeResultWithServerUrl (D.succeed ()) SentInvitationCanceled)
+        , Ports.invitationAccepted (decodeResultWithServerUrl Decode.session (\url result -> SessionDetailMsg (Update.SessionDetail.InvitationAccepted url result)))
+        , Ports.invitationDeclined (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionDetailMsg (Update.SessionDetail.InvitationDeclined url result)))
+        , Ports.sentInvitationCanceled (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionDetailMsg (Update.SessionDetail.SentInvitationCanceled url result)))
 
         -- Races
-        , Ports.racesReceived (decodeResultWithServerUrl Decode.raceList GotRaces)
-        , Ports.raceUploaded (decodeResultWithServerUrl Decode.race RaceUploaded)
-        , Ports.raceDownloaded (decodeResult (D.succeed ()) RaceDownloaded)
-        , Ports.raceDeleted (decodeResultWithServerUrl (D.succeed ()) RaceDeleted)
-        , Ports.sessionRaceSet (decodeResultWithServerUrl (D.succeed ()) SetupRaceResult)
-        , Ports.uploadAndSetSessionRaceResult (decodeResultWithServerUrl (D.succeed ()) SetupRaceResult)
-        , Ports.playerReadyResult (decodeResultWithServerUrl (D.succeed ()) PlayerReadyResult)
+        , Ports.racesReceived (decodeResultWithServerUrl Decode.raceList (\url result -> RacesMsg (Update.Races.GotRaces url result)))
+        , Ports.raceUploaded (decodeResultWithServerUrl Decode.race (\url result -> RacesMsg (Update.Races.RaceUploaded url result)))
+        , Ports.raceDownloaded (decodeResult (D.succeed ()) (RacesMsg << Update.Races.RaceDownloaded))
+        , Ports.raceDeleted (decodeResultWithServerUrl (D.succeed ()) (\url result -> RacesMsg (Update.Races.RaceDeleted url result)))
+        , Ports.sessionRaceSet (decodeResultWithServerUrl (D.succeed ()) (\url result -> RacesMsg (Update.Races.SetupRaceResult url result)))
+        , Ports.uploadAndSetSessionRaceResult (decodeResultWithServerUrl (D.succeed ()) (\url result -> RacesMsg (Update.Races.SetupRaceResult url result)))
+        , Ports.playerReadyResult (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.PlayerReadyResult url result)))
         , Ports.sessionPlayerRaceReceived decodeSessionPlayerRace
-        , Ports.botPlayerAdded (decodeResultWithServerUrl (D.succeed ()) AddBotResult)
-        , Ports.botPlayerRemoved (decodeResultWithServerUrl (D.succeed ()) RemoveBotResult)
+        , Ports.botPlayerAdded (decodeResultWithServerUrl (D.succeed ()) (\url result -> AdminMsg (Update.Admin.AddBotResult url result)))
+        , Ports.botPlayerRemoved (decodeResultWithServerUrl (D.succeed ()) (\url result -> AdminMsg (Update.Admin.RemoveBotResult url result)))
 
         -- Race Builder
-        , Ports.raceBuilderValidation (decodeResult Decode.raceValidation RaceBuilderValidationReceived)
-        , Ports.raceTemplateReceived (decodeResult Decode.raceConfig RaceTemplateLoaded)
-        , Ports.raceBuilderSaved (decodeResult Decode.race RaceBuilderSaved)
-        , Ports.raceFileConfigLoaded (decodeResult Decode.raceConfig RaceFileLoaded)
+        , Ports.raceBuilderValidation (decodeResult Decode.raceValidation (RaceBuilderMsg << Update.RaceBuilder.RaceBuilderValidationReceived))
+        , Ports.raceTemplateReceived (decodeResult Decode.raceConfig (RaceBuilderMsg << Update.RaceBuilder.RaceTemplateLoaded))
+        , Ports.raceBuilderSaved (decodeResult Decode.race (RaceBuilderMsg << Update.RaceBuilder.RaceBuilderSaved))
+        , Ports.raceFileConfigLoaded (decodeResult Decode.raceConfig (RaceBuilderMsg << Update.RaceBuilder.RaceFileLoaded))
 
         -- Rules
         , Ports.rulesReceived decodeRulesReceived
-        , Ports.rulesSet (decodeResultWithServerUrl Decode.rules RulesSet)
+        , Ports.rulesSet (decodeResultWithServerUrl Decode.rules (\url result -> RulesMsg (Update.Rules.RulesSet url result)))
 
         -- Start Game
-        , Ports.gameStarted (decodeResultWithServerUrl (D.succeed ()) GameStarted)
+        , Ports.gameStarted (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.GameStarted url result)))
 
         -- Player Reordering
-        , Ports.playersReordered (decodeResultWithServerUrl (D.succeed ()) PlayersReordered)
+        , Ports.playersReordered (decodeResultWithServerUrl (D.succeed ()) (\url result -> DragDropMsg (Update.DragDrop.PlayersReordered url result)))
 
         -- Server Reordering
-        , Ports.serversReordered (decodeResult (D.succeed ()) ServersReordered)
+        , Ports.serversReordered (decodeResult (D.succeed ()) (DragDropMsg << Update.DragDrop.ServersReordered))
 
         -- Events from Go backend
-        , Ports.sessionsUpdated SessionsUpdated
+        , Ports.sessionsUpdated (SessionsMsg << Update.Sessions.SessionsUpdated)
         , Ports.connectionChanged decodeConnectionChanged
         , Ports.orderConflictReceived decodeOrderConflict
 
         -- WebSocket notifications
-        , Ports.notificationSession (decodeNotification NotificationSession)
-        , Ports.notificationInvitation (decodeNotification NotificationInvitation)
-        , Ports.notificationRace (decodeNotification NotificationRace)
-        , Ports.notificationRuleset (decodeNotification NotificationRuleset)
-        , Ports.notificationPlayerRace (decodeNotification NotificationPlayerRace)
+        , Ports.notificationSession (decodeNotification Update.Notifications.NotificationSession)
+        , Ports.notificationInvitation (decodeNotification Update.Notifications.NotificationInvitation)
+        , Ports.notificationRace (decodeNotification Update.Notifications.NotificationRace)
+        , Ports.notificationRuleset (decodeNotification Update.Notifications.NotificationRuleset)
+        , Ports.notificationPlayerRace (decodeNotification Update.Notifications.NotificationPlayerRace)
         , Ports.notificationSessionTurn decodeSessionTurnNotification
-        , Ports.notificationOrderStatus (decodeNotification NotificationOrderStatus)
+        , Ports.notificationOrderStatus (decodeNotification Update.Notifications.NotificationOrderStatus)
         , Ports.notificationPendingRegistration decodePendingRegistrationNotification
 
         -- Turn files
@@ -169,32 +183,32 @@ subscriptions model =
         , Ports.ordersStatusReceived decodeOrdersStatusReceived
 
         -- App settings
-        , Ports.appSettingsReceived (decodeResult Decode.appSettings GotAppSettings)
-        , Ports.serversDirSelected (decodeResult Decode.appSettings ServersDirSelected)
-        , Ports.autoDownloadStarsSet (decodeResult Decode.appSettings AutoDownloadStarsSet)
-        , Ports.zoomLevelSet (decodeResult Decode.appSettings ZoomLevelSet)
-        , Ports.useWineSet (decodeResult Decode.appSettings UseWineSet)
-        , Ports.winePrefixesDirSelected (decodeResult Decode.appSettings WinePrefixesDirSelected)
-        , Ports.wineInstallChecked (decodeResult Decode.wineCheckResult WineInstallChecked)
-        , Ports.ntvdmChecked (decodeResult Decode.ntvdmCheckResult NtvdmChecked)
-        , Ports.enableBrowserStarsSet (decodeResult Decode.appSettings EnableBrowserStarsSet)
+        , Ports.appSettingsReceived (decodeResult Decode.appSettings (SettingsMsg << Update.Settings.GotAppSettings))
+        , Ports.serversDirSelected (decodeResult Decode.appSettings (SettingsMsg << Update.Settings.ServersDirSelected))
+        , Ports.autoDownloadStarsSet (decodeResult Decode.appSettings (SettingsMsg << Update.Settings.AutoDownloadStarsSet))
+        , Ports.zoomLevelSet (decodeResult Decode.appSettings (UIMsg << Update.UI.ZoomLevelSet))
+        , Ports.useWineSet (decodeResult Decode.appSettings (SettingsMsg << Update.Settings.UseWineSet))
+        , Ports.winePrefixesDirSelected (decodeResult Decode.appSettings (SettingsMsg << Update.Settings.WinePrefixesDirSelected))
+        , Ports.wineInstallChecked (decodeResult Decode.wineCheckResult (SettingsMsg << Update.Settings.WineInstallChecked))
+        , Ports.ntvdmChecked (decodeResult Decode.ntvdmCheckResult (SettingsMsg << Update.Settings.NtvdmChecked))
+        , Ports.enableBrowserStarsSet (decodeResult Decode.appSettings (UIMsg << Update.UI.EnableBrowserStarsSet))
 
         -- Map Viewer
-        , Ports.mapGenerated (decodeResult D.string MapGenerated)
-        , Ports.mapSaved (decodeResult (D.succeed ()) MapSaved)
-        , Ports.animatedMapGenerated (decodeResult D.string AnimatedMapGenerated)
-        , Ports.gifSaved (decodeResult (D.succeed ()) GifSaved)
+        , Ports.mapGenerated (decodeResult D.string (MapViewerMsg << Update.MapViewer.MapGenerated))
+        , Ports.mapSaved (decodeResult (D.succeed ()) (MapViewerMsg << Update.MapViewer.MapSaved))
+        , Ports.animatedMapGenerated (decodeResult D.string (MapViewerMsg << Update.MapViewer.AnimatedMapGenerated))
+        , Ports.gifSaved (decodeResult (D.succeed ()) (MapViewerMsg << Update.MapViewer.GifSaved))
 
         -- Zoom keyboard events
         , Ports.zoomKeyPressed decodeZoomKey
 
         -- Admin
-        , Ports.resetApikeyResult (decodeResult D.string ResetApikeyResult)
-        , Ports.changeApikeyResult (decodeResult D.string ChangeApikeyResult)
-        , Ports.apiKeyReceived (decodeResultWithServerUrl D.string GotApiKey)
+        , Ports.resetApikeyResult (decodeResult D.string (AdminMsg << Update.Admin.ResetApikeyResult))
+        , Ports.changeApikeyResult (decodeResult D.string (AdminMsg << Update.Admin.ChangeApikeyResult))
+        , Ports.apiKeyReceived (decodeResultWithServerUrl D.string (\url result -> AdminMsg (Update.Admin.GotApiKey url result)))
 
         -- Launch Stars
-        , Ports.launchStarsResult (decodeResult (D.succeed ()) LaunchStarsResult)
+        , Ports.launchStarsResult (decodeResult (D.succeed ()) (TurnFilesMsg << Update.TurnFiles.LaunchStarsResult))
 
         -- Has Stars Exe
         , Ports.hasStarsExeResult
@@ -204,17 +218,17 @@ subscriptions model =
                     (D.field "sessionId" D.string)
                     (D.field "hasStarsExe" D.bool)
                 )
-                GotHasStarsExe
+                (TurnFilesMsg << Update.TurnFiles.GotHasStarsExe)
             )
 
         -- Session Backup
-        , Ports.sessionBackupDownloaded (decodeResultWithServerUrl (D.succeed ()) SessionBackupDownloaded)
+        , Ports.sessionBackupDownloaded (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.SessionBackupDownloaded url result)))
 
         -- Historic Backup
-        , Ports.historicBackupDownloaded (decodeResultWithServerUrl (D.succeed ()) HistoricBackupDownloaded)
+        , Ports.historicBackupDownloaded (decodeResultWithServerUrl (D.succeed ()) (\url result -> SessionsMsg (Update.Sessions.HistoricBackupDownloaded url result)))
 
         -- UI events
-        , Ports.escapePressed (\_ -> EscapePressed)
+        , Ports.escapePressed (\_ -> UIMsg Update.UI.EscapePressed)
         ]
         )
 
@@ -228,13 +242,13 @@ decodeZoomKey : String -> Msg
 decodeZoomKey key =
     case key of
         "in" ->
-            ZoomIn
+            UIMsg Update.UI.ZoomIn
 
         "out" ->
-            ZoomOut
+            UIMsg Update.UI.ZoomOut
 
         "reset" ->
-            ZoomReset
+            UIMsg Update.UI.ZoomReset
 
         _ ->
             NoOp
@@ -323,16 +337,16 @@ decodeConnectResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            ConnectResult serverUrl result
+            AuthMsg (Update.Auth.ConnectResult serverUrl result)
 
         Err err ->
             -- Fallback: try without serverUrl wrapper
             case D.decodeValue (D.field "error" D.string) value of
                 Ok errorMsg ->
-                    ConnectResult "" (Err errorMsg)
+                    AuthMsg (Update.Auth.ConnectResult "" (Err errorMsg))
 
                 Err _ ->
-                    ConnectResult "" (Err (D.errorToString err))
+                    AuthMsg (Update.Auth.ConnectResult "" (Err (D.errorToString err)))
 
 
 {-| Decode disconnect result.
@@ -351,10 +365,10 @@ decodeDisconnectResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            DisconnectResult serverUrl result
+            AuthMsg (Update.Auth.DisconnectResult serverUrl result)
 
         Err err ->
-            DisconnectResult "" (Err (D.errorToString err))
+            AuthMsg (Update.Auth.DisconnectResult "" (Err (D.errorToString err)))
 
 
 {-| Decode register result.
@@ -379,10 +393,10 @@ decodeRegisterResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            RegisterResult serverUrl result
+            AuthMsg (Update.Auth.RegisterResult serverUrl result)
 
         Err err ->
-            RegisterResult "" (Err (D.errorToString err))
+            AuthMsg (Update.Auth.RegisterResult "" (Err (D.errorToString err)))
 
 
 {-| Decode create user result (admin).
@@ -407,10 +421,10 @@ decodeCreateUserResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            CreateUserResult serverUrl result
+            AdminMsg (Update.Admin.CreateUserResult serverUrl result)
 
         Err err ->
-            CreateUserResult "" (Err (D.errorToString err))
+            AdminMsg (Update.Admin.CreateUserResult "" (Err (D.errorToString err)))
 
 
 {-| Decode delete user result (admin).
@@ -429,10 +443,10 @@ decodeDeleteUserResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            DeleteUserResult serverUrl result
+            AdminMsg (Update.Admin.DeleteUserResult serverUrl result)
 
         Err err ->
-            DeleteUserResult "" (Err (D.errorToString err))
+            AdminMsg (Update.Admin.DeleteUserResult "" (Err (D.errorToString err)))
 
 
 {-| Decode pending registrations received result (admin).
@@ -458,10 +472,10 @@ decodePendingRegistrationsReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotPendingRegistrations serverUrl result
+            AdminMsg (Update.Admin.GotPendingRegistrations serverUrl result)
 
         Err err ->
-            GotPendingRegistrations "" (Err (D.errorToString err))
+            AdminMsg (Update.Admin.GotPendingRegistrations "" (Err (D.errorToString err)))
 
 
 {-| Decode approve registration result (admin).
@@ -480,10 +494,10 @@ decodeApproveRegistrationResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            ApproveRegistrationResult serverUrl result
+            AdminMsg (Update.Admin.ApproveRegistrationResult serverUrl result)
 
         Err err ->
-            ApproveRegistrationResult "" (Err (D.errorToString err))
+            AdminMsg (Update.Admin.ApproveRegistrationResult "" (Err (D.errorToString err)))
 
 
 {-| Decode reject registration result (admin).
@@ -502,10 +516,10 @@ decodeRejectRegistrationResult value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            RejectRegistrationResult serverUrl result
+            AdminMsg (Update.Admin.RejectRegistrationResult serverUrl result)
 
         Err err ->
-            RejectRegistrationResult "" (Err (D.errorToString err))
+            AdminMsg (Update.Admin.RejectRegistrationResult "" (Err (D.errorToString err)))
 
 
 {-| Decode sessions received result.
@@ -529,10 +543,10 @@ decodeSessionsReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotSessions serverUrl result
+            SessionsMsg (Update.Sessions.GotSessions serverUrl result)
 
         Err err ->
-            GotSessions "" (Err ("Failed to decode sessions response: " ++ D.errorToString err))
+            SessionsMsg (Update.Sessions.GotSessions "" (Err ("Failed to decode sessions response: " ++ D.errorToString err)))
 
 
 {-| Decode archived sessions received result.
@@ -554,10 +568,10 @@ decodeArchivedSessionsReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotArchivedSessions serverUrl result
+            SessionsMsg (Update.Sessions.GotArchivedSessions serverUrl result)
 
         Err err ->
-            GotArchivedSessions "" (Err ("Failed to decode archived sessions response: " ++ D.errorToString err))
+            SessionsMsg (Update.Sessions.GotArchivedSessions "" (Err ("Failed to decode archived sessions response: " ++ D.errorToString err)))
 
 
 {-| Decode single session received result.
@@ -581,10 +595,10 @@ decodeSessionReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotSession serverUrl result
+            SessionsMsg (Update.Sessions.GotSession serverUrl result)
 
         Err err ->
-            GotSession "" (Err ("Failed to decode session response: " ++ D.errorToString err))
+            SessionsMsg (Update.Sessions.GotSession "" (Err ("Failed to decode session response: " ++ D.errorToString err)))
 
 
 {-| Decode rules received result.
@@ -609,10 +623,10 @@ decodeRulesReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, sessionId, result ) ->
-            GotRules serverUrl sessionId result
+            RulesMsg (Update.Rules.GotRules serverUrl sessionId result)
 
         Err err ->
-            GotRules "" "" (Err (D.errorToString err))
+            RulesMsg (Update.Rules.GotRules "" "" (Err (D.errorToString err)))
 
 
 {-| Decode invitations received result.
@@ -634,10 +648,10 @@ decodeInvitationsReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotInvitations serverUrl result
+            SessionDetailMsg (Update.SessionDetail.GotInvitations serverUrl result)
 
         Err err ->
-            GotInvitations "" (Err ("Failed to decode invitations response: " ++ D.errorToString err))
+            SessionDetailMsg (Update.SessionDetail.GotInvitations "" (Err ("Failed to decode invitations response: " ++ D.errorToString err)))
 
 
 {-| Decode sent invitations received result.
@@ -659,10 +673,10 @@ decodeSentInvitationsReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotSentInvitations serverUrl result
+            SessionDetailMsg (Update.SessionDetail.GotSentInvitations serverUrl result)
 
         Err err ->
-            GotSentInvitations "" (Err ("Failed to decode sent invitations response: " ++ D.errorToString err))
+            SessionDetailMsg (Update.SessionDetail.GotSentInvitations "" (Err ("Failed to decode sent invitations response: " ++ D.errorToString err)))
 
 
 {-| Decode connection changed event.
@@ -674,13 +688,13 @@ decodeConnectionChanged : D.Value -> Msg
 decodeConnectionChanged value =
     let
         decoder =
-            D.map2 ConnectionChanged
+            D.map2 Update.Notifications.ConnectionChanged
                 (D.field "serverUrl" D.string)
                 (D.field "connected" D.bool)
     in
     case D.decodeValue decoder value of
         Ok msg ->
-            msg
+            NotificationsMsg msg
 
         Err _ ->
             NoOp
@@ -695,14 +709,14 @@ decodeOrderConflict : D.Value -> Msg
 decodeOrderConflict value =
     let
         decoder =
-            D.map3 OrderConflictReceived
+            D.map3 Update.Notifications.OrderConflictReceived
                 (D.field "serverUrl" D.string)
                 (D.field "sessionId" D.string)
                 (D.field "year" D.int)
     in
     case D.decodeValue decoder value of
         Ok msg ->
-            msg
+            NotificationsMsg msg
 
         Err _ ->
             NoOp
@@ -713,7 +727,7 @@ decodeOrderConflict value =
 The JavaScript sends: { serverUrl: "...", id: "...", action: "..." }
 
 -}
-decodeNotification : (String -> String -> String -> Msg) -> D.Value -> Msg
+decodeNotification : (String -> String -> String -> Update.Notifications.Msg) -> D.Value -> Msg
 decodeNotification toMsg value =
     let
         decoder =
@@ -724,7 +738,7 @@ decodeNotification toMsg value =
     in
     case D.decodeValue decoder value of
         Ok msg ->
-            msg
+            NotificationsMsg msg
 
         Err _ ->
             NoOp
@@ -739,7 +753,7 @@ decodeSessionTurnNotification : D.Value -> Msg
 decodeSessionTurnNotification value =
     let
         decoder =
-            D.map4 NotificationSessionTurn
+            D.map4 Update.Notifications.NotificationSessionTurn
                 (D.field "serverUrl" D.string)
                 (D.field "sessionId" D.string)
                 (D.field "action" D.string)
@@ -747,7 +761,7 @@ decodeSessionTurnNotification value =
     in
     case D.decodeValue decoder value of
         Ok msg ->
-            msg
+            NotificationsMsg msg
 
         Err _ ->
             NoOp
@@ -762,7 +776,7 @@ decodePendingRegistrationNotification : D.Value -> Msg
 decodePendingRegistrationNotification value =
     let
         decoder =
-            D.map5 NotificationPendingRegistration
+            D.map5 Update.Notifications.NotificationPendingRegistration
                 (D.field "serverUrl" D.string)
                 (D.field "id" D.string)
                 (D.field "action" D.string)
@@ -771,7 +785,7 @@ decodePendingRegistrationNotification value =
     in
     case D.decodeValue decoder value of
         Ok msg ->
-            msg
+            NotificationsMsg msg
 
         Err _ ->
             NoOp
@@ -796,10 +810,10 @@ decodeTurnReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotTurnFiles serverUrl result
+            TurnFilesMsg (Update.TurnFiles.GotTurnFiles serverUrl result)
 
         Err err ->
-            GotTurnFiles "" (Err ("Failed to decode turn files response: " ++ D.errorToString err))
+            TurnFilesMsg (Update.TurnFiles.GotTurnFiles "" (Err ("Failed to decode turn files response: " ++ D.errorToString err)))
 
 
 {-| Decode latest turn received result.
@@ -821,10 +835,10 @@ decodeLatestTurnReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotLatestTurn serverUrl result
+            TurnFilesMsg (Update.TurnFiles.GotLatestTurn serverUrl result)
 
         Err err ->
-            GotLatestTurn "" (Err ("Failed to decode latest turn response: " ++ D.errorToString err))
+            TurnFilesMsg (Update.TurnFiles.GotLatestTurn "" (Err ("Failed to decode latest turn response: " ++ D.errorToString err)))
 
 
 {-| Decode orders status received result.
@@ -846,10 +860,10 @@ decodeOrdersStatusReceived value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, result ) ->
-            GotOrdersStatus serverUrl result
+            TurnFilesMsg (Update.TurnFiles.GotOrdersStatus serverUrl result)
 
         Err err ->
-            GotOrdersStatus "" (Err ("Failed to decode orders status response: " ++ D.errorToString err))
+            TurnFilesMsg (Update.TurnFiles.GotOrdersStatus "" (Err ("Failed to decode orders status response: " ++ D.errorToString err)))
 
 
 {-| Decode session player race received result.
@@ -874,7 +888,7 @@ decodeSessionPlayerRace value =
     in
     case D.decodeValue decoder value of
         Ok ( serverUrl, sessionId, result ) ->
-            GotSessionPlayerRace serverUrl sessionId result
+            RacesMsg (Update.Races.GotSessionPlayerRace serverUrl sessionId result)
 
         Err err ->
-            GotSessionPlayerRace "" "" (Err (D.errorToString err))
+            RacesMsg (Update.Races.GotSessionPlayerRace "" "" (Err (D.errorToString err)))

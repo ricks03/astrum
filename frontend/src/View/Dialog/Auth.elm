@@ -11,6 +11,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (ConnectForm, RegisterForm)
 import Msg exposing (Msg(..))
+import Update.Auth
+import Update.Server
 import View.Helpers exposing (viewFormError)
 
 
@@ -23,7 +25,7 @@ viewConnectDialog serverUrl form =
             [ h2 [ class "dialog__title" ] [ text "Connect to Server" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -34,7 +36,7 @@ viewConnectDialog serverUrl form =
                     [ text "Login" ]
                 , button
                     [ class "connect-dialog__tab"
-                    , onClick SwitchToRegister
+                    , onClick (AuthMsg Update.Auth.SwitchToRegister)
                     ]
                     [ text "Register" ]
                 ]
@@ -46,7 +48,7 @@ viewConnectDialog serverUrl form =
                     , type_ "text"
                     , placeholder "Your nickname"
                     , value form.username
-                    , onInput UpdateConnectUsername
+                    , onInput (AuthMsg << Update.Auth.UpdateConnectUsername)
                     ]
                     []
                 ]
@@ -57,7 +59,7 @@ viewConnectDialog serverUrl form =
                     , type_ "password"
                     , placeholder "Your API key"
                     , value form.password
-                    , onInput UpdateConnectPassword
+                    , onInput (AuthMsg << Update.Auth.UpdateConnectPassword)
                     ]
                     []
                 ]
@@ -65,13 +67,13 @@ viewConnectDialog serverUrl form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn-primary"
                 , classList [ ( "btn-loading", form.submitting ) ]
-                , onClick (SubmitConnect serverUrl)
+                , onClick (AuthMsg (Update.Auth.SubmitConnect serverUrl))
                 , disabled form.submitting
                 ]
                 [ text "Connect" ]
@@ -88,7 +90,7 @@ viewRegisterDialog serverUrl form =
             [ h2 [ class "dialog__title" ] [ text "Register Account" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -124,7 +126,7 @@ viewRegisterDialog serverUrl form =
                 [ div [ class "connect-dialog__tabs" ]
                     [ button
                         [ class "connect-dialog__tab"
-                        , onClick SwitchToConnect
+                        , onClick (AuthMsg Update.Auth.SwitchToConnect)
                         ]
                         [ text "Login" ]
                     , button
@@ -139,7 +141,7 @@ viewRegisterDialog serverUrl form =
                         , type_ "text"
                         , placeholder "Choose a nickname"
                         , value form.nickname
-                        , onInput UpdateRegisterNickname
+                        , onInput (AuthMsg << Update.Auth.UpdateRegisterNickname)
                         ]
                         []
                     ]
@@ -150,7 +152,7 @@ viewRegisterDialog serverUrl form =
                         , type_ "email"
                         , placeholder "your@email.com"
                         , value form.email
-                        , onInput UpdateRegisterEmail
+                        , onInput (AuthMsg << Update.Auth.UpdateRegisterEmail)
                         ]
                         []
                     ]
@@ -160,7 +162,7 @@ viewRegisterDialog serverUrl form =
                         [ class "form-input"
                         , placeholder "Why do you want to join?"
                         , value form.message
-                        , onInput UpdateRegisterMessage
+                        , onInput (AuthMsg << Update.Auth.UpdateRegisterMessage)
                         ]
                         []
                     ]
@@ -169,7 +171,7 @@ viewRegisterDialog serverUrl form =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text
                     (if form.success then
@@ -186,7 +188,7 @@ viewRegisterDialog serverUrl form =
                 button
                     [ class "btn btn-primary"
                     , classList [ ( "btn-loading", form.submitting ) ]
-                    , onClick (SubmitRegister serverUrl)
+                    , onClick (AuthMsg (Update.Auth.SubmitRegister serverUrl))
                     , disabled form.submitting
                     ]
                     [ text "Register" ]

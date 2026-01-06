@@ -9,6 +9,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (TurnFilesForm)
 import Msg exposing (Msg(..))
+import Update.MapViewer
+import Update.Server
+import Update.TurnFiles
 import View.Helpers exposing (viewFormError)
 
 
@@ -22,7 +25,7 @@ viewTurnFilesDialog form hasConflict =
                 [ text ("Year " ++ String.fromInt form.year) ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -63,7 +66,7 @@ viewTurnFilesDialog form hasConflict =
                     [ h3 [ class "turn-files-dialog__section-title" ] [ text "Turn Files" ]
                     , button
                         [ class "btn btn--small btn--secondary"
-                        , onClick (OpenGameDir form.sessionId)
+                        , onClick (TurnFilesMsg (Update.TurnFiles.OpenGameDir form.sessionId))
                         , title "Open game directory"
                         ]
                         [ text "Open Directory" ]
@@ -104,7 +107,7 @@ viewTurnFilesDialog form hasConflict =
                 Just _ ->
                     button
                         [ class "btn btn--secondary"
-                        , onClick (OpenMapViewer form.sessionId form.year form.raceName form.playerNumber)
+                        , onClick (MapViewerMsg (Update.MapViewer.OpenMapViewer form.sessionId form.year form.raceName form.playerNumber))
                         ]
                         [ text "View Map" ]
 
@@ -112,7 +115,7 @@ viewTurnFilesDialog form hasConflict =
                     text ""
             , button
                 [ class "btn btn--secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Close" ]
             ]

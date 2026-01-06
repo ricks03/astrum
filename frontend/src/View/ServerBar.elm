@@ -11,6 +11,8 @@ import Html.Events exposing (..)
 import Json.Decode as Decode
 import Model exposing (..)
 import Msg exposing (Msg(..))
+import Update.DragDrop
+import Update.Server
 
 
 {-| Render the server bar with all server buttons.
@@ -23,7 +25,7 @@ viewServerBar model =
         , div [ class "server-bar__bottom" ]
             [ button
                 [ class "add-server-btn"
-                , onClick OpenAddServerDialog
+                , onClick (ServerMsg Update.Server.OpenAddServerDialog)
                 , title "Add Server"
                 ]
                 [ text "+" ]
@@ -72,8 +74,8 @@ viewServerButton selectedUrl serverData dragState server =
 
         dragEvents =
             [ onMouseDownServer server.url
-            , onMouseEnter (ServerDragEnter server.url)
-            , onMouseLeave ServerDragLeave
+            , onMouseEnter (DragDropMsg (Update.DragDrop.ServerDragEnter server.url))
+            , onMouseLeave (DragDropMsg Update.DragDrop.ServerDragLeave)
             ]
     in
     div
@@ -89,7 +91,7 @@ viewServerButton selectedUrl serverData dragState server =
         [ div [ class "server-button__indicator" ] []
         , button
             [ class "server-button__btn"
-            , onClick (SelectServer server.url)
+            , onClick (ServerMsg (Update.Server.SelectServer server.url))
             , onContextMenu server.url
             , title server.name
             ]
@@ -110,7 +112,7 @@ onMouseDownServer serverUrl =
             (\y button ->
                 if button == 0 then
                     -- Left click only
-                    ( ServerDragStart serverUrl y, True )
+                    ( DragDropMsg (Update.DragDrop.ServerDragStart serverUrl y), True )
 
                 else
                     ( NoOp, False )
@@ -136,7 +138,7 @@ serverInitials name =
 onContextMenu : String -> Attribute Msg
 onContextMenu serverUrl =
     preventDefaultOn "contextmenu"
-        (Decode.map2 (\x y -> ( ShowContextMenu serverUrl x y, True ))
+        (Decode.map2 (\x y -> ( ServerMsg (Update.Server.ShowContextMenu serverUrl x y), True ))
             (Decode.field "clientX" Decode.float)
             (Decode.field "clientY" Decode.float)
         )

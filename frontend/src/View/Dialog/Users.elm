@@ -16,6 +16,9 @@ import Html.Events exposing (..)
 import Json.Decode as D
 import Model exposing (CreateUserForm, DeleteUserState(..), InviteForm, PendingActionState(..), ResetApikeyState(..), UsersListPane(..), UsersListState)
 import Msg exposing (Msg(..))
+import Update.Admin
+import Update.Server
+import Update.SessionDetail
 import View.Helpers exposing (viewFormError)
 
 
@@ -30,7 +33,7 @@ onEscapeClear currentFilter =
                 (\key ->
                     if key == "Escape" && not (String.isEmpty currentFilter) then
                         -- Clear filter and stop propagation
-                        D.succeed ( UpdateUsersListFilter "", True )
+                        D.succeed ( AdminMsg (Update.Admin.UpdateUsersListFilter ""), True )
 
                     else
                         -- Let the event propagate (will close dialog if Escape)
@@ -48,7 +51,7 @@ viewInviteUserDialog form userProfiles =
             [ h2 [ class "dialog__title" ] [ text "Invite User" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -64,13 +67,13 @@ viewInviteUserDialog form userProfiles =
         , div [ class "dialog__footer" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn--primary"
                 , disabled (form.selectedUserId == Nothing || form.submitting)
-                , onClick SubmitInvite
+                , onClick (SessionDetailMsg Update.SessionDetail.SubmitInvite)
                 ]
                 [ text
                     (if form.submitting then
@@ -93,7 +96,7 @@ viewUserOption selectedUserId user =
     div
         [ class "invite-dialog__user"
         , classList [ ( "is-selected", isSelected ) ]
-        , onClick (SelectUserToInvite user.id)
+        , onClick (SessionDetailMsg (Update.SessionDetail.SelectUserToInvite user.id))
         ]
         [ span [ class "invite-dialog__user-name" ] [ text user.nickname ]
         , span [ class "invite-dialog__user-email" ] [ text user.email ]
@@ -109,7 +112,7 @@ viewInvitationsDialog receivedInvitations sentInvitations =
             [ h2 [ class "dialog__title" ] [ text "Invitations" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "x" ]
             ]
@@ -141,7 +144,7 @@ viewInvitationsDialog receivedInvitations sentInvitations =
         , div [ class "dialog__footer dialog__footer--right" ]
             [ button
                 [ class "btn btn-secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Close" ]
             ]
@@ -160,17 +163,17 @@ viewReceivedInvitationCard invitation =
         , div [ class "invitation-card__actions" ]
             [ button
                 [ class "btn btn--secondary btn--sm"
-                , onClick (ViewInvitedSession invitation.sessionId)
+                , onClick (SessionDetailMsg (Update.SessionDetail.ViewInvitedSession invitation.sessionId))
                 ]
                 [ text "View" ]
             , button
                 [ class "btn btn--secondary btn--sm"
-                , onClick (DeclineInvitation invitation.id)
+                , onClick (SessionDetailMsg (Update.SessionDetail.DeclineInvitation invitation.id))
                 ]
                 [ text "Decline" ]
             , button
                 [ class "btn btn--primary btn--sm"
-                , onClick (AcceptInvitation invitation.id)
+                , onClick (SessionDetailMsg (Update.SessionDetail.AcceptInvitation invitation.id))
                 ]
                 [ text "Accept" ]
             ]
@@ -189,12 +192,12 @@ viewSentInvitationCard invitation =
         , div [ class "invitation-card__actions" ]
             [ button
                 [ class "btn btn--secondary btn--sm"
-                , onClick (ViewInvitedSession invitation.sessionId)
+                , onClick (SessionDetailMsg (Update.SessionDetail.ViewInvitedSession invitation.sessionId))
                 ]
                 [ text "View" ]
             , button
                 [ class "btn btn--secondary btn--sm"
-                , onClick (CancelSentInvitation invitation.id)
+                , onClick (SessionDetailMsg (Update.SessionDetail.CancelSentInvitation invitation.id))
                 ]
                 [ text "Cancel" ]
             ]
@@ -227,7 +230,7 @@ viewUsersListDialog state =
             [ h2 [ class "dialog__title" ] [ text "User Management" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "\u{00D7}" ]
             ]
@@ -235,13 +238,13 @@ viewUsersListDialog state =
             [ button
                 [ class "users-list-dialog__tab"
                 , classList [ ( "is-active", state.activePane == UsersPane ) ]
-                , onClick SwitchUsersListPane
+                , onClick (AdminMsg Update.Admin.SwitchUsersListPane)
                 ]
                 [ text ("Users (" ++ String.fromInt (List.length state.users) ++ ")") ]
             , button
                 [ class "users-list-dialog__tab"
                 , classList [ ( "is-active", state.activePane == PendingPane ) ]
-                , onClick SwitchUsersListPane
+                , onClick (AdminMsg Update.Admin.SwitchUsersListPane)
                 ]
                 [ text ("Pending (" ++ String.fromInt (List.length state.pendingUsers) ++ ")") ]
             ]
@@ -252,7 +255,7 @@ viewUsersListDialog state =
                     , type_ "text"
                     , placeholder "Filter by nickname or email..."
                     , value state.filterQuery
-                    , onInput UpdateUsersListFilter
+                    , onInput (AdminMsg << Update.Admin.UpdateUsersListFilter)
                     , onEscapeClear state.filterQuery
                     ]
                     []
@@ -262,7 +265,7 @@ viewUsersListDialog state =
                   else
                     button
                         [ class "users-list-dialog__filter-clear"
-                        , onClick (UpdateUsersListFilter "")
+                        , onClick (AdminMsg (Update.Admin.UpdateUsersListFilter ""))
                         , title "Clear filter (Esc)"
                         ]
                         [ text "\u{232B}" ]
@@ -279,14 +282,14 @@ viewUsersListDialog state =
         , div [ class "dialog__footer" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "Close" ]
             , case state.activePane of
                 UsersPane ->
                     button
                         [ class "btn btn--primary"
-                        , onClick OpenCreateUserDialog
+                        , onClick (AdminMsg Update.Admin.OpenCreateUserDialog)
                         ]
                         [ text "Create User" ]
 
@@ -440,13 +443,13 @@ viewUserListItem currentUserId user =
               else
                 button
                     [ class "users-list-dialog__delete-btn"
-                    , onClick (ConfirmDeleteUser user.id user.nickname)
+                    , onClick (AdminMsg (Update.Admin.ConfirmDeleteUser user.id user.nickname))
                     , title "Delete User"
                     ]
                     [ text "\u{1F5D1}" ]
             , button
                 [ class "users-list-dialog__reset-btn"
-                , onClick (ConfirmResetApikey user.id)
+                , onClick (AdminMsg (Update.Admin.ConfirmResetApikey user.id))
                 , title "Reset API Key"
                 ]
                 [ text "\u{1F512}" ]
@@ -469,12 +472,12 @@ viewConfirmResetApikey userId nickname =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CancelResetApikey
+                , onClick (AdminMsg Update.Admin.CancelResetApikey)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn--warning"
-                , onClick (SubmitResetApikey userId)
+                , onClick (AdminMsg (Update.Admin.SubmitResetApikey userId))
                 ]
                 [ text "Reset API Key" ]
             ]
@@ -505,7 +508,7 @@ viewResetApikeyComplete nickname newApikey =
             [ text newApikey ]
         , button
             [ class "btn btn--primary"
-            , onClick CancelResetApikey
+            , onClick (AdminMsg Update.Admin.CancelResetApikey)
             ]
             [ text "Done" ]
         ]
@@ -526,12 +529,12 @@ viewConfirmDeleteUser userId nickname =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CancelDeleteUser
+                , onClick (AdminMsg Update.Admin.CancelDeleteUser)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn--danger"
-                , onClick (SubmitDeleteUser userId)
+                , onClick (AdminMsg (Update.Admin.SubmitDeleteUser userId))
                 ]
                 [ text "Delete User" ]
             ]
@@ -563,7 +566,7 @@ viewDeleteUserError nickname errorMsg =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--primary"
-                , onClick CancelDeleteUser
+                , onClick (AdminMsg Update.Admin.CancelDeleteUser)
                 ]
                 [ text "OK" ]
             ]
@@ -579,7 +582,7 @@ viewCreateUserDialog form =
             [ h2 [ class "dialog__title" ] [ text "Create User" ]
             , button
                 [ class "dialog__close"
-                , onClick CloseDialog
+                , onClick (ServerMsg Update.Server.CloseDialog)
                 ]
                 [ text "\u{00D7}" ]
             ]
@@ -596,14 +599,14 @@ viewCreateUserDialog form =
                 Just _ ->
                     button
                         [ class "btn btn--primary"
-                        , onClick OpenUsersListDialog
+                        , onClick (AdminMsg Update.Admin.OpenUsersListDialog)
                         ]
                         [ text "Back to Users" ]
 
                 Nothing ->
                     button
                         [ class "btn btn--secondary"
-                        , onClick CloseDialog
+                        , onClick (ServerMsg Update.Server.CloseDialog)
                         ]
                         [ text "Cancel" ]
             , case form.createdUser of
@@ -614,7 +617,7 @@ viewCreateUserDialog form =
                     button
                         [ class "btn btn--primary"
                         , disabled form.submitting
-                        , onClick SubmitCreateUser
+                        , onClick (AdminMsg Update.Admin.SubmitCreateUser)
                         ]
                         [ text
                             (if form.submitting then
@@ -641,7 +644,7 @@ viewCreateUserForm form =
                 , type_ "text"
                 , placeholder "User's nickname"
                 , value form.nickname
-                , onInput UpdateCreateUserNickname
+                , onInput (AdminMsg << Update.Admin.UpdateCreateUserNickname)
                 ]
                 []
             ]
@@ -652,7 +655,7 @@ viewCreateUserForm form =
                 , type_ "email"
                 , placeholder "user@example.com"
                 , value form.email
-                , onInput UpdateCreateUserEmail
+                , onInput (AdminMsg << Update.Admin.UpdateCreateUserEmail)
                 ]
                 []
             ]
@@ -673,7 +676,7 @@ viewPendingUserItem user =
                 Just message ->
                     button
                         [ class "users-list-dialog__message-btn"
-                        , onClick (ViewRegistrationMessage user.id user.nickname message)
+                        , onClick (AdminMsg (Update.Admin.ViewRegistrationMessage user.id user.nickname message))
                         , title "View registration message"
                         ]
                         [ text "\u{1F4AC}" ]
@@ -682,13 +685,13 @@ viewPendingUserItem user =
                     text ""
             , button
                 [ class "btn btn--primary btn--sm"
-                , onClick (ConfirmApproveRegistration user.id user.nickname)
+                , onClick (AdminMsg (Update.Admin.ConfirmApproveRegistration user.id user.nickname))
                 , title "Approve Registration"
                 ]
                 [ text "Approve" ]
             , button
                 [ class "btn btn--danger btn--sm"
-                , onClick (ConfirmRejectRegistration user.id user.nickname)
+                , onClick (AdminMsg (Update.Admin.ConfirmRejectRegistration user.id user.nickname))
                 , title "Reject Registration"
                 ]
                 [ text "Reject" ]
@@ -710,17 +713,17 @@ viewRegistrationMessage userId nickname message =
         , div [ class "users-list-dialog__message-actions" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CloseRegistrationMessage
+                , onClick (AdminMsg Update.Admin.CloseRegistrationMessage)
                 ]
                 [ text "Back" ]
             , button
                 [ class "btn btn--primary"
-                , onClick (ConfirmApproveRegistration userId nickname)
+                , onClick (AdminMsg (Update.Admin.ConfirmApproveRegistration userId nickname))
                 ]
                 [ text "Approve" ]
             , button
                 [ class "btn btn--danger"
-                , onClick (ConfirmRejectRegistration userId nickname)
+                , onClick (AdminMsg (Update.Admin.ConfirmRejectRegistration userId nickname))
                 ]
                 [ text "Reject" ]
             ]
@@ -742,12 +745,12 @@ viewConfirmApprove userId nickname =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CancelApproveRegistration
+                , onClick (AdminMsg Update.Admin.CancelApproveRegistration)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn--primary"
-                , onClick (SubmitApproveRegistration userId)
+                , onClick (AdminMsg (Update.Admin.SubmitApproveRegistration userId))
                 ]
                 [ text "Approve" ]
             ]
@@ -776,7 +779,7 @@ viewApproveComplete nickname =
             [ text "The user has been notified and their client will automatically update with the new permissions." ]
         , button
             [ class "btn btn--primary"
-            , onClick CancelApproveRegistration
+            , onClick (AdminMsg Update.Admin.CancelApproveRegistration)
             ]
             [ text "Done" ]
         ]
@@ -797,7 +800,7 @@ viewApproveError nickname errorMsg =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--primary"
-                , onClick CancelApproveRegistration
+                , onClick (AdminMsg Update.Admin.CancelApproveRegistration)
                 ]
                 [ text "OK" ]
             ]
@@ -819,12 +822,12 @@ viewConfirmReject userId nickname =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--secondary"
-                , onClick CancelRejectRegistration
+                , onClick (AdminMsg Update.Admin.CancelRejectRegistration)
                 ]
                 [ text "Cancel" ]
             , button
                 [ class "btn btn--danger"
-                , onClick (SubmitRejectRegistration userId)
+                , onClick (AdminMsg (Update.Admin.SubmitRejectRegistration userId))
                 ]
                 [ text "Reject" ]
             ]
@@ -856,7 +859,7 @@ viewRejectError nickname errorMsg =
         , div [ class "confirm-dialog__actions" ]
             [ button
                 [ class "btn btn--primary"
-                , onClick CancelRejectRegistration
+                , onClick (AdminMsg Update.Admin.CancelRejectRegistration)
                 ]
                 [ text "OK" ]
             ]

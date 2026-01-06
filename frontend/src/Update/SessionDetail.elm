@@ -1,5 +1,6 @@
 module Update.SessionDetail exposing
-    ( handleAcceptInvitation
+    ( Msg(..)
+    , handleAcceptInvitation
     , handleCancelSentInvitation
     , handleCloseSessionDetail
     , handleDeclineInvitation
@@ -17,6 +18,7 @@ module Update.SessionDetail exposing
     , handleTogglePlayersExpanded
     , handleViewInvitedSession
     , handleViewSessionDetail
+    , update
     )
 
 {-| Update handlers for session detail and invitation messages.
@@ -31,9 +33,91 @@ import Api.Session exposing (Session)
 import Api.UserProfile exposing (UserProfile)
 import Json.Encode as E
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 import Update.Helpers exposing (updateInviteForm)
+
+
+{-| Session detail messages.
+-}
+type Msg
+    = ViewSessionDetail String -- sessionId
+    | CloseSessionDetail
+    | TogglePlayersExpanded
+    | GotUserProfiles String (Result String (List UserProfile)) -- serverUrl, result
+    | OpenInviteDialog
+    | SelectUserToInvite String -- userId
+    | SubmitInvite
+    | InviteResult String (Result String ()) -- serverUrl, result
+    | OpenInvitationsDialog
+    | ViewInvitedSession String -- sessionId - view session from invitation
+    | GotInvitations String (Result String (List Invitation)) -- serverUrl, result
+    | GotSentInvitations String (Result String (List Invitation)) -- serverUrl, result
+    | AcceptInvitation String -- invitationId
+    | InvitationAccepted String (Result String Session) -- serverUrl, result
+    | DeclineInvitation String -- invitationId
+    | InvitationDeclined String (Result String ()) -- serverUrl, result
+    | CancelSentInvitation String -- invitationId
+    | SentInvitationCanceled String (Result String ()) -- serverUrl, result
+
+
+{-| Update function for session detail messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        ViewSessionDetail sessionId ->
+            handleViewSessionDetail model sessionId
+
+        CloseSessionDetail ->
+            handleCloseSessionDetail model
+
+        TogglePlayersExpanded ->
+            handleTogglePlayersExpanded model
+
+        GotUserProfiles serverUrl result ->
+            handleGotUserProfiles model serverUrl result
+
+        OpenInviteDialog ->
+            handleOpenInviteDialog model
+
+        SelectUserToInvite userId ->
+            handleSelectUserToInvite model userId
+
+        SubmitInvite ->
+            handleSubmitInvite model
+
+        InviteResult serverUrl result ->
+            handleInviteResult model serverUrl result
+
+        OpenInvitationsDialog ->
+            handleOpenInvitationsDialog model
+
+        ViewInvitedSession sessionId ->
+            handleViewInvitedSession model sessionId
+
+        GotInvitations serverUrl result ->
+            handleGotInvitations model serverUrl result
+
+        GotSentInvitations serverUrl result ->
+            handleGotSentInvitations model serverUrl result
+
+        AcceptInvitation invitationId ->
+            handleAcceptInvitation model invitationId
+
+        InvitationAccepted serverUrl result ->
+            handleInvitationAccepted model serverUrl result
+
+        DeclineInvitation invitationId ->
+            handleDeclineInvitation model invitationId
+
+        InvitationDeclined serverUrl result ->
+            handleInvitationDeclined model serverUrl result
+
+        CancelSentInvitation invitationId ->
+            handleCancelSentInvitation model invitationId
+
+        SentInvitationCanceled serverUrl result ->
+            handleSentInvitationCanceled model serverUrl result
 
 
 

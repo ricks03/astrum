@@ -1,18 +1,6 @@
 module Update.Races exposing
-    ( handleDeleteRace
-    , handleDownloadRace
-    , handleGotRaces
-    , handleGotSessionPlayerRace
-    , handleOpenRacesDialog
-    , handleOpenSetupRaceDialog
-    , handleRaceDeleted
-    , handleRaceDownloaded
-    , handleRaceUploaded
-    , handleSelectRaceForSession
-    , handleSetupRaceResult
-    , handleSubmitSetupRace
-    , handleUploadAndSetRace
-    , handleUploadRace
+    ( Msg(..)
+    , update
     )
 
 {-| Update handlers for race management messages.
@@ -26,9 +14,76 @@ import Api.Race exposing (Race)
 import Dict
 import Json.Encode as E
 import Model exposing (..)
-import Msg exposing (Msg)
 import Ports
 import Update.Helpers exposing (updateDialogError, updateSetupRaceForm)
+
+
+{-| Races-specific messages.
+-}
+type Msg
+    = OpenRacesDialog
+    | GotRaces String (Result String (List Race)) -- serverUrl, result
+    | UploadRace
+    | RaceUploaded String (Result String Race) -- serverUrl, result
+    | DownloadRace String -- raceId
+    | RaceDownloaded (Result String ())
+    | DeleteRace String -- raceId
+    | RaceDeleted String (Result String ()) -- serverUrl, result
+      -- Setup Race Messages (for session)
+    | OpenSetupRaceDialog String -- sessionId
+    | SelectRaceForSession String -- raceId
+    | SubmitSetupRace
+    | SetupRaceResult String (Result String ()) -- serverUrl, result
+    | UploadAndSetRace
+    | GotSessionPlayerRace String String (Result String Race) -- serverUrl, sessionId, result
+
+
+{-| Handle all Races messages.
+-}
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OpenRacesDialog ->
+            handleOpenRacesDialog model
+
+        GotRaces serverUrl result ->
+            handleGotRaces model serverUrl result
+
+        UploadRace ->
+            handleUploadRace model
+
+        RaceUploaded serverUrl result ->
+            handleRaceUploaded model serverUrl result
+
+        DownloadRace raceId ->
+            handleDownloadRace model raceId
+
+        RaceDownloaded result ->
+            handleRaceDownloaded model result
+
+        DeleteRace raceId ->
+            handleDeleteRace model raceId
+
+        RaceDeleted serverUrl result ->
+            handleRaceDeleted model serverUrl result
+
+        OpenSetupRaceDialog sessionId ->
+            handleOpenSetupRaceDialog model sessionId
+
+        SelectRaceForSession raceId ->
+            handleSelectRaceForSession model raceId
+
+        SubmitSetupRace ->
+            handleSubmitSetupRace model
+
+        SetupRaceResult serverUrl result ->
+            handleSetupRaceResult model serverUrl result
+
+        UploadAndSetRace ->
+            handleUploadAndSetRace model
+
+        GotSessionPlayerRace serverUrl sessionId result ->
+            handleGotSessionPlayerRace model serverUrl sessionId result
 
 
 
