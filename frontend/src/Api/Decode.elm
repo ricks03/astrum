@@ -131,13 +131,13 @@ sessionList =
 -}
 sessionPlayer : Decoder SessionPlayer
 sessionPlayer =
-    D.map6 SessionPlayer
-        (D.field "id" D.string)
-        (D.field "userProfileId" D.string)
-        (D.oneOf [ D.field "ready" D.bool, D.succeed False ])
-        (D.oneOf [ D.field "playerOrder" D.int, D.succeed 0 ])
-        (D.oneOf [ D.field "isBot" D.bool, D.succeed False ])
-        (D.maybe (D.field "botRaceName" D.string))
+    D.succeed SessionPlayer
+        |> required "id" D.string
+        |> required "userProfileId" D.string
+        |> optional "ready" D.bool False
+        |> optional "playerOrder" D.int 0
+        |> optional "isBot" D.bool False
+        |> optional "botRaceName" (D.maybe D.string) Nothing
 
 
 
@@ -210,11 +210,11 @@ invitationList =
 -}
 race : Decoder Race
 race =
-    D.map4 Race
-        (D.field "id" D.string)
-        (D.field "userId" D.string)
-        (D.field "nameSingular" D.string)
-        (D.field "namePlural" D.string)
+    D.succeed Race
+        |> required "id" D.string
+        |> required "userId" D.string
+        |> required "nameSingular" D.string
+        |> required "namePlural" D.string
 
 
 {-| Decode a list of races.
@@ -330,11 +330,11 @@ rules =
 -}
 turnFiles : Decoder TurnFiles
 turnFiles =
-    D.map4 TurnFiles
-        (D.field "sessionId" D.string)
-        (D.field "year" D.int)
-        (D.field "universe" D.string)
-        (D.field "turn" D.string)
+    D.succeed TurnFiles
+        |> required "sessionId" D.string
+        |> required "year" D.int
+        |> required "universe" D.string
+        |> required "turn" D.string
 
 
 
@@ -344,11 +344,10 @@ turnFiles =
 
 
 {-| Decoder for app settings response.
-Returns a record with serversDir, autoDownloadStars, zoomLevel, useWine, winePrefixesDir, validWineInstall, and enableBrowserStars.
 -}
 appSettings : Decoder { serversDir : String, autoDownloadStars : Bool, zoomLevel : Int, useWine : Bool, winePrefixesDir : String, validWineInstall : Bool, enableBrowserStars : Bool }
 appSettings =
-    D.map7
+    D.succeed
         (\sd ads zl uw wpd vwi ebs ->
             { serversDir = sd
             , autoDownloadStars = ads
@@ -359,35 +358,33 @@ appSettings =
             , enableBrowserStars = ebs
             }
         )
-        (D.field "serversDir" D.string)
-        (D.field "autoDownloadStars" D.bool)
-        (D.oneOf [ D.field "zoomLevel" D.int, D.succeed 100 ])
-        (D.oneOf [ D.field "useWine" D.bool, D.succeed False ])
-        (D.oneOf [ D.field "winePrefixesDir" D.string, D.succeed "~/.config/astrum/wine_prefixes" ])
-        (D.oneOf [ D.field "validWineInstall" D.bool, D.succeed False ])
-        (D.oneOf [ D.field "enableBrowserStars" D.bool, D.succeed False ])
+        |> required "serversDir" D.string
+        |> required "autoDownloadStars" D.bool
+        |> optional "zoomLevel" D.int 100
+        |> optional "useWine" D.bool False
+        |> optional "winePrefixesDir" D.string "~/.config/astrum/wine_prefixes"
+        |> optional "validWineInstall" D.bool False
+        |> optional "enableBrowserStars" D.bool False
 
 
 {-| Decoder for Wine check result.
 -}
 wineCheckResult : Decoder { valid : Bool, message : String }
 wineCheckResult =
-    D.map2
-        (\v m -> { valid = v, message = m })
-        (D.field "valid" D.bool)
-        (D.field "message" D.string)
+    D.succeed (\v m -> { valid = v, message = m })
+        |> required "valid" D.bool
+        |> required "message" D.string
 
 
 {-| Decoder for NTVDM check result.
 -}
 ntvdmCheckResult : Decoder { available : Bool, is64Bit : Bool, message : String, helpUrl : Maybe String }
 ntvdmCheckResult =
-    D.map4
-        (\a i m h -> { available = a, is64Bit = i, message = m, helpUrl = h })
-        (D.field "available" D.bool)
-        (D.field "is64Bit" D.bool)
-        (D.field "message" D.string)
-        (D.maybe (D.field "helpUrl" D.string))
+    D.succeed (\a i m h -> { available = a, is64Bit = i, message = m, helpUrl = h })
+        |> required "available" D.bool
+        |> required "is64Bit" D.bool
+        |> required "message" D.string
+        |> optional "helpUrl" (D.maybe D.string) Nothing
 
 
 
@@ -400,21 +397,21 @@ ntvdmCheckResult =
 -}
 ordersStatus : Decoder OrdersStatus
 ordersStatus =
-    D.map3 OrdersStatus
-        (D.field "sessionId" D.string)
-        (D.field "pendingYear" D.int)
-        (D.field "players" (D.list playerOrderStatus))
+    D.succeed OrdersStatus
+        |> required "sessionId" D.string
+        |> required "pendingYear" D.int
+        |> required "players" (D.list playerOrderStatus)
 
 
 {-| Decode a single player's order status.
 -}
 playerOrderStatus : Decoder PlayerOrderStatus
 playerOrderStatus =
-    D.map4 PlayerOrderStatus
-        (D.field "playerOrder" D.int)
-        (D.field "nickname" D.string)
-        (D.field "isBot" D.bool)
-        (D.field "submitted" D.bool)
+    D.succeed PlayerOrderStatus
+        |> required "playerOrder" D.int
+        |> required "nickname" D.string
+        |> required "isBot" D.bool
+        |> required "submitted" D.bool
 
 
 
@@ -441,9 +438,9 @@ raceValidation =
 -}
 raceValidationError : Decoder RaceValidationError
 raceValidationError =
-    D.map2 RaceValidationError
-        (D.field "field" D.string)
-        (D.field "message" D.string)
+    D.succeed RaceValidationError
+        |> required "field" D.string
+        |> required "message" D.string
 
 
 {-| Decode habitability display information.
