@@ -9,7 +9,7 @@ module View.Dialog.Users exposing
 -}
 
 import Api.Invitation exposing (Invitation)
-import Api.UserProfile exposing (UserProfile)
+import Api.UserProfile exposing (UserProfile, UserProfileState(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -421,17 +421,18 @@ viewUserListItem currentUserId user =
 
                       else
                         text ""
-                    , if user.pending then
-                        span [ class "users-list-dialog__badge users-list-dialog__badge--pending" ]
-                            [ text "Pending" ]
+                    , case user.state of
+                        Pending ->
+                            span [ class "users-list-dialog__badge users-list-dialog__badge--pending" ]
+                                [ text "Pending" ]
 
-                      else if user.isActive then
-                        span [ class "users-list-dialog__badge users-list-dialog__badge--active" ]
-                            [ text "Active" ]
+                        Active ->
+                            span [ class "users-list-dialog__badge users-list-dialog__badge--active" ]
+                                [ text "Active" ]
 
-                      else
-                        span [ class "users-list-dialog__badge users-list-dialog__badge--inactive" ]
-                            [ text "Inactive" ]
+                        Inactive ->
+                            span [ class "users-list-dialog__badge users-list-dialog__badge--inactive" ]
+                                [ text "Inactive" ]
                     ]
                 ]
             , span [ class "users-list-dialog__email" ] [ text user.email ]

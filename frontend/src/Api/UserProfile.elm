@@ -1,4 +1,4 @@
-module Api.UserProfile exposing (UserProfile)
+module Api.UserProfile exposing (UserProfile, UserProfileState(..))
 
 {-| UserProfile type definition.
 
@@ -7,14 +7,21 @@ Represents a user profile on a Neper server.
 -}
 
 
+{-| User profile state.
+-}
+type UserProfileState
+    = Pending
+    | Active
+    | Inactive
+
+
 {-| A user profile.
 -}
 type alias UserProfile =
     { id : String
     , nickname : String
     , email : String
-    , isActive : Bool
+    , state : UserProfileState
     , isManager : Bool
-    , pending : Bool -- True if registration is pending approval
     , message : Maybe String -- Registration message (for pending users)
     }

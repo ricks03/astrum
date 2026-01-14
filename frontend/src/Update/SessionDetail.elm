@@ -12,7 +12,7 @@ Handles session detail view, invitations, and user profiles.
 import Api.Encode as Encode
 import Api.Invitation exposing (Invitation)
 import Api.Session exposing (Session)
-import Api.UserProfile exposing (UserProfile)
+import Api.UserProfile exposing (UserProfile, UserProfileState(..))
 import Json.Encode as E
 import Model exposing (..)
 import Ports
@@ -271,7 +271,7 @@ handleGotUserProfiles model serverUrl result =
                 finalModel =
                     case model.dialog of
                         Just (UsersListDialog state) ->
-                            { updatedModel | dialog = Just (UsersListDialog { state | users = List.filter (\u -> not u.pending) profiles }) }
+                            { updatedModel | dialog = Just (UsersListDialog { state | users = List.filter (\u -> u.state /= Pending) profiles }) }
 
                         _ ->
                             updatedModel

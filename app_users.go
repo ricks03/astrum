@@ -33,9 +33,8 @@ func (a *App) GetUserProfiles(serverURL string) ([]UserProfileInfo, error) {
 			ID:        p.ID,
 			Nickname:  p.Nickname,
 			Email:     p.Email,
-			IsActive:  p.IsActive,
+			State:     p.State,
 			IsManager: p.IsManager,
-			Pending:   p.Pending,
 		}
 	}
 
@@ -74,7 +73,7 @@ func (a *App) CreateUserProfile(serverURL, nickname, email string) (*UserProfile
 		ID:        created.ID,
 		Nickname:  created.Nickname,
 		Email:     created.Email,
-		IsActive:  created.IsActive,
+		State:     created.State,
 		IsManager: created.IsManager,
 	}, nil
 }
@@ -364,7 +363,7 @@ func (a *App) GetPendingRegistrations(serverURL string) ([]UserProfileInfo, erro
 			ID:        p.ID,
 			Nickname:  p.Nickname,
 			Email:     p.Email,
-			IsActive:  p.IsActive,
+			State:     p.State,
 			IsManager: p.IsManager,
 			Message:   message,
 		}

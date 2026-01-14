@@ -91,9 +91,8 @@ type UserProfileInfo struct {
 	ID        string `json:"id"`
 	Nickname  string `json:"nickname"`
 	Email     string `json:"email"`
-	IsActive  bool   `json:"isActive"`
+	State     string `json:"state"` // User state: "pending", "active", "inactive"
 	IsManager bool   `json:"isManager"`
-	Pending   bool   `json:"pending"`           // True if registration is pending approval
 	Message   string `json:"message,omitempty"` // Registration message (for pending users)
 }
 

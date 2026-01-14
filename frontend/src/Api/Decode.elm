@@ -35,11 +35,13 @@ import Api.Race exposing (Race)
 import Api.ResearchLevel as ResearchLevel exposing (ResearchLevel)
 import Api.Rules exposing (Rules)
 import Api.Server exposing (Server)
-import Api.Session exposing (Session, SessionPlayer, SessionState(..))
+import Api.Session exposing (Session, SessionPlayer, SessionState)
+import Api.Session as Session
 import Api.StartingDistance as StartingDistance exposing (StartingDistance)
 import Api.TurnFiles exposing (TurnFiles)
 import Api.UniverseSize as UniverseSize exposing (UniverseSize)
-import Api.UserProfile exposing (UserProfile)
+import Api.UserProfile exposing (UserProfile, UserProfileState)
+import Api.UserProfile as UserProfile
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
 import Model exposing (HabitabilityDisplay, LRTInfo, PRTInfo, RaceConfig, RaceValidation, RaceValidationError)
@@ -90,16 +92,16 @@ sessionState =
             (\str ->
                 case str of
                     "pending" ->
-                        D.succeed Pending
+                        D.succeed Session.Pending
 
                     "started" ->
-                        D.succeed Started
+                        D.succeed Session.Started
 
                     "archived" ->
-                        D.succeed Archived
+                        D.succeed Session.Archived
 
                     _ ->
-                        D.succeed Pending
+                        D.succeed Session.Pending
             )
 
 
@@ -113,7 +115,7 @@ session =
         |> required "isPublic" D.bool
         |> optional "members" (D.list D.string) []
         |> optional "managers" (D.list D.string) []
-        |> optional "state" sessionState Pending
+        |> optional "state" sessionState Session.Pending
         |> optional "rulesIsSet" D.bool False
         |> optional "players" (D.list sessionPlayer) []
         |> optional "pending_invitation" D.bool False
@@ -148,6 +150,28 @@ sessionPlayer =
 -- =============================================================================
 
 
+{-| Decode user profile state.
+-}
+userProfileState : Decoder UserProfileState
+userProfileState =
+    D.string
+        |> D.andThen
+            (\str ->
+                case str of
+                    "active" ->
+                        D.succeed UserProfile.Active
+
+                    "pending" ->
+                        D.succeed UserProfile.Pending
+
+                    "inactive" ->
+                        D.succeed UserProfile.Inactive
+
+                    _ ->
+                        D.succeed UserProfile.Active
+            )
+
+
 {-| Decode a single user profile.
 -}
 userProfile : Decoder UserProfile
@@ -156,10 +180,9 @@ userProfile =
         |> required "id" D.string
         |> required "nickname" D.string
         |> required "email" D.string
-        |> optional "isActive" D.bool True
+        |> optional "state" userProfileState UserProfile.Active
         |> optional "isManager" D.bool False
-        |> optional "pending" D.bool False
-        |> optional "message" (D.maybe D.string) Nothing
+        |> optional "registrationMessage" (D.maybe D.string) Nothing
 
 
 {-| Decode a list of user profiles.

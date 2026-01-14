@@ -93,7 +93,7 @@ import Api.Rules exposing (Rules)
 import Api.Server exposing (Server)
 import Api.Session exposing (Session)
 import Api.TurnFiles exposing (TurnFiles)
-import Api.UserProfile exposing (UserProfile)
+import Api.UserProfile exposing (UserProfile, UserProfileState(..))
 import Dict exposing (Dict)
 import Set exposing (Set)
 
@@ -1031,7 +1031,7 @@ Filters out pending users from the main users list (they appear in Pending pane)
 -}
 emptyUsersListState : String -> List UserProfile -> UsersListState
 emptyUsersListState currentUserId users =
-    { users = List.filter (\u -> not u.pending) users
+    { users = List.filter (\u -> u.state /= Pending) users
     , pendingUsers = []
     , currentUserId = currentUserId
     , activePane = UsersPane

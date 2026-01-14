@@ -15,7 +15,7 @@ import Api.BotLevel exposing (BotLevel)
 import Api.BotRace exposing (BotRace)
 import Api.Encode as Encode
 import Api.PlayerControl exposing (PlayerControlStatus)
-import Api.UserProfile exposing (UserProfile)
+import Api.UserProfile exposing (UserProfile, UserProfileState(..))
 import Dict
 import Json.Encode as E
 import Model exposing (..)
@@ -397,9 +397,8 @@ handleCreateUserResult model serverUrl result =
                             { id = user.id
                             , nickname = user.nickname
                             , email = user.email
-                            , isActive = False
+                            , state = Pending
                             , isManager = False
-                            , pending = True
                             , message = Nothing
                             }
                     in
@@ -804,9 +803,8 @@ handleGotPendingRegistrations model serverUrl result =
                             { id = p.id
                             , nickname = p.nickname
                             , email = p.email
-                            , isActive = False
+                            , state = Pending
                             , isManager = False
-                            , pending = True
                             , message = p.message
                             }
                         )
